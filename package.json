@@ -1,0 +1,32 @@
+{
+  "name": "jems-di",
+  "version": "0.0.1",
+  "description": "An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications. Wrote using SOLID principles and a variety OOP patterns implementations.",
+  "main": "distribution/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JemsFramework/jems-di.git"
+  },
+  "keywords": [
+    "IoC",
+    "DI",
+    "inversion-of-control",
+    "dependency-injection",
+    "granulate",
+    "decouple"
+  ],
+  "author": "Francisco Mercedes <franciscomerdot@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JemsFramework/jems-di/issues"
+  },
+  "homepage": "https://github.com/JemsFramework/jems-di#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.1.6",
+    "typescript": "^2.2.1"
+  }
+}
