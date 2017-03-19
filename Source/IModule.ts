@@ -1,6 +1,13 @@
-import IKernel from './Ikernel'
+import { IKernel } from './Ikernel'
 
+/**
+ * Represents a module that perform dome additional registrations and configuration to the kernel that load it.
+ */
 export interface IModule {
 
-    init(kernel:IKernel);
+    /**
+     * Initialize the module and perform the needed configurations in the given kernel.
+     * @param kernel Represents the kernel tha is loading the module.
+     */
+    initialize(kernel:IKernel):void;
 }
