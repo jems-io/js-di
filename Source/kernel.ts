@@ -5,13 +5,21 @@ import { IkernerlBinding } from './IkernerlBinding'
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
  */
-export interface IKernel {
+export class Kernel {
+
+    private _loadedModules:IModule[];
+
 
     /**
      * Load thegiven modules into the kernel.
      * @param modules Represents the modules that will be loaded in the kernel.
      */
-    loadModules(modules:IModule[]):void;
+    loadModules(modules:IModule[]):void {
+        modules.forEach(function(module:IModule) {            
+            module.initialize(this);
+            this._loadedModules.push(module);
+        });
+    }
 
     /**
      * Register an type or object to the kernel for his future activation.
@@ -37,7 +45,7 @@ export interface IKernel {
      * Unbind an alias from the kernel.
      * @param alias Represents the alias to unbind.
      */
-    unbind(alias:string):void;
+    unbind(alias:string):void
 
     /**
      * Get an activeted objet by the given alias.
@@ -47,12 +55,12 @@ export interface IKernel {
     
     /**
      * Dispose and release all the objects and containers in the kernel.
-     */    
+     */
     dispose():void;
 
     /**
      * Get an resolved and activated instance of that is registered with the given type.
      * @param alias Represents the alias to look for.
      */
-    get(alias:string);
+    get(alias:string); 
 }

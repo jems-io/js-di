@@ -5,11 +5,6 @@ export enum ServicingStrategy {
      */
      INSTANCE
 
-     /**
-     * Make the kernel return a single instances of the type on each request.
-     */
-    ,SINGELTON
-
     /**
      * Make the kernel return same instances of the object on each request.
      */
