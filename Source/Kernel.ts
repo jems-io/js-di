@@ -28,11 +28,13 @@ export class Kernel implements IKernel {
      * @param modules Represents the modules that will be loaded in the kernel.
      */
     public async loadModules(modules:IModule[]):Promise<void> {
-        modules.forEach(async function(module:IModule) {
-            await module.initialize(this);
-        });
-
-        return;
+        return new Promise<void>(
+            () => {
+                modules.forEach(async function(module:IModule) {
+                    await module.initialize(this);
+                });
+            }
+        );
     }
 
     /**
