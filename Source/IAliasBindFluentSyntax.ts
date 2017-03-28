@@ -1,7 +1,10 @@
+import { IAliasReference } from "./IAliasReference";
+import { IKernelReference } from "./IKernelReference";
+
 /**
- * Represents a alias fluent context that allows the kernel register types and objects in a fluent api way.
+ * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
  */
-export interface IAliasFluentContext {
+export interface IAliasBindFluentSyntax extends IAliasReference, IKernelReference {
     
     /**
      * Register the alias with a instance serving strategy.
@@ -17,7 +20,7 @@ export interface IAliasFluentContext {
 
     /**
      * Register the alias with a builder function serving strategy.
-     * @param Represents the object to return.
+     * @param Represents the function that will be invoked to generate the object.
      */
     ToBuilderFunction(builder:any):void
 }

@@ -1,6 +1,10 @@
+import { DependencyMetadata } from "./DependencyMetadata";
+import { IContainerActivator } from "./IContainerActivator";
+
 /**
- * Represents a container that contain in an isolated way a set of intances of the activeted objects that only will be activated only a one time, also you can refer to it as a context.
+ * Represents a container that contain aliases metadata and is capable of resolve dependencies.
  */
+
 export interface IContainer {
 
     /**
@@ -9,15 +13,31 @@ export interface IContainer {
     dispose():void;
     
     /**
-     * Return a instance of the required function type by the given alias.
-     * @param alias Represents the alias of the required instance.
+     * Register the dependency metadata that allow container resolve aliases.
+     * @param dependencyMetadata Represents the dependency metadata.
      */
-    getDependency(alias:string):any;
+    registerDependencyMetadata(dependencyMetadata:DependencyMetadata):void;
 
     /**
-     * Set an instance of an objects as a serving object for the given alias.
-     * @param alias Represents the alias of the instance to set.
-     * @param dependencyInstance Represents the dependency instance to serv.
+     * Unregister the dependency metadata that allow container resolve aliases.
+     * @param alias Represents the alias to unregister.
      */
-    setDependency(alias:string, dependencyInstance:any):void;
+    unregisterDependencyMetadata(alias:string):void;
+
+    /**
+     * Returns a boolean value specifying if the container can or not resolve an alias.
+     * @param alias Represents the alias to resolve.
+     */
+    canResolve(alias:string):boolean
+
+    /**
+     * Returns a resolved object instance.
+     * @param alias Represents the alias to resolve.
+     */
+    resolve(alias:string):boolean
+
+    /**
+     * Return tha container activator that allow the container activate objects.
+     */
+    activator():IContainerActivator;
 }

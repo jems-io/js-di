@@ -1,6 +1,7 @@
 import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
-import { IkernerlBinding } from './IkernerlBinding'
+import { DependencyMetadata } from "./DependencyMetadata";
+import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
@@ -15,35 +16,27 @@ export interface IKernel {
 
     /**
      * Register an type or object to the kernel for his future activation.
-     * @param alias Represents the alias of the type or object to register.
-     * @param activationReference Represents the type or object reference to serv.
-     * @param activationStrategy Represents the strategy to serv the type or object.
+     * @param dependencyMetadata Represents the dependency metadata.
      */
-    register(alias:string, activationReference:any, activationStrategy:ServicingStrategy):void;
+    register(dependencyMetadata:DependencyMetadata):void;
 
     /**
-     * Unregister an alias from the kernel.
+     * Unregister a dependency metadata with the given alias from the kernel.
      * @param alias Represents the alias to unregister from the kernel.
      */
     unregister(alias:string):void
 
     /**
-     * Return a kernel binding that allow register types and object in a fluent api way.
+     * Return an alias bind fluent syntax that allow register types and object in a fluent api syntax.
      * @param alias Represents the alias to register in the kernel.
      */
-    bind(alias:string):IkernerlBinding;
+    bind(alias:string):IAliasBindFluentSyntax;
 
     /**
      * Unbind an alias from the kernel.
      * @param alias Represents the alias to unbind.
      */
     unbind(alias:string):void;
-
-    /**
-     * Get an activeted objet by the given alias.
-     * @param alias Represents the alias that is referenced to the type or object.
-     */
-    get(alias:string):void;
     
     /**
      * Dispose and release all the objects and containers in the kernel.
@@ -51,8 +44,28 @@ export interface IKernel {
     dispose():void;
 
     /**
-     * Get an resolved and activated instance of that is registered with the given type.
+     * Return an resolved instance of that is registered with the given alias.
      * @param alias Represents the alias to look for.
      */
-    get(alias:string);
+    resolve(alias:string);
+
+    /**
+     * 
+     */
+    createContainer(containerAlias:string);
+
+    /**
+     * 
+     */
+    removeContainer(containerAlias:string);
+
+    /**
+     * 
+     */
+    useContainer(containerAlias:string);
+
+    /**
+     * 
+     */
+    useDefaultContainer(containerAlias:string);
 }

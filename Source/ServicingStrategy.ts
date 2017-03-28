@@ -1,3 +1,6 @@
+/**
+ * Represents the serving strategy for the dependency activation.
+ */
 export enum ServicingStrategy {
 
     /**
