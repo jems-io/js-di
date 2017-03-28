@@ -11,13 +11,14 @@ import { Container } from "./Container";
  */
 export class Kernel implements IKernel {    
 
+    private _defaultContainerKey:string = 'default';
     private _containers:{[containerAlias: string]:IContainer};
     private _currentContainer:IContainer;
 
     constructor() {
         this._containers = {};
         this._currentContainer = new Container();
-        this._containers['default'] = this._currentContainer;
+        this._containers[this._defaultContainerKey] = this._currentContainer;
     }
 
 
@@ -79,7 +80,7 @@ export class Kernel implements IKernel {
             return this._currentContainer.resolve(alias);
         }
         else
-            return this._containers['default'].resolve(alias);
+            return this._containers[this._defaultContainerKey].resolve(alias);
     }
 
     /**
@@ -130,6 +131,6 @@ export class Kernel implements IKernel {
      * Use the default container as a serving container for the kernel.
      */
     public async useDefaultContainer():Promise<void> {
-        this._currentContainer = this._currentContainer['default'];
+        this._currentContainer = this._currentContainer[this._defaultContainerKey];
     }
 }
