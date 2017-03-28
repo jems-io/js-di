@@ -5,6 +5,7 @@ import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./Ikernel";
 import { IContainer } from "./IContainer";
 import { Container } from "./Container";
+import { ContainerActivator } from "./ContainerActivator";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
@@ -27,9 +28,11 @@ export class Kernel implements IKernel {
      * @param modules Represents the modules that will be loaded in the kernel.
      */
     public async loadModules(modules:IModule[]):Promise<void> {
-        modules.forEach(function(module:IModule) {
-            module.initialize(this);
+        modules.forEach(async function(module:IModule) {
+            await module.initialize(this);
         });
+
+        return;
     }
 
     /**
@@ -37,7 +40,7 @@ export class Kernel implements IKernel {
      * @param dependencyMetadata Represents the dependency metadata.
      */
     public async register(dependencyMetadata:DependencyMetadata):Promise<void> {
-        this._currentContainer.registerDependencyMetadata(dependencyMetadata);
+        await this._currentContainer.registerDependencyMetadata(dependencyMetadata);
     }
 
     /**
@@ -45,7 +48,7 @@ export class Kernel implements IKernel {
      * @param alias Represents the alias to unregister from the kernel.
      */
     public async unregister(alias:string):Promise<void> {
-        this._currentContainer.unregisterDependencyMetadata(alias);
+        await this._currentContainer.unregisterDependencyMetadata(alias);
     }
 
     /**
@@ -68,19 +71,29 @@ export class Kernel implements IKernel {
      * Dispose and release all the objects and containers in the kernel.
      */    
     public async dispose():Promise<void> {
-        
+        for (var containerAlias in this._containers){
+            if (this._containers.hasOwnProperty(containerAlias)) {
+                this._containers[containerAlias].dispose();
+                delete this._containers[containerAlias];
+            }
+        }        
     }
 
     /**
      * Return an resolved instance of that is registered with the given alias.
      * @param alias Represents the alias to look for.
+     * @param containerActivator Represents the activator that will be use for the container. [Optional]
      */
-    public async resolve(alias:string):Promise<any> {
-        if (this._currentContainer.canResolve(alias)) {
-            return this._currentContainer.resolve(alias);
+    public async resolve(alias:string, containerActivator:ContainerActivator):Promise<any> {
+
+        if (!containerActivator)
+            containerActivator = new ContainerActivator(this);
+
+        if (await this._currentContainer.canResolve(alias)) {
+            return await this._currentContainer.resolve(alias, containerActivator);
         }
         else
-            return this._containers[this._defaultContainerKey].resolve(alias);
+            return await this._containers[this._defaultContainerKey].resolve(alias, containerActivator);
     }
 
     /**

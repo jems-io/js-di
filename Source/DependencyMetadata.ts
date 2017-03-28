@@ -19,4 +19,9 @@ export class DependencyMetadata {
      * Get or set the serving strategy.
      */
     servingStrategy:ServicingStrategy;
+
+    /**
+     * Get or set a boolean value specifyiong if the reference mus be activated as a singelton.
+     */
+    activateAsSingelton:boolean;
 }

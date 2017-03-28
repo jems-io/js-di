@@ -2,6 +2,7 @@ import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
+import { ContainerActivator } from "./ContainerActivator";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
@@ -46,8 +47,9 @@ export interface IKernel {
     /**
      * Return an resolved instance of that is registered with the given alias.
      * @param alias Represents the alias to look for.
+     * @param containerActivator Represents the activator that will be use for the container. [Optional]
      */
-    resolve(alias:string):Promise<any>;
+    resolve(alias:string, containerActivator:ContainerActivator):Promise<any>;
 
     /**
      * Creates a container with the given alias.
