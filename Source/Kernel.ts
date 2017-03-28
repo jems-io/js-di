@@ -27,21 +27,17 @@ export class Kernel implements IKernel {
      * Load thegiven modules into the kernel.
      * @param modules Represents the modules that will be loaded in the kernel.
      */
-    public async loadModules(modules:IModule[]):Promise<void> {
-        return new Promise<void>(
-            () => {
-                modules.forEach(async function(module:IModule) {
-                    await module.initialize(this);
-                });
-            }
-        );
+    public async loadModules(modules:IModule[]) {        
+        modules.forEach(async function(module:IModule) {
+            await module.initialize(this);
+        });        
     }
 
     /**
      * Register an type or object to the kernel for his future activation.
      * @param dependencyMetadata Represents the dependency metadata.
      */
-    public async register(dependencyMetadata:DependencyMetadata):Promise<void> {
+    public async register(dependencyMetadata:DependencyMetadata) {
         await this._currentContainer.registerDependencyMetadata(dependencyMetadata);
     }
 
@@ -49,7 +45,7 @@ export class Kernel implements IKernel {
      * Unregister a dependency metadata with the given alias from the kernel.
      * @param alias Represents the alias to unregister from the kernel.
      */
-    public async unregister(alias:string):Promise<void> {
+    public async unregister(alias:string) {
         await this._currentContainer.unregisterDependencyMetadata(alias);
     }
 
@@ -65,14 +61,14 @@ export class Kernel implements IKernel {
      * Unbind an alias from the kernel.
      * @param alias Represents the alias to unbind.
      */
-    public async unbind(alias:string):Promise<void> {
+    public async unbind(alias:string) {
 
     }
     
     /**
      * Dispose and release all the objects and containers in the kernel.
      */    
-    public async dispose():Promise<void> {
+    public async dispose() {
         for (var containerAlias in this._containers){
             if (this._containers.hasOwnProperty(containerAlias)) {
                 this._containers[containerAlias].dispose();
@@ -102,7 +98,7 @@ export class Kernel implements IKernel {
      * Creates a container with the given alias.
      * @param containerAlias Represents the alias of the container.
      */
-    public async createContainer(containerAlias:string):Promise<void> {        
+    public async createContainer(containerAlias:string) {        
         if (!(await this.hasContainer(containerAlias))) {
             this._currentContainer[containerAlias] = new Container();
         }
@@ -114,7 +110,7 @@ export class Kernel implements IKernel {
      * Remove the container with the given alias.
      * @param containerAlias Represents the alias of the container.
      */
-    public async removeContainer(containerAlias:string):Promise<void> {
+    public async removeContainer(containerAlias:string) {
         if (await this.hasContainer(containerAlias)) {
             delete this._currentContainer[containerAlias];
         }
@@ -134,7 +130,7 @@ export class Kernel implements IKernel {
      * Use the container with the given alias as a serving container for the kernel.
      * @param containerAlias Represents the alias of the container.
      */
-    public async useContainer(containerAlias:string):Promise<void> {
+    public async useContainer(containerAlias:string) {
         if (await this.hasContainer(containerAlias)) {
             this._currentContainer = this._currentContainer[containerAlias];
         }
@@ -145,7 +141,7 @@ export class Kernel implements IKernel {
     /**
      * Use the default container as a serving container for the kernel.
      */
-    public async useDefaultContainer():Promise<void> {
+    public async useDefaultContainer() {
         this._currentContainer = this._currentContainer[this._defaultContainerKey];
     }
 }

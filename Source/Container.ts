@@ -19,23 +19,19 @@ export class Container implements IContainer {
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
      */
-    public async dispose():Promise<void> {
-        return new Promise<void>(
-            () => {
-                for (var dependencyAlias in this._dependenciesMetadata){
-                    if (this._dependenciesMetadata.hasOwnProperty(dependencyAlias)) {
-                        delete this._dependenciesMetadata[dependencyAlias];
-                    }
-                }
+    public async dispose() {
+        for (var dependencyAlias in this._dependenciesMetadata){
+            if (this._dependenciesMetadata.hasOwnProperty(dependencyAlias)) {
+                delete this._dependenciesMetadata[dependencyAlias];
             }
-        );
+        }        
     }
     
     /**
      * Register the dependency metadata that allow container resolve aliases.
      * @param dependencyMetadata Represents the dependency metadata.
      */
-    public async registerDependencyMetadata(dependencyMetadata:DependencyMetadata):Promise<void> {
+    public async registerDependencyMetadata(dependencyMetadata:DependencyMetadata) {
 
         if (!dependencyMetadata.alias)
             throw new Error('The dependency metadata must contain an alias. Criteria -> none');
@@ -47,7 +43,7 @@ export class Container implements IContainer {
      * Unregister the dependency metadata that allow container resolve aliases.
      * @param alias Represents the alias to unregister.
      */
-    public async unregisterDependencyMetadata(alias:string):Promise<void> {
+    public async unregisterDependencyMetadata(alias:string) {
 
         if (!alias)
             throw new Error('Must provide an alias. Criteria -> none');

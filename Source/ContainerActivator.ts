@@ -18,7 +18,7 @@ export class ContainerActivator implements IContainerActivator {
      * Return an activated instance of the given function reference.
      * @param Represenst the function reference to activate.
      */
-    public async activate(functionReference):Promise<any> {
+    public async activate(functionReference:any):Promise<any> {
         return new functionReference.apply(this.getFunctionArguments(functionReference));
     }
 
@@ -26,7 +26,7 @@ export class ContainerActivator implements IContainerActivator {
      * Return the result of the invokation of the given function reference.
      * @param Represenst the function reference to invoke.
      */
-    public async invoke(functionReference):Promise<any> {
+    public async invoke(functionReference:any):Promise<any> {
         return functionReference.apply(this.getFunctionArguments(functionReference));
     }
 
@@ -45,13 +45,13 @@ export class ContainerActivator implements IContainerActivator {
 
     private getFunctionArgumentsNames(functionReference:any):string[] {
 
-        var args = functionReference.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+        var args:string = functionReference.toString().match(/function\s.*?\(([^)]*)\)/)[1];
  
         // Split the arguments string into an array comma delimited.
-        return args.split(',').map(function(arg) {
+        return args.split(',').map(function(arg:string) {
             // Ensure no inline comments are parsed and trim the whitespace.
             return arg.replace(/\/\*.*\*\//, '').trim();
-        }).filter(function(arg) {
+        }).filter(function(arg:string) {
             // Ensure no undefined values are added.
             return arg;
         })

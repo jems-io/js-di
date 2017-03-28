@@ -4,7 +4,9 @@
     ],
     "compilerOptions": {
         "noImplicitAny": true,
-        "noLib": true,
         "target": "ES5"
-    }
+    },
+    "ignoreRules": {
+        "TS2705": true
+    }    
 }
