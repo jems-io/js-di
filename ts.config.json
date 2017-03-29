@@ -1,12 +1,6 @@
 {
-    "include": [
-        "source/**/*"
-    ],
     "compilerOptions": {
         "noImplicitAny": true,
         "target": "ES5"
-    },
-    "ignoreRules": {
-        "TS2705": true
-    }    
+    } 
 }

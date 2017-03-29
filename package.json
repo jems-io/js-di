@@ -4,7 +4,8 @@
   "description": "An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications. Wrote using SOLID principles and a variety OOP patterns implementations.",
   "main": "distribution/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp",
+    "test": "mocha Transpilation/Test/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,9 @@
   "homepage": "https://github.com/JemsFramework/jems-di#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-mocha": "^4.2.0",
     "gulp-typescript": "^3.1.6",
+    "mocha": "^3.2.0",
     "typescript": "^2.2.1"
   }
 }

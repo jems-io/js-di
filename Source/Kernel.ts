@@ -82,7 +82,7 @@ export class Kernel implements IKernel {
      * @param alias Represents the alias to look for.
      * @param containerActivator Represents the activator that will be use for the container. [Optional]
      */
-    public async resolve(alias:string, containerActivator:ContainerActivator):Promise<any> {
+    public async resolve(alias:string, containerActivator:ContainerActivator = null):Promise<any> {
 
         if (!containerActivator)
             containerActivator = new ContainerActivator(this);

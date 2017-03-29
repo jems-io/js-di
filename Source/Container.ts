@@ -101,20 +101,20 @@ export class Container implements IContainer {
     }
 
     private async getBuilderFunctionActivation(metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {
-        return await this.getActivatedObject(metadata, containerActivator, true);
+        return await this.getActivatedObject(metadata, containerActivator, false);
     }
 
     private async getInstanceActivation(metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {        
-        return await this.getActivatedObject(metadata, containerActivator, false);
+        return await this.getActivatedObject(metadata, containerActivator, true);
     }
 
     private async getActivatedObject(metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):Promise<any> {
 
         if (metadata.activateAsSingelton && this.existsInContent(metadata.alias))
-            return this.getFromContainerContent(metadata.alias);
+            return this._containerContent[metadata.alias];
         
-        let activatedObject:any = useInvokation ? await containerActivator.invoke(metadata.activationReference) : 
-                                                  await containerActivator.activate(metadata.activationReference); 
+        let activatedObject:any = useInvokation ? await containerActivator.invoke(metadata) : 
+                                                  await containerActivator.activate(metadata); 
         
         if (metadata.activateAsSingelton && activatedObject)
             this._containerContent[metadata.alias] = activatedObject;
@@ -124,9 +124,5 @@ export class Container implements IContainer {
 
     private existsInContent(alias:string):boolean {
         return !(!this._containerContent[alias]);
-    }
-
-    private getFromContainerContent(alias:string):any {
-        return this._containerContent[alias];
     }
 }
