@@ -13,7 +13,7 @@ export class ContainerActivator implements IContainerActivator {
 
     constructor(kernel:IKernel) {
         this._kernel = kernel;
-        this._activationStack = [];
+        this._activationStack = [];        
     }
 
     /**
@@ -29,6 +29,7 @@ export class ContainerActivator implements IContainerActivator {
         this.removeAliasFromStack(dependencyMetadata.alias);
 
         return acivatedObject;
+        
     }
 
     /**
@@ -62,11 +63,13 @@ export class ContainerActivator implements IContainerActivator {
     }
 
     private getFunctionArguments(functionReference:any):any[] {
+        
         let functionArguments:any[] = [];
+        let kernel = this._kernel;
 
         this.getFunctionArgumentsNames(functionReference).forEach(function(argumentName:string) {
             
-            let argumentInstance:any = this._kernel.resolve(argumentName, this);
+            let argumentInstance:any = kernel.resolve(argumentName, this);
             
             functionArguments.push(argumentInstance);
         });
