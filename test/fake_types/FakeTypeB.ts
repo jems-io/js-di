@@ -1,5 +1,5 @@
-import { FakeTypeA } from "./FakeTypeA";
+import FakeTypeA from "./FakeTypeA";
 
-export class FakeTypeB {
+export default class FakeTypeB {
     constructor(fakeTypeA:FakeTypeA) {}
 }

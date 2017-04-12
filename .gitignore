@@ -1,3 +1,4 @@
+distribution/
 node_modules/
-Transpilation/
-Distribution/
+transpiled_test/
+

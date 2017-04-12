@@ -1,16 +1,16 @@
 import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
-import { DependencyMetadata } from "./DependencyMetadata";
+import DependencyMetadata from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./Ikernel";
 import { IContainer } from "./IContainer";
-import { Container } from "./Container";
-import { ContainerActivator } from "./ContainerActivator";
+import Container from "./Container";
+import ContainerActivator from "./ContainerActivator";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
  */
-export class Kernel implements IKernel {    
+export default class Kernel implements IKernel {    
 
     private _defaultContainerKey:string = 'default';
     private _containers:{[containerAlias: string]:IContainer};

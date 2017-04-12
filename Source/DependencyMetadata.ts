@@ -3,7 +3,7 @@ import { ServicingStrategy } from "./ServicingStrategy";
 /**
  * Represents the alias metadata that contain the activation and serving information of the alias.
  */
-export class DependencyMetadata {
+export default class DependencyMetadata {
 
     /**
      * Get or set the alias.

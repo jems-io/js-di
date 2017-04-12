@@ -1,8 +1,8 @@
 import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
-import { DependencyMetadata } from "./DependencyMetadata";
+import DependencyMetadata from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
-import { ContainerActivator } from "./ContainerActivator";
+import ContainerActivator from "./ContainerActivator";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies

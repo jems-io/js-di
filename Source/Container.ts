@@ -1,13 +1,14 @@
-import { DependencyMetadata } from "./DependencyMetadata";
+import DependencyMetadata from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
 import { ServicingStrategy } from "./ServicingStrategy";
+import { AliasNotRegisteredError } from "./Errors/Index";
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
  */
 
-export class Container implements IContainer { 
+export default class Container implements IContainer { 
 
     private _dependenciesMetadata:{[dependencyAlias:string]:DependencyMetadata};
     private _containerContent:{[dependencyAlias:string]:any}
@@ -73,7 +74,7 @@ export class Container implements IContainer {
         let activatedObject:any;
 
         if (!metadata)
-            throw new Error('The kernel can not resolve the given alias. Criteria -> alias: ' + alias);
+            throw new AliasNotRegisteredError('The kernel can not resolve the given alias.', alias);
         
         switch(metadata.servingStrategy) {
             case ServicingStrategy.CONSTANT:

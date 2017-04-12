@@ -1,3 +1,3 @@
-export class FakeTypeA {
+export default class FakeTypeA {
     
 }

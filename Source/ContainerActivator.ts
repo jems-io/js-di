@@ -1,4 +1,4 @@
-import { DependencyMetadata } from "./DependencyMetadata";
+import DependencyMetadata from "./DependencyMetadata";
 import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
 import { IKernel } from "./Ikernel";
@@ -6,7 +6,7 @@ import { IKernel } from "./Ikernel";
 /**
  * Represenst an activator that can activate objects.
  */
-export class ContainerActivator implements IContainerActivator {
+export default class ContainerActivator implements IContainerActivator {
 
     private _kernel:IKernel;
     private _activationStack:string[];

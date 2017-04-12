@@ -15,7 +15,7 @@ gulp.task('trasnpile-source', function () {
 });
 
 gulp.task('create-source-definition', ['trasnpile-source'], function () {
-    return gulp.src('Source/Index.ts')
+    return gulp.src('Source/**/*')
                 .pipe(ts({
                     declaration: true
                 }))

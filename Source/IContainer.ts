@@ -1,4 +1,4 @@
-import { DependencyMetadata } from "./DependencyMetadata";
+import DependencyMetadata from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 
 /**
