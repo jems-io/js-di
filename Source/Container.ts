@@ -2,7 +2,7 @@ import DependencyMetadata from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
 import { ServicingStrategy } from "./ServicingStrategy";
-import { AliasNotRegisteredError } from "./Errors/Index";
+import * as Errors from "./Errors/Index";
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
@@ -35,7 +35,7 @@ export default class Container implements IContainer {
     public async registerDependencyMetadata(dependencyMetadata:DependencyMetadata) {
 
         if (!dependencyMetadata.alias)
-            throw new Error('The dependency metadata must contain an alias. Criteria -> none');
+            throw new Errors.InvalidDataError('The dependency metadata must contain an alias.', dependencyMetadata.alias);
 
         this._dependenciesMetadata[dependencyMetadata.alias] = dependencyMetadata;        
     }
@@ -47,10 +47,10 @@ export default class Container implements IContainer {
     public async unregisterDependencyMetadata(alias:string) {
 
         if (!alias)
-            throw new Error('Must provide an alias. Criteria -> none');
+            throw new Errors.InvalidDataError('Must provide an alias', alias);
 
         if (!this._dependenciesMetadata[alias])
-            throw new Error('The given alias to remove dont exist in the container. Criteria -> alias: ' + alias);
+            throw new Errors.UnregisteredAliasError('The given alias to remove dont exist in the container', alias);
 
         delete this._dependenciesMetadata[alias];        
     }
@@ -74,7 +74,7 @@ export default class Container implements IContainer {
         let activatedObject:any;
 
         if (!metadata)
-            throw new AliasNotRegisteredError('The kernel can not resolve the given alias.', alias);
+            throw new Errors.UnregisteredAliasError('The kernel can not resolve the given alias.', alias);
         
         switch(metadata.servingStrategy) {
             case ServicingStrategy.CONSTANT:
@@ -87,11 +87,11 @@ export default class Container implements IContainer {
                 activatedObject = await this.getBuilderFunctionActivation(metadata, containerActivator);
                 break;
             default:
-                throw new Error('The given servicing strategy is not suported. Criteria -> servicing strategy: ' + metadata.servingStrategy);
+                throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported', metadata.servingStrategy);
         }
 
         if (!activatedObject)
-            throw new Error('The activated object result in a null value, the activation fail. Criteria -> none');
+            throw new Errors.ActivationFailError('The activated object result in a null value, the activation fail');
 
         return activatedObject;        
     }

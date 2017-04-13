@@ -6,6 +6,7 @@ import { IKernel } from "./Ikernel";
 import { IContainer } from "./IContainer";
 import Container from "./Container";
 import ContainerActivator from "./ContainerActivator";
+import * as Errors from "./Errors/Index";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
@@ -103,7 +104,7 @@ export default class Kernel implements IKernel {
             this._currentContainer[containerAlias] = new Container();
         }
         else
-            throw new Error('The given container alias is already registered. Criteria -> container alias: ' +  containerAlias);
+            throw new Errors.InvalidDataError('The given container alias is already registered. Criteria', containerAlias);
     }
 
     /**
@@ -115,7 +116,7 @@ export default class Kernel implements IKernel {
             delete this._currentContainer[containerAlias];
         }
         else
-            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  containerAlias);
+            throw new Errors.InvalidDataError('The given container alias is not registered.', +  containerAlias);
     }
 
     /**

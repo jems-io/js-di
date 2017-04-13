@@ -2,6 +2,7 @@ import DependencyMetadata from "./DependencyMetadata";
 import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
 import { IKernel } from "./Ikernel";
+import * as Errors from "./Errors/Index";
 
 /**
  * Represenst an activator that can activate objects.
@@ -51,8 +52,10 @@ export default class ContainerActivator implements IContainerActivator {
 
     private addAliasToStack(alias:string):void {
 
-        if (this._activationStack.indexOf(alias) >= 0)
-            throw new Error('An cyclic dependency has been foun. Criteria -> alias: ' + alias);
+        if (this._activationStack.indexOf(alias) >= 0) {
+            this._activationStack.push(alias);
+            throw new Errors.CyclicDependencyError('An cyclic dependency has been found.', this._activationStack);
+        }
 
         this._activationStack.push(alias);
     }
@@ -66,7 +69,7 @@ export default class ContainerActivator implements IContainerActivator {
 
     private async getFunctionArguments(functionReference:any):Promise<any[]> {
 
-        let functionArguments:any[] = [0];
+        let functionArguments:any[] = [null];
         let functionArgumentsNames:string[] = this.getFunctionArgumentsNames(functionReference);
         let kernel = this._kernel;
 
