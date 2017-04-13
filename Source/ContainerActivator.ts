@@ -22,9 +22,11 @@ export default class ContainerActivator implements IContainerActivator {
      */
     public async activate(dependencyMetadata:DependencyMetadata):Promise<any> {
 
-        this.addAliasToStack(dependencyMetadata.alias);        
-     
-        let acivatedObject:any =new (Function.prototype.bind.apply(dependencyMetadata.activationReference, this.getFunctionArguments(dependencyMetadata.activationReference)));
+        this.addAliasToStack(dependencyMetadata.alias);     
+
+        var argumets = await this.getFunctionArguments(dependencyMetadata.activationReference);
+
+        let acivatedObject:any =new (Function.prototype.bind.apply(dependencyMetadata.activationReference, argumets));
 
         this.removeAliasFromStack(dependencyMetadata.alias);
 
@@ -40,7 +42,7 @@ export default class ContainerActivator implements IContainerActivator {
         
         this.addAliasToStack(dependencyMetadata.alias);
 
-        let acivatedObject:any = dependencyMetadata.activationReference.apply(this.getFunctionArguments(dependencyMetadata.activationReference));
+        let acivatedObject:any = dependencyMetadata.activationReference.apply(await this.getFunctionArguments(dependencyMetadata.activationReference));
 
         this.removeAliasFromStack(dependencyMetadata.alias);
 
@@ -62,17 +64,17 @@ export default class ContainerActivator implements IContainerActivator {
         this._activationStack.splice(aliasIndex, 1);
     }
 
-    private getFunctionArguments(functionReference:any):any[] {
-        
-        let functionArguments:any[] = [];
+    private async getFunctionArguments(functionReference:any):Promise<any[]> {
+
+        let functionArguments:any[] = [0];
+        let functionArgumentsNames:string[] = this.getFunctionArgumentsNames(functionReference);
         let kernel = this._kernel;
 
-        this.getFunctionArgumentsNames(functionReference).forEach(function(argumentName:string) {
-            
-            let argumentInstance:any = kernel.resolve(argumentName, this);
-            
+        for(let argumentIndex = 0; argumentIndex < functionArgumentsNames.length; argumentIndex++) {
+
+            let argumentInstance:any = await kernel.resolve(functionArgumentsNames[argumentIndex], this);  
             functionArguments.push(argumentInstance);
-        });
+        }
 
         return functionArguments;
     }

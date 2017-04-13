@@ -81,10 +81,10 @@ export default class Container implements IContainer {
                 activatedObject = this.getConstantActivation(metadata);
                 break;
             case ServicingStrategy.BUILDER_FUNCTION:
-                activatedObject = this.getBuilderFunctionActivation(metadata, containerActivator);
+                activatedObject = await this.getBuilderFunctionActivation(metadata, containerActivator);
                 break;
             case ServicingStrategy.INSTANCE:
-                activatedObject = this.getBuilderFunctionActivation(metadata, containerActivator);
+                activatedObject = await this.getBuilderFunctionActivation(metadata, containerActivator);
                 break;
             default:
                 throw new Error('The given servicing strategy is not suported. Criteria -> servicing strategy: ' + metadata.servingStrategy);
