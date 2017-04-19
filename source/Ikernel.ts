@@ -16,16 +16,30 @@ export interface IKernel {
     loadModules(modules:IModule[]):Promise<void>;
 
     /**
-     * Register an type or object to the kernel for his future activation.
+     * Register an type or object to the kernel for his future activation and return the generated identifier.
      * @param dependencyMetadata Represents the dependency metadata.
+     * @returns Return the dependency metadata generated identifier.
      */
-    register(dependencyMetadata:DependencyMetadata):Promise<void>;
+    register(dependencyMetadata:DependencyMetadata):Promise<string>;
 
     /**
-     * Unregister a dependency metadata with the given alias from the kernel.
+     * Return the registered dependency metadata with the given identifier.
+     * @param identifier Represents the identifier to look for.
+     * @returns Return dependency metadata with the given identifier.
+     */
+    getDependencyMetadataByIdentifier(identifier:string):Promise<DependencyMetadata>;
+
+    /**
+     * Unregister all registered dependency metadata with the given alias from the kernel.
      * @param alias Represents the alias to unregister from the kernel.
      */
-    unregister(alias:string):Promise<void>
+    unregisterAlias(alias:string):Promise<void>
+
+    /**
+     * Unregister the dependency metadata with the given identifier.
+     * @param identifier Represents the identifier to look for.
+     */
+    unregisterDependencyMetadataByIdentifier(identifier:string):Promise<void>
 
     /**
      * Return an alias bind fluent syntax that allow register types and object in a fluent api syntax.
