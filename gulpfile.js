@@ -2,6 +2,8 @@ var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var mocha = require('gulp-mocha');
 var clean = require('gulp-clean');
+
+var tsProject = ts.createProject('tsconfig.json');
  
 gulp.task('default', ['trasnpile-source', 'create-source-definition', 'trasnpile-test', 'run-test', 'clean-test', 'distribute-source']);
 

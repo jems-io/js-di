@@ -13,16 +13,16 @@ import * as Errors from "./Errors/Index";
  */
 export default class Kernel implements IKernel {    
 
-    private _defaultContainerKey:string = 'default';
-    private _containers:{[containerAlias: string]:IContainer};
-    private _currentContainer:IContainer;
+    private _defaultContainerAlias:string = 'default';
+    private _containers:{[containerAlias: string]:IContainer} = {};
+    private _containerResolutionStack:IContainer[] = [];
 
     constructor() {
-        this._containers = {};
-        this._currentContainer = new Container();
-        this._containers[this._defaultContainerKey] = this._currentContainer;
-    }
 
+        let defaultContainer = new Container();
+        this._containerResolutionStack.push(defaultContainer);
+        this._containers[this._defaultContainerAlias] = defaultContainer;
+    }
 
     /**
      * Load thegiven modules into the kernel.
@@ -32,40 +32,182 @@ export default class Kernel implements IKernel {
         modules.forEach(async function(module:IModule) {
             await module.initialize(this);
         });        
-    }
+    }     
 
     /**
-     * Register an type or object to the kernel for his future activation.
-     * @param dependencyMetadata Represents the dependency metadata.
-     */
-    public async register(dependencyMetadata:DependencyMetadata) {
-        await this._currentContainer.registerDependencyMetadata(dependencyMetadata);
-    }
-
-    /**
-     * Unregister a dependency metadata with the given alias from the kernel.
-     * @param alias Represents the alias to unregister from the kernel.
-     */
-    public async unregister(alias:string) {
-        await this._currentContainer.unregisterDependencyMetadata(alias);
-    }
-
-    /**
-     * Return an alias bind fluent syntax that allow register types and object in a fluent api syntax.
-     * @param alias Represents the alias to register in the kernel.
+     * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
+     * @param alias Represents the alias to look for.
+     * @returns A fluent bind.
      */
     public async bind(alias:string):Promise<IAliasBindFluentSyntax> {
-        return null;
+        //TODO: Implement this man.
+        throw new Error('Not Implemented');
     }
 
     /**
-     * Unbind an alias from the kernel.
-     * @param alias Represents the alias to unbind.
+     * Unbind all dependencies metadata with the given alias from the container resolution stack.
+     * @param alias Represents the alias to look for.
      */
-    public async unbind(alias:string) {
+    public async unbindWithAlias(alias:string):Promise<void> {
+        //TODO: Implement this man.
+        throw new Error('Not Implemented');
+    }
 
+    /**
+     * Unbind the dependency metadata with the given identifier from the container resolution stack.
+     * @param identifier Represents the identifier to look for.
+     */
+    public async unbindWithIdentifier(identifier:string):Promise<void> {
+        //TODO: Implement this man.
+        throw new Error('Not Implemented');
+    }
+
+    /**
+     * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.
+     * @param alias Represents the alias to look for.
+     * @returns True if the kernel can resolve the given alias.
+     */
+    public async canResolve(alias:string):Promise<boolean> {
+        for (let containerIndex:number = 0; containerIndex < this._containerResolutionStack.length; containerIndex++) {
+            if (this._containerResolutionStack[containerIndex].canResolve(alias))
+                return true;
+        }
     }
     
+    /**
+     * Return an resolved instance of that is registered with the given alias in the container resolution stack.
+     * @param alias Represents the alias to look for.
+     * @param containerActivator Represents the activator that will be use for the container. [Optional]
+     */
+    public async resolve(alias:string, containerActivator:ContainerActivator = undefined):Promise<any> {
+        
+        if (!containerActivator)
+            containerActivator = new ContainerActivator(this);
+
+        for(let containerIndex:number = 0; containerIndex < this._containerResolutionStack.length; containerIndex++) {
+            let container:IContainer = this._containerResolutionStack[containerIndex];
+
+            if (await container.canResolve(alias)) {
+                return await container.resolve(alias, containerActivator);
+            }
+        }            
+    }
+
+    /**
+     * Creates a container with the given alias.
+     * @param alias Represents the alias of the container.
+     */
+    public async createContainer(alias:string):Promise<void> {        
+        if (!(await this.hasContainer(alias))) {
+            this._containers[alias] =  new Container();
+        }
+        else
+            throw new Errors.InvalidDataError('The given container alias is already registered. Criteria', alias);
+    }
+
+    /**
+     * Removes the container with the given alias.
+     * @param alias Represents the alias of the container.
+     */
+    public async removeContainer(alias:string):Promise<void> {
+        if (await this.hasContainer(alias)) {
+            delete this._containers[alias];
+        }
+        else
+            throw new Errors.InvalidDataError('The given container alias is not registered.', +  alias);
+    }
+
+    /**
+     * Returns a boolean value specifying if the kernel has a container with the given alias.
+     * @param alias Represents the alias of the container.
+     * @returns True if the kernel has the container.
+     */
+    public async hasContainer(alias:string):Promise<boolean> {
+        return !(!this._containers[alias]);
+    }
+
+    /**
+     * Use the container with the given alias as a serving container for the kernel.
+     * @param alias Represents the alias of the container.
+     */
+    public async useContainer(alias:string):Promise<void> {
+        if (await this.hasContainer(alias)) {
+            this._containerResolutionStack = [this._containers[alias], // The container to use.
+                                              this._containers[this._defaultContainerAlias]]; // The default container as backup for resolution.
+        }
+        else
+            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
+    }
+
+    /**
+     * Use the container with the given alias as a serving container for the kernel and keep the previews one to be used in the container resolution stack.
+     * @param alias Represents the alias of the container.
+     */
+    public async useContainerKeepingPreviews(alias:string):Promise<void> {
+        if (await this.hasContainer(alias)) {
+            this._containerResolutionStack.splice(0, 0, this._containers[alias]);
+        }
+        else
+            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
+    }
+
+    /**
+     * Use the default container as a serving container for the kernel.
+     */
+    public async useDefaultContainer():Promise<void> {
+        this._containerResolutionStack = [this._containers[this._defaultContainerAlias]];
+    }
+
+    /**
+     * Return the container with the given alias.
+     * @param alias Represents the alias to look for.
+     * @returns A container.
+     */
+    public async getContainer(alias:string):Promise<IContainer> {
+        if (await this.hasContainer(alias)) {
+            return this._containers[alias];
+        }
+        else
+            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
+    }
+
+    /**
+     * Return the current container.
+     * @returns A container.
+     */
+    public async getCurrentContainer():Promise<IContainer> {
+        if (this._containerResolutionStack.length > 0)
+            return this._containerResolutionStack[this._containerResolutionStack.length];
+        else
+            throw Error('Something that dont should happen is happening, we dont have containers. [The default must be there]');
+    }
+
+    /**
+     * Return the deafult container.
+     * @returns A container.
+     */
+    public async getDefaultContainer():Promise<IContainer> {
+        return this._containers[this._defaultContainerAlias];
+    }
+
+     /**
+     * Get an array of the current container resolution stack used to resolve the aliases.
+     * @returns An array of container aliases.
+     */
+    public async getContainerResolutionStack():Promise<string[]> {
+        let toReturn:string[] = [];
+        let containers = this._containers;
+
+        this._containerResolutionStack.forEach(function(container) {
+            for (let containerAlias in containers) {
+                if (container === containers[containerAlias])
+                    toReturn.push(containerAlias);
+            }
+        });
+
+        return toReturn;
+    }
+
     /**
      * Dispose and release all the objects and containers in the kernel.
      */    
@@ -76,73 +218,5 @@ export default class Kernel implements IKernel {
                 delete this._containers[containerAlias];
             }
         }        
-    }
-
-    /**
-     * Return an resolved instance of that is registered with the given alias.
-     * @param alias Represents the alias to look for.
-     * @param containerActivator Represents the activator that will be use for the container. [Optional]
-     */
-    public async resolve(alias:string, containerActivator:ContainerActivator = null):Promise<any> {
-
-        if (!containerActivator)
-            containerActivator = new ContainerActivator(this);
-
-        if (await this._currentContainer.canResolve(alias)) {
-            return await this._currentContainer.resolve(alias, containerActivator);
-        }
-        else
-            return await this._containers[this._defaultContainerKey].resolve(alias, containerActivator);
-    }
-
-    /**
-     * Creates a container with the given alias.
-     * @param containerAlias Represents the alias of the container.
-     */
-    public async createContainer(containerAlias:string) {        
-        if (!(await this.hasContainer(containerAlias))) {
-            this._currentContainer[containerAlias] = new Container();
-        }
-        else
-            throw new Errors.InvalidDataError('The given container alias is already registered. Criteria', containerAlias);
-    }
-
-    /**
-     * Remove the container with the given alias.
-     * @param containerAlias Represents the alias of the container.
-     */
-    public async removeContainer(containerAlias:string) {
-        if (await this.hasContainer(containerAlias)) {
-            delete this._currentContainer[containerAlias];
-        }
-        else
-            throw new Errors.InvalidDataError('The given container alias is not registered.', +  containerAlias);
-    }
-
-    /**
-     * Return a boolean value specifying if the kernel has a container with the given alias.
-     * @param containerAlias Represents the alias of the container.
-     */
-    public async hasContainer(containerAlias:string):Promise<boolean> {
-        return !(!this._currentContainer[containerAlias]);
-    }
-
-    /**
-     * Use the container with the given alias as a serving container for the kernel.
-     * @param containerAlias Represents the alias of the container.
-     */
-    public async useContainer(containerAlias:string) {
-        if (await this.hasContainer(containerAlias)) {
-            this._currentContainer = this._currentContainer[containerAlias];
-        }
-        else
-            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  containerAlias);
-    }
-
-    /**
-     * Use the default container as a serving container for the kernel.
-     */
-    public async useDefaultContainer() {
-        this._currentContainer = this._currentContainer[this._defaultContainerKey];
     }
 }

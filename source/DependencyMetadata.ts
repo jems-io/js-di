@@ -4,12 +4,6 @@ import { ServicingStrategy } from "./ServicingStrategy";
  * Represents the alias metadata that contain the activation and serving information of the alias.
  */
 export default class DependencyMetadata {
-
-    /**
-     * Get or set the alias.
-     */
-    alias:string;
-
     /**
      * Get or set the activation reference, it can be a function type, object instance, function buildier and so on.
      */

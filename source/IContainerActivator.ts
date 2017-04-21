@@ -10,11 +10,11 @@ export interface IContainerActivator {
      * Return an activated instance of the given function reference.
      * @param Represenst the function reference to activate.
      */
-    activate(functionReference:any):Promise<any>;
+    activate(alias:string, functionReference:any):Promise<any>;
 
     /**
      * Return the result of the invokation of the given function reference.
      * @param Represenst the function reference to invoke.
      */
-    invoke(functionReference:any):Promise<any>;
+    invoke(alias:string, functionReference:any):Promise<any>;
 }

@@ -8,21 +8,40 @@ import { IContainerActivator } from "./IContainerActivator";
 export interface IContainer {
 
     /**
-     * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
-     */
-    dispose():Promise<void>;
-    
-    /**
-     * Register the dependency metadata that allow container resolve aliases.
+     * Returns the generated identifier and register the given metadata with the given alias for his future activation.
+     * @param alias Represents the alias.
      * @param dependencyMetadata Represents the dependency metadata.
+     * @returns Returns the dependency metadata generated identifier.
      */
-    registerDependencyMetadata(dependencyMetadata:DependencyMetadata):Promise<void>;
+    registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):Promise<string>;
+
+     /**
+     * Returns the registered dependencies metadata with the given alias.
+     * @param alias Represents the alias to look for.
+     * @returns Returns an array of dependencies metadata with the given alias.
+     */
+    getDependenciesMetadataWithAlias(alias:string):Promise<DependencyMetadata[]>;
 
     /**
-     * Unregister the dependency metadata that allow container resolve aliases.
-     * @param alias Represents the alias to unregister.
+     * Returns the registered dependency metadata with the given alias and identifier.
+     * @param alias Represents the alias to look for.
+     * @param identifier Represents the identifier to look for.
+     * @returns Return dependency metadata with the given identifier.    
      */
-    unregisterDependencyMetadata(alias:string):Promise<void>;
+    getDependencyMetadataWithIdentifier(alias:string, identifier:string):Promise<DependencyMetadata>;
+
+    /**
+     * Unregister all registered dependencies metadata with the given alias.
+     * @param alias Represents the alias to to look for.
+     */
+    unregisterDependenciesMetadataWithAlias(alias:string):Promise<void>;
+
+    /**
+     * Unregister the dependency metadata with the given alias and identifier.
+     * @param alias Represents the alias to look for.
+     * @param identifier Represents the identifier to look for.
+     */
+    unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):Promise<void>;
 
     /**
      * Returns a boolean value specifying if the container can or not resolve an alias.
@@ -36,4 +55,9 @@ export interface IContainer {
      * @param containerActivator Represents the container activator.
      */
     resolve(alias:string, containerActivator:IContainerActivator):Promise<any>;
+
+    /**
+     * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
+     */
+    dispose():Promise<void>;
 }

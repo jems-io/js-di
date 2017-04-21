@@ -7,69 +7,68 @@ import FakeTypeB from './fake_types/FakeTypeB';
 import FakeTypeC from "./fake_types/FakeTypeC";
 import FakeTypeDependant1 from "./fake_types/FakeTypeDependant1";
 import FakeTypeDependant2 from "./fake_types/FakeTypeDependant2";
+import { IContainer } from "../distribution/IContainer";
 
 let kernel:jemsdi.Kernel = new jemsdi.Kernel();
-
-kernel.register({
-     alias: 'fakeTypeA',
-     servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-     activationReference: FakeTypeA,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeB',
-     servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-     activationReference: FakeTypeB,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeC',
-     servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-     activationReference: FakeTypeC,
-     activateAsSingelton: false
-});
-
 let constantInstance = {};
 
-kernel.register({
-     alias: 'fakeConstantType',
-     servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
-     activationReference: constantInstance,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeDependant1',
-     servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-     activationReference: FakeTypeDependant1,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeDependant2',
-     servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-     activationReference: FakeTypeDependant2,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeNotStrategy',
-     servingStrategy: -1,
-     activationReference: FakeTypeC,
-     activateAsSingelton: false
-});
-
-kernel.register({
-     alias: 'fakeTypeNULL',
-     servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
-     activationReference: null,
-     activateAsSingelton: false
-});
-
-
 describe('The Kernel Should', function() {
+
+    before(function(done) {
+        kernel.getDefaultContainer().then(function(container:IContainer) {
+            
+            container.registerDependencyMetadata('fakeTypeA', ({
+                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+                activationReference: FakeTypeA,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata('fakeTypeB', ({
+                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+                activationReference: FakeTypeB,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata('fakeTypeC', ({
+                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+                activationReference: FakeTypeC,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata('fakeConstantType', ({
+                servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
+                activationReference: constantInstance,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata( 'fakeTypeDependant1',({
+                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+                activationReference: FakeTypeDependant1,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata('fakeTypeDependant2',({
+                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+                activationReference: FakeTypeDependant2,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata('fakeTypeNotStrategy',({
+                servingStrategy: -1,
+                activationReference: FakeTypeC,
+                activateAsSingelton: false
+            }));
+
+            container.registerDependencyMetadata( 'fakeTypeNULL',({
+                servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
+                activationReference: null,
+                activateAsSingelton: false
+            }));
+
+            setTimeout(done, 100);
+
+        });
+    });
 
     describe('Get', function() {
 
@@ -121,11 +120,11 @@ describe('The Kernel Should', function() {
             });           
         });   
 
-        it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', function() {
-            return kernel.unregister('fakeTypeUnexisting').catch(function(error:Error) {
-                assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError');                 
-            });           
-        });
+        // it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', function() {
+        //     return kernel.unregister('fakeTypeUnexisting').catch(function(error:Error) {
+        //         assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError');                 
+        //     });           
+        // });
 
         it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy between dependant1 and dependant2 with alias fakeTypeDependant1', function() {
             return kernel.resolve('fakeTypeDependant1').catch(function(error:Error) {
@@ -140,3 +139,5 @@ describe('The Kernel Should', function() {
         });    
     });
 });
+
+

@@ -21,15 +21,15 @@ export default class ContainerActivator implements IContainerActivator {
      * Return an activated instance of the given function reference.
      * @param dependencyMetadata Represenst the metadata that contains the function reference to activate.
      */
-    public async activate(dependencyMetadata:DependencyMetadata):Promise<any> {
+    public async activate(alias:string, dependencyMetadata:DependencyMetadata):Promise<any> {
 
-        this.addAliasToStack(dependencyMetadata.alias);     
+        this.addAliasToStack(alias);     
 
         var argumets = await this.getFunctionArguments(dependencyMetadata.activationReference);
 
         let acivatedObject:any =new (Function.prototype.bind.apply(dependencyMetadata.activationReference, argumets));
 
-        this.removeAliasFromStack(dependencyMetadata.alias);
+        this.removeAliasFromStack(alias);
 
         return acivatedObject;
         
@@ -39,13 +39,13 @@ export default class ContainerActivator implements IContainerActivator {
      * Return the result of the invokation of the given function reference.
      * @param dependencyMetadata Represenst the metadata that contains the function reference to invoke.
      */
-    public async invoke(dependencyMetadata:DependencyMetadata):Promise<any> {
+    public async invoke(alias:string, dependencyMetadata:DependencyMetadata):Promise<any> {
         
-        this.addAliasToStack(dependencyMetadata.alias);
+        this.addAliasToStack(alias);
 
         let acivatedObject:any = dependencyMetadata.activationReference.apply(await this.getFunctionArguments(dependencyMetadata.activationReference));
 
-        this.removeAliasFromStack(dependencyMetadata.alias);
+        this.removeAliasFromStack(alias);
 
         return acivatedObject;
     }
