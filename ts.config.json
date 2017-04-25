@@ -1,6 +1,7 @@
 {
-    "compilerOptions": {
-        "--lib": "ES2015",
-        "noImplicitAny": true
+    "compilerOptions": {        
+        "noImplicitAny": true,
+        "lib": ["ES6"],
+        "declaration": true        
     } 
 }
