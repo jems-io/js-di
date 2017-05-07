@@ -5,7 +5,7 @@ var clean = require('gulp-clean');
 
 var tsProject = ts.createProject('ts.config.json');
  
-gulp.task('default', ['run-test']);
+gulp.task('default', ['clean-test']);
 
 gulp.task('trasnpile-source', function () {
     return gulp.src('Source/**/*')

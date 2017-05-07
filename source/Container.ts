@@ -3,6 +3,7 @@ import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
 import { ServicingStrategy } from "./ServicingStrategy";
 import * as Errors from "./Errors/Index";
+import { IKernel } from "./Ikernel";
 
 type IdentifierDependencyMetadataMap = {identifier:string, metadata:DependencyMetadata};
 
@@ -13,8 +14,15 @@ export default class Container implements IContainer {
 
     private _aliasDependenciesMetadataMap:{[dependencyAlias:string]:{[dependencyIdentifier:string]:DependencyMetadata}};
     private _containerContent:{[dependencyAlias:string]:any}
+    private _supportContainerAliasList:string[];
+    private _kernel:IKernel;
 
-    constructor() {
+    constructor(kernel:IKernel) {
+
+        if (!kernel)
+            throw new Errors.InvalidDataError('Must provide a kernel', kernel);
+
+        this._kernel = kernel;
         this._aliasDependenciesMetadataMap = {};
     }
 
@@ -151,35 +159,53 @@ export default class Container implements IContainer {
         let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
         let activatedObjects:any[] = [];
 
-        if (!identifierMetadataMapCollection.length)
-            throw new Errors.UnregisteredAliasError('The kernel can not resolve the given alias.', alias);
+        if (identifierMetadataMapCollection.length)
+        {
+            for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
+            {   
+                let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
+                let activatedObject:any;
 
-        for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
-        {   
-            let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
-            let activatedObject:any;
+                switch(identifierMetadataMap.metadata.servingStrategy) {
+                    case ServicingStrategy.CONSTANT:
+                        activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
+                        break;
+                    case ServicingStrategy.BUILDER_FUNCTION:
+                        activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                        break;
+                    case ServicingStrategy.INSTANCE:
+                        activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                        break;
+                    default:
+                        throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported', identifierMetadataMap.metadata.servingStrategy);
+                }
 
-            switch(identifierMetadataMap.metadata.servingStrategy) {
-                case ServicingStrategy.CONSTANT:
-                    activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
-                    break;
-                case ServicingStrategy.BUILDER_FUNCTION:
-                    activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                    break;
-                case ServicingStrategy.INSTANCE:
-                    activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                    break;
-                default:
-                    throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported', identifierMetadataMap.metadata.servingStrategy);
+                if (!activatedObject)
+                    throw new Errors.ActivationFailError('The activated object result in a null value, the activation fail');
+
+                activatedObjects.push(activatedObject);
             }
 
-            if (!activatedObject)
-                throw new Errors.ActivationFailError('The activated object result in a null value, the activation fail');
+            return activatedObjects[0];
+        }
+        else
+            return await this.resolveWithSupport(alias, containerActivator);       
+    }
 
-            activatedObjects.push(activatedObject);
+    private async resolveWithSupport(alias:string, containerActivator:IContainerActivator):Promise<any> {        
+        if (this._supportContainerAliasList) {
+            for(let supportAliasIndex = 0; supportAliasIndex < this._supportContainerAliasList.length; supportAliasIndex) {
+                try {
+                    return await (await this._kernel.getContainer(this._supportContainerAliasList[supportAliasIndex]))
+                                                    .resolve(alias, containerActivator);
+                } catch (error) {
+                    if (error instanceof Errors.UnregisteredAliasError)
+                        break;
+                }
+            }
         }
 
-        return activatedObjects[0];
+        throw new Errors.UnregisteredAliasError('Can not resolve the given alias.', alias);
     }
 
     private getIdentifierMetadataMapCollection(alias:string):IdentifierDependencyMetadataMap[] {
@@ -200,6 +226,32 @@ export default class Container implements IContainer {
 
         return toReturnDependenciesMetadataMapCollection;
     };
+
+      /**
+     * Set a list of container alias that will support the container resolutions.
+     * @param aliases Represents the list of container alias that support the container.
+     */
+    public async setSupportContainersAlias(aliases:string[]):Promise<void> {
+        if (!aliases || (aliases && !aliases.length)) {
+            throw new Errors.InvalidDataError('Must provide at least one support container alias.', aliases)
+        }
+
+        let kernel:IKernel = this._kernel;
+
+        aliases.forEach(function(alias) {
+            if (!kernel.hasContainer(alias))
+                throw new Errors.InvalidDataError('The support container alias [' + alias + '], is not created in kernel.', aliases)
+        });
+
+        this._supportContainerAliasList = aliases;
+    }
+
+    /**
+     * Clean the list of support container alias.
+     */
+    public async cleanSupportContainersAlias():Promise<void> {
+        this._supportContainerAliasList = undefined;
+    }
 
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.

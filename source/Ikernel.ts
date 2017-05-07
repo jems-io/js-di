@@ -75,12 +75,6 @@ export interface IKernel {
     useContainer(alias:string):Promise<void>;
 
     /**
-     * Use the container with the given alias as a serving container for the kernel and keep the previews one to be used in the container resolution stack.
-     * @param alias Represents the alias of the container.
-     */
-    useContainerKeepingPreviews(alias:string):Promise<void>;
-
-    /**
      * Use the default container as a serving container for the kernel.
      */
     useDefaultContainer():Promise<void>;
@@ -103,12 +97,6 @@ export interface IKernel {
      * @returns A container.
      */
     getDefaultContainer():Promise<IContainer>;
-
-    /**
-     * Get an array of the current container resolution stack used to resolve the aliases.
-     * @returns An array of container aliases.
-     */
-    getContainerResolutionStack():Promise<string[]>;
 
      /**
      * Dispose and release all the containers in the kernel.

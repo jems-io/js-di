@@ -15,12 +15,12 @@ export default class Kernel implements IKernel {
 
     private _defaultContainerAlias:string = 'default';
     private _containers:{[containerAlias: string]:IContainer} = {};
-    private _containerResolutionStack:IContainer[] = [];
+    private _currentContainer:IContainer;
 
     constructor() {
 
-        let defaultContainer = new Container();
-        this._containerResolutionStack.push(defaultContainer);
+        let defaultContainer = new Container(this);
+        this._currentContainer = defaultContainer;
         this._containers[this._defaultContainerAlias] = defaultContainer;
     }
 
@@ -68,10 +68,7 @@ export default class Kernel implements IKernel {
      * @returns True if the kernel can resolve the given alias.
      */
     public async canResolve(alias:string):Promise<boolean> {
-        for (let containerIndex:number = 0; containerIndex < this._containerResolutionStack.length; containerIndex++) {
-            if (this._containerResolutionStack[containerIndex].canResolve(alias))
-                return true;
-        }
+        return await this._currentContainer.canResolve(alias);
     }
     
     /**
@@ -84,13 +81,7 @@ export default class Kernel implements IKernel {
         if (!containerActivator)
             containerActivator = new ContainerActivator(this);
 
-        for(let containerIndex:number = 0; containerIndex < this._containerResolutionStack.length; containerIndex++) {
-            let container:IContainer = this._containerResolutionStack[containerIndex];
-
-            if (await container.canResolve(alias)) {
-                return await container.resolve(alias, containerActivator);
-            }
-        }            
+        return await this._currentContainer.resolve(alias, containerActivator);  
     }
 
     /**
@@ -99,7 +90,7 @@ export default class Kernel implements IKernel {
      */
     public async createContainer(alias:string):Promise<void> {        
         if (!(await this.hasContainer(alias))) {
-            this._containers[alias] =  new Container();
+            this._containers[alias] =  new Container(this);
         }
         else
             throw new Errors.InvalidDataError('The given container alias is already registered. Criteria', alias);
@@ -132,20 +123,7 @@ export default class Kernel implements IKernel {
      */
     public async useContainer(alias:string):Promise<void> {
         if (await this.hasContainer(alias)) {
-            this._containerResolutionStack = [this._containers[alias], // The container to use.
-                                              this._containers[this._defaultContainerAlias]]; // The default container as backup for resolution.
-        }
-        else
-            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
-    }
-
-    /**
-     * Use the container with the given alias as a serving container for the kernel and keep the previews one to be used in the container resolution stack.
-     * @param alias Represents the alias of the container.
-     */
-    public async useContainerKeepingPreviews(alias:string):Promise<void> {
-        if (await this.hasContainer(alias)) {
-            this._containerResolutionStack.splice(0, 0, this._containers[alias]);
+            this._currentContainer = this._containers[alias];
         }
         else
             throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
@@ -155,7 +133,7 @@ export default class Kernel implements IKernel {
      * Use the default container as a serving container for the kernel.
      */
     public async useDefaultContainer():Promise<void> {
-        this._containerResolutionStack = [this._containers[this._defaultContainerAlias]];
+        this._currentContainer = this._containers[this._defaultContainerAlias];
     }
 
     /**
@@ -176,8 +154,8 @@ export default class Kernel implements IKernel {
      * @returns A container.
      */
     public async getCurrentContainer():Promise<IContainer> {
-        if (this._containerResolutionStack.length > 0)
-            return this._containerResolutionStack[this._containerResolutionStack.length];
+        if (this._currentContainer)
+            return this._currentContainer;
         else
             throw Error('Something that dont should happen is happening, we dont have containers. [The default must be there]');
     }
@@ -188,24 +166,6 @@ export default class Kernel implements IKernel {
      */
     public async getDefaultContainer():Promise<IContainer> {
         return this._containers[this._defaultContainerAlias];
-    }
-
-     /**
-     * Get an array of the current container resolution stack used to resolve the aliases.
-     * @returns An array of container aliases.
-     */
-    public async getContainerResolutionStack():Promise<string[]> {
-        let toReturn:string[] = [];
-        let containers = this._containers;
-
-        this._containerResolutionStack.forEach(function(container) {
-            for (let containerAlias in containers) {
-                if (container === containers[containerAlias])
-                    toReturn.push(containerAlias);
-            }
-        });
-
-        return toReturn;
     }
 
     /**

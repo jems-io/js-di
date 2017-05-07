@@ -14,17 +14,26 @@ let constantInstance = {};
 
 describe('The kernel', function() {
 
-    describe('if everithing is good', function() {
-        // Test the instance servicing strategy
-        require('./servicing_strategies/TestInstanceServicingStrategy');
+    describe('when is resolving', function() {
 
-        // Test the constant servicing strategy
-        require('./servicing_strategies/TestConstantServicingStrategy');
-    });
+        describe('if everithing is good', function() {
+            // Test the instance servicing strategy
+            require('./servicing_strategies/TestInstanceServicingStrategy');
 
-     describe('if something is bad', function() {
-        // Test the instance servicing strategy
-        require('./errors/TestErrorTriggering');
+            // Test the constant servicing strategy
+            require('./servicing_strategies/TestConstantServicingStrategy');
+
+            // Test the function builder servicing strategy
+            require('./servicing_strategies/TestBuilderFunctionServicingStrategy');
+
+            // Test the contention
+            require('./contention/TestContention');                
+        });
+
+        describe('if something is bad', function() {
+            // Test the instance servicing strategy
+            require('./errors/TestErrorTriggering');
+        });
     });
 });
 

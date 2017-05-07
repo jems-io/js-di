@@ -11,73 +11,76 @@ describe('must throw an the error', function() {
 
     let kernel:jemsdi.Kernel = new jemsdi.Kernel();
 
-    before(function(done) {
-        kernel.getDefaultContainer().then(function(container:IContainer) {
-            
-            container.registerDependencyMetadata( 'fakeTypeDependant1',({
-                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-                activationReference: FakeTypeDependant1,
-                activateAsSingelton: false
-            }));
+    before(async function() {
+        let container:IContainer = await kernel.getDefaultContainer();
+        
+        await container.registerDependencyMetadata( 'fakeTypeDependant1',({
+            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            activationReference: FakeTypeDependant1,
+            activateAsSingelton: false
+        }));
 
-            container.registerDependencyMetadata('fakeTypeDependant2',({
-                servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-                activationReference: FakeTypeDependant2,
-                activateAsSingelton: false
-            }));
+        await container.registerDependencyMetadata('fakeTypeDependant2',({
+            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            activationReference: FakeTypeDependant2,
+            activateAsSingelton: false
+        }));
 
-            container.registerDependencyMetadata('fakeTypeNotStrategy',({
-                servingStrategy: -1,
-                activationReference: FakeTypeC,
-                activateAsSingelton: false
-            }));
+        await container.registerDependencyMetadata('fakeTypeNotStrategy',({
+            servingStrategy: -1,
+            activationReference: FakeTypeC,
+            activateAsSingelton: false
+        }));
 
-            container.registerDependencyMetadata( 'fakeTypeNULL',({
-                servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
-                activationReference: null,
-                activateAsSingelton: false
-            }));
-
-        });
-
-        done();
+        await container.registerDependencyMetadata( 'fakeTypeNULL',({
+            servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
+            activationReference: null,
+            activateAsSingelton: false
+        }));
     });
 
-    it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', function() {
-        return kernel.resolve('fakeTypeUnexisting').catch(function(error:Error) {
-            assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError');                 
-        });           
+    it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', async function() {
+         try {
+             let resolvedObject:any = await kernel.resolve('fakeTypeUnexisting');             
+             assert.ok(false, 'Must throw the exception because the alias is not registered.');
+         } catch (error) {
+             assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError');                 
+         }                  
     });
 
-    it('jemsdi.Errors.UnsupportedServicignStrategyError because there is not a servicing strategy that match with the metadata.', function() {
-        return kernel.resolve('fakeTypeNotStrategy').catch(function(error:Error) {
-            assert.equal(error.name, 'UnsupportedServicignStrategyError', 'The error is not an instance of jemsdi.Errors.UnsupportedServicignStrategyError');                 
-        });           
+    it('jemsdi.Errors.UnsupportedServicignStrategyError because there is not a servicing strategy that match with the metadata.',async function() {
+        try {
+             let resolvedObject:any = await kernel.resolve('fakeTypeNotStrategy');             
+             assert.ok(false, 'Must throw the exception because the strategy is not suported.');
+         } catch (error) {
+             assert.equal(error.name, 'UnsupportedServicignStrategyError', 'The error is not an instance of jemsdi.Errors.UnsupportedServicignStrategyError');                 
+         }          
     });
 
-    it('jemsdi.Errors.ActivationFailError because the reuslt of the resolution is null.', function() {
-        return kernel.resolve('fakeTypeNULL').catch(function(error:Error) {
+    it('jemsdi.Errors.ActivationFailError because the reuslt of the resolution is null.', async function() {
+        try {
+            let resolvedObject:any = await kernel.resolve('fakeTypeNULL');             
+            assert.ok(false, 'Must throw the exception because the activation result is null.');
+        } catch (error) {
             assert.equal(error.name, 'ActivationFailError', 'The error is not an instance of jemsdi.Errors.ActivationFailError');                 
-        });           
-    });   
+        }      
+    });
 
-    // it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', function() {
-    //     return kernel.getCurrentContainer().then(function(container) {
-    //         container.unregisterDependenciesMetadataWithAlias('fakeTypeUnexisting').catch(function(error:Error) {
-    //             assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError');                 
-    //         });          
-    //     });  
-    // });
-
-    it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy between dependant1 and dependant2 with alias fakeTypeDependant1', function() {
-        return kernel.resolve('fakeTypeDependant1').catch(function(error:Error) {
+    it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy between dependant1 and dependant2 with alias fakeTypeDependant1', async function() {
+        try {
+            let resolvedObject:any = await kernel.resolve('fakeTypeDependant1');             
+            assert.ok(false, 'Must throw the exception because there is a ciclyc dependency.');
+        } catch (error) {
             assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError');                 
-        });           
+        }          
     });       
 
-    it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy between dependant1 and dependant2 with alias fakeTypeDependant2', function() {
-        return kernel.resolve('fakeTypeDependant2').catch(function(error:Error) {
+    it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy between dependant1 and dependant2 with alias fakeTypeDependant2', async function() {
+        try {
+            let resolvedObject:any = await kernel.resolve('fakeTypeDependant2');             
+            assert.ok(false, 'Must throw the exception because there is a ciclyc dependency.');
+        } catch (error) {
             assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError');                 
-        });           
+        }          
     });
 });

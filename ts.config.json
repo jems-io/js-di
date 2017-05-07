@@ -2,6 +2,7 @@
     "compilerOptions": {        
         "noImplicitAny": true,
         "lib": ["ES6"],
-        "declaration": true        
+        "declaration": true,
+        "target": "ES3"
     } 
 }

@@ -57,6 +57,17 @@ export interface IContainer {
     resolve(alias:string, containerActivator:IContainerActivator):Promise<any>;
 
     /**
+     * Set a list of container alias that will support the container resolutions.
+     * @param aliases Represents the list of container alias that support the container.
+     */
+    setSupportContainersAlias(aliases:string[]):Promise<void>;
+
+    /**
+     * Clean the list of support container alias.
+     */
+    cleanSupportContainersAlias():Promise<void>;
+
+    /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
      */
     dispose():Promise<void>;
