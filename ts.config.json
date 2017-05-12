@@ -3,6 +3,6 @@
         "noImplicitAny": true,
         "lib": ["ES6"],
         "declaration": true,
-        "target": "ES3"
+        "target": "ES5"
     } 
 }
