@@ -7,21 +7,31 @@ import { IContainer } from "./IContainer";
 import Container from "./Container";
 import ContainerActivator from "./ContainerActivator";
 import * as Errors from "./Errors/Index";
+import KernelConfiguration from "./KernelConfiguration";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
  */
 export default class Kernel implements IKernel {    
 
-    private _defaultContainerAlias:string = 'default';
+    private _defaultContainerAlias:string = '';
     private _containers:{[containerAlias: string]:IContainer} = {};
     private _currentContainer:IContainer;
+    private _kernelConfiguration:KernelConfiguration;
 
     constructor() {
 
         let defaultContainer = new Container(this);
         this._currentContainer = defaultContainer;
         this._containers[this._defaultContainerAlias] = defaultContainer;
+        this._kernelConfiguration = new KernelConfiguration();
+    }
+
+    /**
+     * Returns the configuration of the kernel.
+     */
+    public async getConfiguration():Promise<KernelConfiguration> {
+        return this._kernelConfiguration;
     }
 
     /**
@@ -79,7 +89,7 @@ export default class Kernel implements IKernel {
     public async resolve(alias:string, containerActivator:ContainerActivator = undefined):Promise<any> {
         
         if (!containerActivator)
-            containerActivator = new ContainerActivator(this);
+            containerActivator = new ContainerActivator(this._currentContainer);
 
         return await this._currentContainer.resolve(alias, containerActivator);  
     }

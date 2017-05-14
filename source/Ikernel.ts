@@ -4,11 +4,17 @@ import DependencyMetadata from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import ContainerActivator from "./ContainerActivator";
 import { IContainer } from "./IContainer";
+import KernelConfiguration from "./KernelConfiguration";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
  */
 export interface IKernel {
+
+    /**
+     * Returns the configuration of the kernel.
+     */
+    getConfiguration():Promise<KernelConfiguration>;
 
     /**
      * Load the given modules into the kernel.
@@ -24,30 +30,29 @@ export interface IKernel {
     bind(alias:string):Promise<IAliasBindFluentSyntax>;
 
     /**
-     * Unbind all dependencies metadata with the given alias from the container resolution stack.
+     * Unbind all dependencies metadata with the given alias from the container.
      * @param alias Represents the alias to look for.
      */
     unbindWithAlias(alias:string):Promise<void>;
 
     /**
-     * Unbind the dependency metadata with the given identifier from the container resolution stack.
+     * Unbind the dependency metadata with the given identifier from the container.
      * @param identifier Represents the identifier to look for.
      */
     unbindWithIdentifier(identifier:string):Promise<void>;
 
     /**
-     * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.
+     * Returns a boolean value specifying if the kernel can resolve given alias with the container.
      * @param alias Represents the alias to look for.
      * @returns True if the kernel can resolve the given alias.
      */
     canResolve(alias:string):Promise<boolean>;
 
     /**
-     * Return an resolved instance of that is registered with the given alias in the container resolution stack.
+     * Return an resolved instance of that is registered with the given alias.
      * @param alias Represents the alias to look for.
-     * @param containerActivator Represents the activator that will be use for the container. [Optional]
      */
-    resolve(alias:string, containerActivator:ContainerActivator):Promise<any>;
+    resolve(alias:string):Promise<any>;
 
     /**
      * Creates a container with the given alias.

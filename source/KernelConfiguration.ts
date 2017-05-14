@@ -1,20 +1,44 @@
-
+import ResolutionConfiguration from "./ResolutionConfiguration";
 
 /**
  * Represents a kernel configuration, it define the kernel behavior.
  */
-import { IAliasFlag } from "./AliasFlag/IAliasFlag";
-
 export default class KernelConfiguration {
-    
-    private _aliasFlags:IAliasFlag[];
-
+        
     constructor() {
-        this._aliasFlags = [];
+        this.loadDefaultFlags();
     }
 
     /**
      * Represents the flags that will be avaluated in the alias.
      */
-    get Flags():IAliasFlag[] { return this._aliasFlags; }
+    public aliasSufixResolutionConfigurationMap:{[aliasSufix:string]:ResolutionConfiguration};
+
+
+    private loadDefaultFlags():void {
+        this.aliasSufixResolutionConfigurationMap = {};
+        this.aliasSufixResolutionConfigurationMap[''] = {
+            quanty: 1,
+            optional: false,
+            dependencyFilter: undefined
+        };
+
+        this.aliasSufixResolutionConfigurationMap['List'] = {
+            quanty: 0,
+            optional: false,
+            dependencyFilter: undefined
+        };
+
+        this.aliasSufixResolutionConfigurationMap['Optional'] = {
+            quanty: 1,
+            optional: true,
+            dependencyFilter: undefined
+        };
+
+        this.aliasSufixResolutionConfigurationMap['OptionalList'] = {
+            quanty: 0,
+            optional: true,
+            dependencyFilter: undefined
+        };
+    }
 }

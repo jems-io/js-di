@@ -1,19 +1,19 @@
 import DependencyMetadata from "./DependencyMetadata";
 import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
-import { IKernel } from "./Ikernel";
 import * as Errors from "./Errors/Index";
+import { IContainer } from "./IContainer";
 
 /**
  * Represenst an activator that can activate objects.
  */
 export default class ContainerActivator implements IContainerActivator {
 
-    private _kernel:IKernel;
+    private _container:IContainer;
     private _activationStack:string[];
 
-    constructor(kernel:IKernel) {
-        this._kernel = kernel;
+    constructor(container:IContainer) {
+        this._container = container;
         this._activationStack = [];        
     }
 
@@ -42,7 +42,7 @@ export default class ContainerActivator implements IContainerActivator {
     public async invoke(alias:string, dependencyMetadata:DependencyMetadata):Promise<any> {
         
         this.addAliasToStack(alias);
-
+        
         let acivatedObject:any = dependencyMetadata.activationReference.apply(await this.getFunctionArguments(dependencyMetadata.activationReference));
 
         this.removeAliasFromStack(alias);
@@ -50,7 +50,7 @@ export default class ContainerActivator implements IContainerActivator {
         return acivatedObject;
     }
 
-    private addAliasToStack(alias:string):void {
+    private addAliasToStack(alias:string):void {  
 
         if (this._activationStack.indexOf(alias) >= 0) {
             this._activationStack.push(alias);
@@ -71,11 +71,10 @@ export default class ContainerActivator implements IContainerActivator {
 
         let functionArguments:any[] = [null];
         let functionArgumentsNames:string[] = this.getFunctionArgumentsNames(functionReference);
-        let kernel = this._kernel;
-
+        
         for(let argumentIndex = 0; argumentIndex < functionArgumentsNames.length; argumentIndex++) {
 
-            let argumentInstance:any = await kernel.resolve(functionArgumentsNames[argumentIndex], this);  
+            let argumentInstance:any = await this._container.resolve(functionArgumentsNames[argumentIndex], this);  
             functionArguments.push(argumentInstance);
         }
 

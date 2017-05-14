@@ -4,8 +4,10 @@ import { IContainer } from "./IContainer";
 import { ServicingStrategy } from "./ServicingStrategy";
 import * as Errors from "./Errors/Index";
 import { IKernel } from "./Ikernel";
+import ResolutionConfiguration from "./ResolutionConfiguration";
 
 type IdentifierDependencyMetadataMap = {identifier:string, metadata:DependencyMetadata};
+type ResolutionConfigurationLookUpResult = {outAlias:string,configuration:ResolutionConfiguration};
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
@@ -156,8 +158,19 @@ export default class Container implements IContainer {
 
         this.validateAliasArgument(alias);
 
+        let resolutionConfiguration:ResolutionConfiguration = (await this._kernel.getConfiguration()).aliasSufixResolutionConfigurationMap[''];
         let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
         let activatedObjects:any[] = [];
+
+        if (!identifierMetadataMapCollection.length) {
+            let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = await this.getResolutionConfigurationForAlias(alias);
+
+            if (resolutionConfigurationLookUpResult && resolutionConfigurationLookUpResult.outAlias != alias) {
+
+                alias = resolutionConfigurationLookUpResult.outAlias;
+                identifierMetadataMapCollection = this.getIdentifierMetadataMapCollection(alias);
+            }
+        }
 
         if (identifierMetadataMapCollection.length)
         {
@@ -174,7 +187,7 @@ export default class Container implements IContainer {
                         activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
                         break;
                     case ServicingStrategy.INSTANCE:
-                        activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                        activatedObject = await this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
                         break;
                     default:
                         throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported', identifierMetadataMap.metadata.servingStrategy);
@@ -192,11 +205,34 @@ export default class Container implements IContainer {
             return await this.resolveWithSupport(alias, containerActivator);       
     }
 
-    private async resolveWithSupport(alias:string, containerActivator:IContainerActivator):Promise<any> {        
+    private async getResolutionConfigurationForAlias(alias:string):Promise<ResolutionConfigurationLookUpResult> {
+       
+        let aliasSufixResolutionConfigurationMap:{[aliasSufix:string]:ResolutionConfiguration} = (await this._kernel.getConfiguration()).aliasSufixResolutionConfigurationMap;
+        let posibleSufixeMatch:string = '';
+
+        for(let aliasSufix in aliasSufixResolutionConfigurationMap) {
+            if (aliasSufixResolutionConfigurationMap.hasOwnProperty(aliasSufix) &&
+                alias.endsWith(aliasSufix) &&
+                alias.length > posibleSufixeMatch.length) {
+
+                posibleSufixeMatch = aliasSufix;
+            }
+        }
+        
+        return {
+            outAlias: alias.substring(0, alias.length - posibleSufixeMatch.length),
+            configuration: aliasSufixResolutionConfigurationMap[posibleSufixeMatch]
+        };
+    }
+
+    private async resolveWithSupport(alias:string, containerActivator:IContainerActivator):Promise<any> {
+        
         if (this._supportContainerAliasList) {
             for(let supportAliasIndex = 0; supportAliasIndex < this._supportContainerAliasList.length; supportAliasIndex) {
                 try {
-                    return await (await this._kernel.getContainer(this._supportContainerAliasList[supportAliasIndex]))
+                    let supportAlias:string = this._supportContainerAliasList[supportAliasIndex] == 'default' ? '' : this._supportContainerAliasList[supportAliasIndex];
+
+                    return await (await this._kernel.getContainer(supportAlias))
                                                     .resolve(alias, containerActivator);
                 } catch (error) {
                     if (error instanceof Errors.UnregisteredAliasError)
@@ -238,10 +274,12 @@ export default class Container implements IContainer {
 
         let kernel:IKernel = this._kernel;
 
-        aliases.forEach(function(alias) {
-            if (!kernel.hasContainer(alias))
-                throw new Errors.InvalidDataError('The support container alias [' + alias + '], is not created in kernel.', aliases)
-        });
+        for(let aliasIndex:number = 0; aliasIndex < aliases.length; aliasIndex++) {   
+            let alias:string = aliases[aliasIndex] == 'default' ? '' : aliases[aliasIndex];       
+            
+            if (!(await kernel.hasContainer(alias)))
+                throw new Errors.InvalidDataError('The support container alias [' + alias + '], is not created in kernel.', aliases);
+        }        
 
         this._supportContainerAliasList = aliases;
     }
@@ -269,11 +307,11 @@ export default class Container implements IContainer {
     }
 
     private async getBuilderFunctionActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {
-        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
+        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
     }
 
     private async getInstanceActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {        
-        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
+        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
     }
 
     private async getActivatedObject(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):Promise<any> {
