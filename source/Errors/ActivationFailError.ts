@@ -1,8 +1,6 @@
-import { ReasonedError } from "./ReasonedError";
-
-export default class ActivationFailError extends ReasonedError {
+export default class ActivationFailError extends Error {
     constructor(message:string) {
-        super(message, message)
+        super(message)
         this.name = "ActivationFailError"
     }
 }

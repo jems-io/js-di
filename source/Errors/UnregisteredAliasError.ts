@@ -1,8 +1,6 @@
-import { ReasonedError } from "./ReasonedError";
-
-export default class UnregisteredAliasError extends ReasonedError {
-    constructor(message:string, alias:string) {
-        super('The alias [' + alias + '] is not registered.', message)
+export default class UnregisteredAliasError extends Error {
+    constructor(message:string) {
+        super(message)
         this.name = "UnregisteredAliasError"
     }
 }

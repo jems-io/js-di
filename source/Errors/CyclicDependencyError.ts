@@ -1,8 +1,9 @@
-import { ReasonedError } from "./ReasonedError";
-
-export default class CyclicDependencyError extends ReasonedError {
+export default class CyclicDependencyError extends Error {
     constructor(message:string, resolutionStak:string[]) {
-        super('The resolution stack has a cyclic dependency.:' + resolutionStak, message)
+        super(message);
         this.name = "CyclicDependencyError"
+        this.resolutionStack = resolutionStak;
     }
+
+    public resolutionStack:string[];
 }

@@ -1,9 +1,6 @@
-import { ReasonedError } from "./ReasonedError";
-import { ServicingStrategy } from "../ServicingStrategy";
-
-export default class UnsupportedServicignStrategyError extends ReasonedError {
-    constructor(message:string, strategy:ServicingStrategy) {
-        super('The strategy [' + strategy + '] provided for the resolution is unsupported. ', message)
+export default class UnsupportedServicignStrategyError extends Error {
+    constructor(message:string) {
+        super(message)
         this.name = "UnsupportedServicignStrategyError"
     }
 }

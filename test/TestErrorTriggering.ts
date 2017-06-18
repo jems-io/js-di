@@ -1,11 +1,11 @@
-/// <reference path="../../typings/index.d.ts" />
+/// <reference path="../typings/index.d.ts" />
 
 import * as assert from 'assert'
-import * as jemsdi from "../../distribution/Index";
-import { IContainer } from "../../distribution/IContainer";
-import FakeTypeDependant1 from "../fake_types/FakeTypeDependant1";
-import FakeTypeDependant2 from "../fake_types/FakeTypeDependant2";
-import FakeTypeC from "../fake_types/FakeTypeC";
+import * as jemsdi from "../distribution/Index";
+import { IContainer } from "../distribution/IContainer";
+import FakeTypeDependant1 from "./fake_types/FakeTypeDependant1";
+import FakeTypeDependant2 from "./fake_types/FakeTypeDependant2";
+import FakeTypeC from "./fake_types/FakeTypeC";
 
 describe('must throw an the error', function() {
 

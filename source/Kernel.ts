@@ -30,7 +30,7 @@ export default class Kernel implements IKernel {
     /**
      * Returns the configuration of the kernel.
      */
-    public async getConfiguration():Promise<KernelConfiguration> {
+    public get configuration():KernelConfiguration {
         return this._kernelConfiguration;
     }
 
@@ -103,7 +103,7 @@ export default class Kernel implements IKernel {
             this._containers[alias] =  new Container(this);
         }
         else
-            throw new Errors.InvalidDataError('The given container alias is already registered. Criteria', alias);
+            throw new Errors.InvalidDataError(`The given container alias [${alias}] is already registered`);
     }
 
     /**
@@ -115,7 +115,7 @@ export default class Kernel implements IKernel {
             delete this._containers[alias];
         }
         else
-            throw new Errors.InvalidDataError('The given container alias is not registered.', +  alias);
+            throw new Errors.InvalidDataError(`The given container alias [${alias}] is not registered.`);
     }
 
     /**
@@ -136,7 +136,7 @@ export default class Kernel implements IKernel {
             this._currentContainer = this._containers[alias];
         }
         else
-            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
+            throw new Errors.InvalidDataError(`The given container alias [${alias}] is not registered`);
     }
 
     /**
@@ -156,7 +156,7 @@ export default class Kernel implements IKernel {
             return this._containers[alias];
         }
         else
-            throw new Error('The given container alias is not registered. Criteria -> container alias: ' +  alias);
+            throw new Errors.InvalidDataError(`The given container alias [${alias}] is not registered`);
     }
 
     /**

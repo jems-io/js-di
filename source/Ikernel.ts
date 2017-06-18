@@ -14,7 +14,7 @@ export interface IKernel {
     /**
      * Returns the configuration of the kernel.
      */
-    getConfiguration():Promise<KernelConfiguration>;
+    configuration:KernelConfiguration;
 
     /**
      * Load the given modules into the kernel.
