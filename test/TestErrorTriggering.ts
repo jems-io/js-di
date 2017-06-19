@@ -37,6 +37,19 @@ describe('must throw an the error', function() {
             activationReference: null,
             activateAsSingelton: false
         }));
+        
+        await container.registerDependencyMetadata('fakeType', ({
+            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            activationReference: function() { this.fake = true; },
+            activateAsSingelton: false
+        }));
+
+        await container.registerDependencyMetadata('fakeType', ({
+            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            activationReference: function() { this.fake = true; },
+            activateAsSingelton: false
+        }));
+
     });
 
     it('jemsdi.Errors.UnregisteredAliasError because there is nothing registered with fakeTypeUnexisting alias', async function() {
@@ -83,4 +96,14 @@ describe('must throw an the error', function() {
             assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError');                 
         }          
     });
+
+    it('jemsdi.Errors.ResolutionConfigurationError because there is an ambiguety with the faketype alias.', async function() {
+        try {
+            let resolvedObject:any = await kernel.resolve('fakeType');             
+            assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.');
+        } catch (error) {
+            assert.equal(error.name, 'ResolutionConfigurationError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError');                 
+        }          
+    });
+
 });

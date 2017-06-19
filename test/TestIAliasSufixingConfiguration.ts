@@ -33,23 +33,31 @@ describe('with an alias that contain sufixing configuration', function() {
         }));
      });
 
-    it('should resolve an array with instances of FakeTypeA, FakeTypeB, FakeTypeC with fakeType alias', async function() {
+   it('should resolve an array with instances of FakeTypeA, FakeTypeB, FakeTypeC with fakeType alias when is using the List sufix.', async function() {
         let resolvedObjects:any[] = await kernel.resolve('fakeTypeList');
-        
-        console.log(resolvedObjects);
-        //assert.ok((resolvedObject instanceof FakeTypeA) == true, 'The resolved type is not: FakeTypeA');                 
+
+        assert.equal(3, resolvedObjects.length, 'The resolved objects quantity must be 3.');
+
+        resolvedObjects.forEach(function(resolvedObject:any) { if (!resolvedObject.hasOwnProperty('fake')) throw new Error('Not all resolved objects are correrct.')});             
     });
 
-    // it('should resolve an instance of FakeTypeB with fakeTypeB alias, resolving A as a dependency of B ', async function() {
-    //     let resolvedObject:FakeTypeB = await kernel.resolve('fakeTypeB');
-    //     assert.ok((resolvedObject instanceof FakeTypeB) == true, 'The resolved type is not: FakeTypeB');                 
-    //     assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) == true, 'The resolved A dependency type is not: FakeTypeA');                
-    // });
+    it('should resolve an array with instances of FakeTypeA, FakeTypeB, FakeTypeC with fakeType alias when is using the OptionalList sufix.', async function() {
+        let resolvedObjects:any[] = await kernel.resolve('fakeTypeOptionalList');
 
-    // it('should resolve an instance of FakeTypeC with fakeTypeC alias, resolving A and B as a dependency of C', async function() {
-    //     let resolvedObject:FakeTypeC = await kernel.resolve('fakeTypeC');
-    //     assert.ok((resolvedObject instanceof FakeTypeC) == true, 'The resolved type is not: FakeTypeC');
-    //     assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) == true, 'The resolved A dependency type is not: FakeTypeA'); 
-    //     assert.ok((resolvedObject.fackeTypeBIntance instanceof FakeTypeB) == true, 'The resolved B dependency type is not: FakeTypeB');                   
-    // });
+        assert.equal(3, resolvedObjects.length, 'The resolved objects quantity must be 3.');
+
+        resolvedObjects.forEach(function(resolvedObject:any) { if (!resolvedObject.hasOwnProperty('fake')) throw new Error('Not all resolved objects are correrct.')});             
+    });
+
+    it('should resolve a null with fakeTypeUnexisting alias when is using the Optional sufix.', async function() {        
+        let resolvedObject:any = await kernel.resolve('fakeTypeUnexistingOptional');
+        
+        assert.equal(null, resolvedObject, "The resolved object is not registered, it must be null.")
+    });
+
+    it('should resolve a null with fakeTypeUnexisting alias when is using the OptionalList sufix.', async function() {        
+        let resolvedObjects:any[] = await kernel.resolve('fakeTypeUnexistingOptionalList');
+        
+        assert.equal(null, resolvedObjects, "The resolved object is not registered, it must be null.")
+    });
 });
