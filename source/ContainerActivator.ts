@@ -54,7 +54,7 @@ export default class ContainerActivator implements IContainerActivator {
 
         if (this._activationStack.indexOf(alias) >= 0) {
             this._activationStack.push(alias);
-            throw new Errors.CyclicDependencyError('An cyclic dependency has been found.', this._activationStack);
+            throw new Errors.CyclicDependencyError('An cyclic dependency has been found for arguments in the resolution of an object.', this._activationStack);
         }
 
         this._activationStack.push(alias);

@@ -34,7 +34,7 @@ describe('with containeraized resolution', function() {
 
         let containerB:IContainer = await kernel.getContainer(containerBAlias);
 
-        await containerB.setSupportContainersAlias(['default']);   
+        await containerB.setSupportContainersAliases(['default']);   
 
         await containerB.registerDependencyMetadata('fakeType', ({
             servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
@@ -50,7 +50,7 @@ describe('with containeraized resolution', function() {
         
         let containerC:IContainer = await kernel.getContainer(containerCAlias);
 
-        await containerC.setSupportContainersAlias([containerBAlias]);       
+        await containerC.setSupportContainersAliases([containerBAlias]);       
 
         await containerC.registerDependencyMetadata('fakeType', ({
             servingStrategy: jemsdi.ServicingStrategy.INSTANCE,

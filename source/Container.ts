@@ -18,16 +18,18 @@ export default class Container implements IContainer {
     private _containerContent:{[dependencyAlias:string]:any}
     private _supportContainerAliases:string[];
     private _kernel:IKernel;
+    private _name:string;
 
-    constructor(kernel:IKernel) {
+    constructor(kernel:IKernel, name:string) {
 
         if (!kernel)
             throw new Errors.InvalidDataError('To initialize a container, a kernel must be provided.');
 
         this._kernel = kernel;
+        this._name = name;
         this._aliasDependenciesMetadataMap = {};
     }
-
+    
     private validateAliasArgument(alias:string):void {
         if (!alias)
             throw new Errors.InvalidDataError('An alias must be provided to perform this operation.');
@@ -38,6 +40,10 @@ export default class Container implements IContainer {
             throw new Errors.InvalidDataError('An identifier must be provided to perform this operation.');
     }
 
+    /**
+     * Get the name of the container;
+     */
+    public get name():string { return this._name; };
 
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.
@@ -158,7 +164,7 @@ export default class Container implements IContainer {
 
         this.validateAliasArgument(alias);
 
-        let resolutionConfiguration:ResolutionConfiguration = this._kernel.configuration.aliasSufixResolutionConfigurationMap[''];
+        let resolutionConfiguration:ResolutionConfiguration = this._kernel.configuration.aliasSufixResolutionConfigurationMap['default'];
         let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
         let activatedObjects:any[] = [];
 
@@ -235,7 +241,7 @@ export default class Container implements IContainer {
         if (this._supportContainerAliases) {
             for(let supportAliasIndex = 0; supportAliasIndex < this._supportContainerAliases.length; supportAliasIndex) {
                 try {
-                    let supportAlias:string = this._supportContainerAliases[supportAliasIndex] == 'default' ? '' : this._supportContainerAliases[supportAliasIndex];
+                    let supportAlias:string = this._supportContainerAliases[supportAliasIndex];
 
                     return await (await this._kernel.getContainer(supportAlias))
                                                     .resolve(alias, containerActivator);
@@ -274,19 +280,48 @@ export default class Container implements IContainer {
      * Set a list of container alias that will support the container resolutions.
      * @param aliases Represents the list of container alias that support the container.
      */
-    public async setSupportContainersAlias(aliases:string[]):Promise<void> {
+    public async setSupportContainersAliases(aliases:string[]):Promise<void> {
         if (!aliases || (aliases && !aliases.length)) {
             throw new Errors.InvalidDataError('At least one coniner alias must be provided.')
         }
 
         for(let aliasIndex:number = 0; aliasIndex < aliases.length; aliasIndex++) {   
-            let alias:string = aliases[aliasIndex] == 'default' ? '' : aliases[aliasIndex];       
+            let alias:string = aliases[aliasIndex];       
             
             if (!(await this._kernel.hasContainer(alias)))
-                throw new Errors.InvalidDataError('The given support container alias [' + alias + '], is not in kernel.');
+                throw new Errors.InvalidDataError(`The given support container alias [${alias}], is not in kernel.`);
         }        
 
+        await this.validateCiclycDependency([this.name], aliases);
+
         this._supportContainerAliases = aliases;
+    }
+
+    private async validateCiclycDependency(stack:string[], supports:string[]):Promise<void> {
+
+        if (!supports)
+            return;
+
+        for(let supportAliasIndex = 0; supportAliasIndex < supports.length; supportAliasIndex++) {
+            for(let stackAliasIndex = 0; stackAliasIndex < supports.length; stackAliasIndex++) {
+                
+                stack.push(supports[supportAliasIndex]);          
+
+                if (supports[supportAliasIndex] == stack[stackAliasIndex])
+                    throw new Errors.CyclicDependencyError('An cyclic dependency has been found for containers in the addition of support.', stack);  
+
+                await this.validateCiclycDependency(stack, await (await this._kernel.getContainer(supports[supportAliasIndex])).getSupportContainersAliases());
+
+                stack.splice(stack.length - 1, 1);
+            }
+        }
+    }
+
+    /**
+     * Get the list of container alias that are supporting the container resolutions.
+     */
+    public async getSupportContainersAliases():Promise<string[]> {
+        return this._supportContainerAliases;
     }
 
     /**
