@@ -14,16 +14,16 @@ import KernelConfiguration from "./KernelConfiguration";
  */
 export default class Kernel implements IKernel {    
 
-    private _defaultContainerAlias:string = '';
+    private _defaultContainerAlias:string = 'default';
     private _containers:{[containerAlias: string]:IContainer} = {};
     private _currentContainer:IContainer;
     private _kernelConfiguration:KernelConfiguration;
 
     constructor() {
 
-        let defaultContainer = new Container(this);
+        let defaultContainer = new Container(this, this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
-        this._containers[this._defaultContainerAlias] = defaultContainer;
+        this._containers[defaultContainer.name] = defaultContainer;
         this._kernelConfiguration = new KernelConfiguration();
     }
 
@@ -100,7 +100,7 @@ export default class Kernel implements IKernel {
      */
     public async createContainer(alias:string):Promise<void> {        
         if (!(await this.hasContainer(alias))) {
-            this._containers[alias] =  new Container(this);
+            this._containers[alias] =  new Container(this, alias);
         }
         else
             throw new Errors.InvalidDataError(`The given container alias [${alias}] is already registered`);

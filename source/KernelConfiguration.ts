@@ -17,7 +17,7 @@ export default class KernelConfiguration {
 
     private loadDefaultFlags():void {
         this.aliasSufixResolutionConfigurationMap = {};
-        this.aliasSufixResolutionConfigurationMap[''] = {
+        this.aliasSufixResolutionConfigurationMap['default'] = {
             quanty: 1,
             optional: false,
             dependencyFilter: undefined

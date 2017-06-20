@@ -1,9 +1,9 @@
 export default class CyclicDependencyError extends Error {
-    constructor(message:string, resolutionStak:string[]) {
+    constructor(message:string, cyclicStack:string[]) {
         super(message);
         this.name = "CyclicDependencyError"
-        this.resolutionStack = resolutionStak;
+        this.cyclicStack = cyclicStack;
     }
 
-    public resolutionStack:string[];
+    public cyclicStack:string[];
 }

@@ -1,7 +1,5 @@
 ROAD MAP
 
-- Return arrays when the alias is gramatically pluralized.
-- Catch the cicly dependency on support containers.
 - Work the fluent syntax for all. (segregate the fluent syntax as an other implementation.)
 - Create a documentation.
 - Create a CI and CD.

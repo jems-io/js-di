@@ -7,6 +7,8 @@ import { IContainerActivator } from "./IContainerActivator";
 
 export interface IContainer {
 
+     name:string;
+
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.
      * @param alias Represents the alias.
@@ -60,7 +62,12 @@ export interface IContainer {
      * Set a list of container alias that will support the container resolutions.
      * @param aliases Represents the list of container alias that support the container.
      */
-    setSupportContainersAlias(aliases:string[]):Promise<void>;
+    setSupportContainersAliases(aliases:string[]):Promise<void>;
+
+    /**
+     * Get the list of container alias that are supporting the container resolutions.
+     */
+    getSupportContainersAliases():Promise<string[]>;
 
     /**
      * Clean the list of support container alias.

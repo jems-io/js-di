@@ -12,6 +12,11 @@ describe('must throw an the error', function() {
     let kernel:jemsdi.Kernel = new jemsdi.Kernel();
 
     before(async function() {
+
+        await kernel.createContainer('ContainerA');
+        await kernel.createContainer('ContainerB');
+        await kernel.createContainer('ContainerC');
+
         let container:IContainer = await kernel.getDefaultContainer();
         
         await container.registerDependencyMetadata( 'fakeTypeDependant1',({
@@ -103,6 +108,44 @@ describe('must throw an the error', function() {
             assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.');
         } catch (error) {
             assert.equal(error.name, 'ResolutionConfigurationError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError');                 
+        }          
+    });
+
+    it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy with the containers support hierarchy.', async function() {
+        try {
+
+            let container:IContainer = await kernel.getDefaultContainer();
+            await container.setSupportContainersAliases(['ContainerA']);
+
+            container = await kernel.getContainer('ContainerA');
+            await container.setSupportContainersAliases(['ContainerB']); 
+
+            container = await kernel.getContainer('ContainerB');
+            await container.setSupportContainersAliases(['default']); 
+
+            assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.');
+        } catch (error) {
+
+            assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError:\n\n' + error.message);                 
+        }          
+    });
+
+     it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy with the containers support hierarchy. [Multiple supports]', async function() {
+        try {            
+
+            let container:IContainer = await kernel.getDefaultContainer();
+            await container.setSupportContainersAliases(['ContainerA']);
+
+            container = await kernel.getContainer('ContainerA');
+            await container.setSupportContainersAliases(['ContainerB', 'ContainerC']); 
+
+            container = await kernel.getContainer('ContainerC');
+            await container.setSupportContainersAliases(['default']); 
+
+            assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.');
+        } catch (error) {
+
+            assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError:\n\n' + error.message);                 
         }          
     });
 

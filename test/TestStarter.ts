@@ -18,7 +18,7 @@ describe('The kernel,', function() {
             require('./TestContention');  
             
             // Test the alias sufixing configuration
-            require('./TestIAliasSufixingConfiguration');            
+            require('./TestAliasSufixingConfiguration');            
         });
 
         describe('if something is bad,', function() {
