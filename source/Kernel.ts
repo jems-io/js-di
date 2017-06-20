@@ -38,10 +38,18 @@ export default class Kernel implements IKernel {
      * Load thegiven modules into the kernel.
      * @param modules Represents the modules that will be loaded in the kernel.
      */
-    public async loadModules(modules:IModule[]) {        
+    public loadModules(modules:IModule[]):void {        
         modules.forEach(async function(module:IModule) {
             await module.initialize(this);
         });        
+    }   
+
+     /**
+     * Load the given modules into the kernel asynchronous.
+     * @param modules Represents the modules that will be loaded in the kernel.
+     */
+    public async loadModulesAsync(modules:IModule[]):Promise<void> {        
+        this.loadModules(modules);      
     }     
 
     /**
@@ -49,7 +57,7 @@ export default class Kernel implements IKernel {
      * @param alias Represents the alias to look for.
      * @returns A fluent bind.
      */
-    public async bind(alias:string):Promise<IAliasBindFluentSyntax> {
+    public bind(alias:string):IAliasBindFluentSyntax {
         //TODO: Implement this man.
         throw new Error('Not Implemented');
     }
@@ -58,7 +66,7 @@ export default class Kernel implements IKernel {
      * Unbind all dependencies metadata with the given alias from the container resolution stack.
      * @param alias Represents the alias to look for.
      */
-    public async unbindWithAlias(alias:string):Promise<void> {
+    public unbindWithAlias(alias:string):void {
         //TODO: Implement this man.
         throw new Error('Not Implemented');
     }
@@ -67,7 +75,7 @@ export default class Kernel implements IKernel {
      * Unbind the dependency metadata with the given identifier from the container resolution stack.
      * @param identifier Represents the identifier to look for.
      */
-    public async unbindWithIdentifier(identifier:string):Promise<void> {
+    public unbindWithIdentifier(identifier:string):void {
         //TODO: Implement this man.
         throw new Error('Not Implemented');
     }
@@ -77,29 +85,32 @@ export default class Kernel implements IKernel {
      * @param alias Represents the alias to look for.
      * @returns True if the kernel can resolve the given alias.
      */
-    public async canResolve(alias:string):Promise<boolean> {
-        return await this._currentContainer.canResolve(alias);
+    public canResolve(alias:string):boolean {
+        return this._currentContainer.canResolve(alias);
     }
     
     /**
-     * Return an resolved instance of that is registered with the given alias in the container resolution stack.
+     * Return an resolved instance of that is registered with the given alias.
      * @param alias Represents the alias to look for.
-     * @param containerActivator Represents the activator that will be use for the container. [Optional]
      */
-    public async resolve(alias:string, containerActivator:ContainerActivator = undefined):Promise<any> {
-        
-        if (!containerActivator)
-            containerActivator = new ContainerActivator(this._currentContainer);
+    public resolve(alias:string):any {        
+        return this._currentContainer.resolve(alias, new ContainerActivator(this._currentContainer));  
+    }
 
-        return await this._currentContainer.resolve(alias, containerActivator);  
+    /**
+     * Return an resolved instance of that is registered with the given alias asynchronous.
+     * @param alias Represents the alias to look for.
+     */
+    public async resolveAsync(alias:string):Promise<any> {
+        return this.resolve(alias);
     }
 
     /**
      * Creates a container with the given alias.
      * @param alias Represents the alias of the container.
      */
-    public async createContainer(alias:string):Promise<void> {        
-        if (!(await this.hasContainer(alias))) {
+    public createContainer(alias:string):void {        
+        if (!(this.hasContainer(alias))) {
             this._containers[alias] =  new Container(this, alias);
         }
         else
@@ -110,8 +121,8 @@ export default class Kernel implements IKernel {
      * Removes the container with the given alias.
      * @param alias Represents the alias of the container.
      */
-    public async removeContainer(alias:string):Promise<void> {
-        if (await this.hasContainer(alias)) {
+    public removeContainer(alias:string):void {
+        if (this.hasContainer(alias)) {
             delete this._containers[alias];
         }
         else
@@ -123,7 +134,7 @@ export default class Kernel implements IKernel {
      * @param alias Represents the alias of the container.
      * @returns True if the kernel has the container.
      */
-    public async hasContainer(alias:string):Promise<boolean> {
+    public hasContainer(alias:string):boolean {
         return !(!this._containers[alias]);
     }
 
@@ -131,8 +142,8 @@ export default class Kernel implements IKernel {
      * Use the container with the given alias as a serving container for the kernel.
      * @param alias Represents the alias of the container.
      */
-    public async useContainer(alias:string):Promise<void> {
-        if (await this.hasContainer(alias)) {
+    public useContainer(alias:string):void {
+        if (this.hasContainer(alias)) {
             this._currentContainer = this._containers[alias];
         }
         else
@@ -142,7 +153,7 @@ export default class Kernel implements IKernel {
     /**
      * Use the default container as a serving container for the kernel.
      */
-    public async useDefaultContainer():Promise<void> {
+    public useDefaultContainer():void {
         this._currentContainer = this._containers[this._defaultContainerAlias];
     }
 
@@ -151,8 +162,8 @@ export default class Kernel implements IKernel {
      * @param alias Represents the alias to look for.
      * @returns A container.
      */
-    public async getContainer(alias:string):Promise<IContainer> {
-        if (await this.hasContainer(alias)) {
+    public getContainer(alias:string):IContainer {
+        if (this.hasContainer(alias)) {
             return this._containers[alias];
         }
         else
@@ -163,7 +174,7 @@ export default class Kernel implements IKernel {
      * Return the current container.
      * @returns A container.
      */
-    public async getCurrentContainer():Promise<IContainer> {
+    public getCurrentContainer():IContainer {
         if (this._currentContainer)
             return this._currentContainer;
         else
@@ -174,19 +185,26 @@ export default class Kernel implements IKernel {
      * Return the deafult container.
      * @returns A container.
      */
-    public async getDefaultContainer():Promise<IContainer> {
+    public getDefaultContainer():IContainer {
         return this._containers[this._defaultContainerAlias];
     }
 
     /**
      * Dispose and release all the objects and containers in the kernel.
      */    
-    public async dispose() {
+    public dispose():void {
         for (var containerAlias in this._containers){
             if (this._containers.hasOwnProperty(containerAlias)) {
                 this._containers[containerAlias].dispose();
                 delete this._containers[containerAlias];
             }
         }        
+    }
+
+     /**
+     * Dispose and release all the objects and containers in the kernel asynchronous.
+     */    
+    public async disposeAsync():Promise<void> {
+        this.dispose();      
     }
 }

@@ -51,7 +51,7 @@ export default class Container implements IContainer {
      * @param dependencyMetadata Represents the dependency metadata.
      * @returns Returns the dependency metadata generated identifier.
      */
-    public async registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):Promise<string> {
+    public registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):string {
         
         this.validateAliasArgument(alias);        
         
@@ -62,9 +62,7 @@ export default class Container implements IContainer {
         
         this._aliasDependenciesMetadataMap[alias][dependencyIdentifier] = dependencyMetadata;
         
-        return new Promise<string>(function(resolve) {
-            resolve(dependencyIdentifier);
-        });
+        return dependencyIdentifier;
     }
 
      /**
@@ -72,7 +70,7 @@ export default class Container implements IContainer {
      * @param alias Represents the alias to look for.
      * @returns Returns an array of dependencies metadata with the given alias.
      */
-    public async getDependenciesMetadataWithAlias(alias:string):Promise<DependencyMetadata[]> {     
+    public getDependenciesMetadataWithAlias(alias:string):DependencyMetadata[] {     
 
         this.validateAliasArgument(alias);
 
@@ -91,7 +89,7 @@ export default class Container implements IContainer {
      * @param identifier Represents the identifier to look for.
      * @returns Return dependency metadata with the given identifier.    
      */
-    public async getDependencyMetadataWithIdentifier(alias:string, identifier:string):Promise<DependencyMetadata> {
+    public getDependencyMetadataWithIdentifier(alias:string, identifier:string):DependencyMetadata {
 
         this.validateAliasArgument(alias);
         this.validateIdentifierArgument(identifier);
@@ -114,7 +112,7 @@ export default class Container implements IContainer {
      * Unregister all registered dependencies metadata with the given alias.
      * @param alias Represents the alias to to look for.
      */
-    public async unregisterDependenciesMetadataWithAlias(alias:string):Promise<void> {
+    public unregisterDependenciesMetadataWithAlias(alias:string):void {
 
         this.validateAliasArgument(alias);
 
@@ -129,7 +127,7 @@ export default class Container implements IContainer {
      * @param alias Represents the alias to look for.
      * @param identifier Represents the identifier to look for.
      */
-    public async unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):Promise<void> {
+    public unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):void {
 
         this.validateAliasArgument(alias);
         this.validateIdentifierArgument(identifier);
@@ -148,11 +146,11 @@ export default class Container implements IContainer {
      * Returns a boolean value specifying if the container can or not resolve an alias.
      * @param alias Represents the alias to resolve.
      */
-    public async canResolve(alias:string):Promise<boolean> {
+    public canResolve(alias:string):boolean {
 
         this.validateAliasArgument(alias);       
 
-        return !(!(await this.getDependenciesMetadataWithAlias(alias)).length);
+        return !(!(this.getDependenciesMetadataWithAlias(alias)).length);
     }
 
     /**
@@ -160,7 +158,7 @@ export default class Container implements IContainer {
      * @param alias Represents the alias to resolve.
      * @param containerActivator Represents the container activator.
      */
-    public async resolve(alias:string, containerActivator:IContainerActivator):Promise<any> {
+    public resolve(alias:string, containerActivator:IContainerActivator):any {
 
         this.validateAliasArgument(alias);
 
@@ -169,7 +167,7 @@ export default class Container implements IContainer {
         let activatedObjects:any[] = [];
 
         if (!identifierMetadataMapCollection.length) {
-            let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = await this.getResolutionConfigurationForAlias(alias);
+            let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = this.getResolutionConfigurationForAlias(alias);
 
             if (resolutionConfigurationLookUpResult && resolutionConfigurationLookUpResult.outAlias != alias) {
 
@@ -183,7 +181,7 @@ export default class Container implements IContainer {
             if (resolutionConfiguration.optional)
                 return null;
             else
-                return await this.resolveWithSupport(alias, containerActivator);      
+                return this.resolveWithSupport(alias, containerActivator);      
         else {   
             if (resolutionConfiguration.quanty > 0 && resolutionConfiguration.quanty != identifierMetadataMapCollection.length)
                 throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
@@ -198,10 +196,10 @@ export default class Container implements IContainer {
                         activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
                         break;
                     case ServicingStrategy.BUILDER_FUNCTION:
-                        activatedObject = await this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                        activatedObject = this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
                         break;
                     case ServicingStrategy.INSTANCE:
-                        activatedObject = await this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                        activatedObject = this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
                         break;
                     default:
                         throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
@@ -217,7 +215,16 @@ export default class Container implements IContainer {
         }   
     }
 
-    private async getResolutionConfigurationForAlias(alias:string):Promise<ResolutionConfigurationLookUpResult> {
+    /**
+     * Returns a resolved object instance asynchronous.
+     * @param alias Represents the alias to resolve.
+     * @param containerActivator Represents the container activator.
+     */
+    public resolveAsync(alias:string, containerActivator:IContainerActivator):Promise<any> {
+        return this.resolve(alias, containerActivator);
+    }
+
+    private getResolutionConfigurationForAlias(alias:string):ResolutionConfigurationLookUpResult {
        
         let posibleSufixeMatch:string = '';
 
@@ -236,14 +243,14 @@ export default class Container implements IContainer {
         };
     }
 
-    private async resolveWithSupport(alias:string, containerActivator:IContainerActivator):Promise<any> {
+    private resolveWithSupport(alias:string, containerActivator:IContainerActivator):any {
         
         if (this._supportContainerAliases) {
             for(let supportAliasIndex = 0; supportAliasIndex < this._supportContainerAliases.length; supportAliasIndex) {
                 try {
                     let supportAlias:string = this._supportContainerAliases[supportAliasIndex];
 
-                    return await (await this._kernel.getContainer(supportAlias))
+                    return (this._kernel.getContainer(supportAlias))
                                                     .resolve(alias, containerActivator);
                 } catch (error) {
                     if (error instanceof Errors.UnregisteredAliasError)
@@ -280,7 +287,7 @@ export default class Container implements IContainer {
      * Set a list of container alias that will support the container resolutions.
      * @param aliases Represents the list of container alias that support the container.
      */
-    public async setSupportContainersAliases(aliases:string[]):Promise<void> {
+    public setSupportContainersAliases(aliases:string[]):void {
         if (!aliases || (aliases && !aliases.length)) {
             throw new Errors.InvalidDataError('At least one coniner alias must be provided.')
         }
@@ -288,16 +295,16 @@ export default class Container implements IContainer {
         for(let aliasIndex:number = 0; aliasIndex < aliases.length; aliasIndex++) {   
             let alias:string = aliases[aliasIndex];       
             
-            if (!(await this._kernel.hasContainer(alias)))
+            if (!(this._kernel.hasContainer(alias)))
                 throw new Errors.InvalidDataError(`The given support container alias [${alias}], is not in kernel.`);
         }        
 
-        await this.validateCiclycDependency([this.name], aliases);
+        this.validateCiclycDependency([this.name], aliases);
 
         this._supportContainerAliases = aliases;
     }
 
-    private async validateCiclycDependency(stack:string[], supports:string[]):Promise<void> {
+    private validateCiclycDependency(stack:string[], supports:string[]):void {
 
         if (!supports)
             return;
@@ -310,7 +317,7 @@ export default class Container implements IContainer {
                 if (supports[supportAliasIndex] == stack[stackAliasIndex])
                     throw new Errors.CyclicDependencyError('An cyclic dependency has been found for containers in the addition of support.', stack);  
 
-                await this.validateCiclycDependency(stack, await (await this._kernel.getContainer(supports[supportAliasIndex])).getSupportContainersAliases());
+                this.validateCiclycDependency(stack, (this._kernel.getContainer(supports[supportAliasIndex])).getSupportContainersAliases());
 
                 stack.splice(stack.length - 1, 1);
             }
@@ -320,21 +327,21 @@ export default class Container implements IContainer {
     /**
      * Get the list of container alias that are supporting the container resolutions.
      */
-    public async getSupportContainersAliases():Promise<string[]> {
+    public getSupportContainersAliases():string[] {
         return this._supportContainerAliases;
     }
 
     /**
      * Clean the list of support container alias.
      */
-    public async cleanSupportContainersAlias():Promise<void> {
+    public cleanSupportContainersAlias():void {
         this._supportContainerAliases = undefined;
     }
 
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
      */
-    public async dispose():Promise<void> {
+    public dispose():void {
         for (var dependencyAlias in this._aliasDependenciesMetadataMap){
             if (this._aliasDependenciesMetadataMap.hasOwnProperty(dependencyAlias)) {
                 delete this._aliasDependenciesMetadataMap[dependencyAlias];
@@ -342,25 +349,32 @@ export default class Container implements IContainer {
         }   
     }
 
+    /**
+     * Dispose and release all instances in the container allowin the GC destroy it if no references are in use asynchronous.
+     */
+    public async disposeAsync():Promise<void> {
+        this.dispose();
+    }
+
     private getConstantActivation(metadata:DependencyMetadata):any {        
         return metadata.activationReference;
     }
 
-    private async getBuilderFunctionActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {
-        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
+    private getBuilderFunctionActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {
+        return this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
     }
 
-    private async getInstanceActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):Promise<any> {        
-        return await this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
+    private getInstanceActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {        
+        return this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
     }
 
-    private async getActivatedObject(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):Promise<any> {
+    private getActivatedObject(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):any {
 
         if (metadata.activateAsSingelton && this.existsInContent(identifier))
             return this._containerContent[identifier];
         
-        let activatedObject:any = useInvokation ? await containerActivator.invoke(alias, metadata) : 
-                                                  await containerActivator.activate(alias, metadata); 
+        let activatedObject:any = useInvokation ? containerActivator.invoke(alias, metadata) : 
+                                                  containerActivator.activate(alias, metadata); 
         
         if (metadata.activateAsSingelton && activatedObject)
             this._containerContent[identifier] = activatedObject;
