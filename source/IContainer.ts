@@ -89,5 +89,5 @@ export interface IContainer {
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use asynchronous.
      */
-    disposeAsync():void;
+    disposeAsync():Promise<void>;
 }

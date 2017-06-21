@@ -7,6 +7,5 @@ export interface IKernelReference {
     /**
      * Get the kernel.
      */
-    kernel():IKernel
-    ;
+    kernel():IKernel;
 }

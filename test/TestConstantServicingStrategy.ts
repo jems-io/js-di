@@ -9,10 +9,10 @@ describe('with cosntant servicing strategy resolution', function() {
     let kernel:jemsdi.Kernel = new jemsdi.Kernel();
     let constantInstance = {};
 
-    before(async function() {
-        let container:IContainer = await kernel.getDefaultContainer();
+    before(function() {
+        let container:IContainer = kernel.getDefaultContainer();
 
-        await container.registerDependencyMetadata('fakeConstantType', ({
+        container.registerDependencyMetadata('fakeConstantType', ({
             servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
             activationReference: constantInstance,
             activateAsSingelton: false
@@ -20,8 +20,8 @@ describe('with cosntant servicing strategy resolution', function() {
         
     });
 
-    it('should resolve the registered object', async function() {
-        let resolvedObject:any = await kernel.resolve('fakeConstantType');
+    it('should resolve the registered object', function() {
+        let resolvedObject:any = kernel.resolve('fakeConstantType');
         assert.ok(resolvedObject === constantInstance, 'The resolved object is not the registed one.');                 
     });
 });

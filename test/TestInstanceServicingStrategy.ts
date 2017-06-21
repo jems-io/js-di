@@ -11,41 +11,41 @@ describe('with instance servicing strategy resolution', function() {
 
     let kernel:jemsdi.Kernel = new jemsdi.Kernel();
 
-     before(async function() {
-        let container:IContainer = await kernel.getDefaultContainer();
+     before(function() {
+        let container:IContainer = kernel.getDefaultContainer();
             
-        await container.registerDependencyMetadata('fakeTypeA', ({
+        container.registerDependencyMetadata('fakeTypeA', ({
             servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeA,
             activateAsSingelton: false
         }));
 
-        await container.registerDependencyMetadata('fakeTypeB', ({
+        container.registerDependencyMetadata('fakeTypeB', ({
             servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeB,
             activateAsSingelton: false
         }));
 
-        await container.registerDependencyMetadata('fakeTypeC', ({
+        container.registerDependencyMetadata('fakeTypeC', ({
             servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeC,
             activateAsSingelton: false
         }));
      });
 
-    it('should resolve an instance of FakeTypeA with fakeTypeA alias', async function() {
-        let resolvedObject:FakeTypeA = await kernel.resolve('fakeTypeA');
+    it('should resolve an instance of FakeTypeA with fakeTypeA alias', function() {
+        let resolvedObject:FakeTypeA = kernel.resolve('fakeTypeA');
         assert.ok((resolvedObject instanceof FakeTypeA) == true, 'The resolved type is not: FakeTypeA');                 
     });
 
-    it('should resolve an instance of FakeTypeB with fakeTypeB alias, resolving A as a dependency of B ', async function() {
-        let resolvedObject:FakeTypeB = await kernel.resolve('fakeTypeB');
+    it('should resolve an instance of FakeTypeB with fakeTypeB alias, resolving A as a dependency of B ', function() {
+        let resolvedObject:FakeTypeB = kernel.resolve('fakeTypeB');
         assert.ok((resolvedObject instanceof FakeTypeB) == true, 'The resolved type is not: FakeTypeB');                 
         assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) == true, 'The resolved A dependency type is not: FakeTypeA');                
     });
 
-    it('should resolve an instance of FakeTypeC with fakeTypeC alias, resolving A and B as a dependency of C', async function() {
-        let resolvedObject:FakeTypeC = await kernel.resolve('fakeTypeC');
+    it('should resolve an instance of FakeTypeC with fakeTypeC alias, resolving A and B as a dependency of C', function() {
+        let resolvedObject:FakeTypeC = kernel.resolve('fakeTypeC');
         assert.ok((resolvedObject instanceof FakeTypeC) == true, 'The resolved type is not: FakeTypeC');
         assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) == true, 'The resolved A dependency type is not: FakeTypeA'); 
         assert.ok((resolvedObject.fackeTypeBIntance instanceof FakeTypeB) == true, 'The resolved B dependency type is not: FakeTypeB');                   

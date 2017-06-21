@@ -21,11 +21,11 @@ export default class ContainerActivator implements IContainerActivator {
      * Return an activated instance of the given function reference.
      * @param dependencyMetadata Represenst the metadata that contains the function reference to activate.
      */
-    public async activate(alias:string, dependencyMetadata:DependencyMetadata):Promise<any> {
+    public activate(alias:string, dependencyMetadata:DependencyMetadata):any {
 
         this.addAliasToStack(alias);     
 
-        var argumets = await this.getFunctionArguments(dependencyMetadata.activationReference);
+        var argumets = this.getFunctionArguments(dependencyMetadata.activationReference);
 
         let acivatedObject:any =new (Function.prototype.bind.apply(dependencyMetadata.activationReference, argumets));
 
@@ -39,11 +39,11 @@ export default class ContainerActivator implements IContainerActivator {
      * Return the result of the invokation of the given function reference.
      * @param dependencyMetadata Represenst the metadata that contains the function reference to invoke.
      */
-    public async invoke(alias:string, dependencyMetadata:DependencyMetadata):Promise<any> {
+    public invoke(alias:string, dependencyMetadata:DependencyMetadata):any {
         
         this.addAliasToStack(alias);
         
-        let acivatedObject:any = dependencyMetadata.activationReference.apply(await this.getFunctionArguments(dependencyMetadata.activationReference));
+        let acivatedObject:any = dependencyMetadata.activationReference.apply(this.getFunctionArguments(dependencyMetadata.activationReference));
 
         this.removeAliasFromStack(alias);
 
@@ -67,14 +67,14 @@ export default class ContainerActivator implements IContainerActivator {
         this._activationStack.splice(aliasIndex, 1);
     }
 
-    private async getFunctionArguments(functionReference:any):Promise<any[]> {
+    private getFunctionArguments(functionReference:any):any[] {
 
         let functionArguments:any[] = [null];
         let functionArgumentsNames:string[] = this.getFunctionArgumentsNames(functionReference);
         
         for(let argumentIndex = 0; argumentIndex < functionArgumentsNames.length; argumentIndex++) {
 
-            let argumentInstance:any = await this._container.resolve(functionArgumentsNames[argumentIndex], this);  
+            let argumentInstance:any = this._container.resolve(functionArgumentsNames[argumentIndex], this);  
             functionArguments.push(argumentInstance);
         }
 

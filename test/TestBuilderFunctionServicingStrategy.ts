@@ -9,19 +9,19 @@ describe('with builder function servicing strategy resolution', function() {
     let kernel:jemsdi.Kernel = new jemsdi.Kernel();
     let constantInstance = {};
 
-    before(async function () {
+    before(function () {
 
-        let container:IContainer = await kernel.getDefaultContainer();
+        let container:IContainer = kernel.getDefaultContainer();
         
-        await container.registerDependencyMetadata('fakeFunctionBuilder', ({
+        container.registerDependencyMetadata('fakeFunctionBuilder', ({
             servingStrategy: jemsdi.ServicingStrategy.BUILDER_FUNCTION,
             activationReference: function() { return constantInstance; },
             activateAsSingelton: false
         }));            
     });
 
-    it('should resolve the function value', async function () {
-        let resolvedObject:any = await kernel.resolve('fakeFunctionBuilder');
+    it('should resolve the function value', function () {
+        let resolvedObject:any = kernel.resolve('fakeFunctionBuilder');
         assert.ok(resolvedObject === constantInstance, 'The resolved object is not the function value.');        
     });
 });
