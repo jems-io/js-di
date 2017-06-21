@@ -39,8 +39,8 @@ export default class Kernel implements IKernel {
      * @param modules Represents the modules that will be loaded in the kernel.
      */
     public loadModules(modules:IModule[]):void {        
-        modules.forEach(async function(module:IModule) {
-            await module.initialize(this);
+        modules.forEach(function(module:IModule) {
+            module.initialize(this);
         });        
     }   
 
