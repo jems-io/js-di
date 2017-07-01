@@ -8,6 +8,7 @@ import Container from "./Container";
 import ContainerActivator from "./ContainerActivator";
 import * as Errors from "./Errors/Index";
 import KernelConfiguration from "./KernelConfiguration";
+import AliasBindFluentSyntax from "./AliasBindFluentSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and serving strategies
@@ -58,8 +59,7 @@ export default class Kernel implements IKernel {
      * @returns A fluent bind.
      */
     public bind(alias:string):IAliasBindFluentSyntax {
-        //TODO: Implement this man.
-        throw new Error('Not Implemented');
+        return new AliasBindFluentSyntax(alias, this);
     }
 
     /**
@@ -67,17 +67,16 @@ export default class Kernel implements IKernel {
      * @param alias Represents the alias to look for.
      */
     public unbindWithAlias(alias:string):void {
-        //TODO: Implement this man.
-        throw new Error('Not Implemented');
+        this.getCurrentContainer().unregisterDependenciesMetadataWithAlias(alias);
     }
 
     /**
      * Unbind the dependency metadata with the given identifier from the container resolution stack.
+     * @param alias Represents the alias that contain the identifier to look for.
      * @param identifier Represents the identifier to look for.
      */
-    public unbindWithIdentifier(identifier:string):void {
-        //TODO: Implement this man.
-        throw new Error('Not Implemented');
+    public unbindWithIdentifier(aslias:string, identifier:string):void {
+        this.getCurrentContainer().unregisterDependencyMetadataWithIdentifier(aslias, identifier);
     }
 
     /**
