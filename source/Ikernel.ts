@@ -14,7 +14,7 @@ export interface IKernel {
     /**
      * Returns the configuration of the kernel.
      */
-    configuration:KernelConfiguration;
+    getConfiguration():KernelConfiguration;
 
     /**
      * Load the given modules into the kernel.

@@ -12,7 +12,7 @@ export default class DependencyMetadata {
     /**
      * Get or set the serving strategy.
      */
-    servingStrategy:ServicingStrategy;
+    servicingStrategy:ServicingStrategy;
 
     /**
      * Get or set a boolean value specifyiong if the reference mus be activated as a singelton.

@@ -21,13 +21,13 @@ describe('with containeraized resolution', function() {
         let defaultContainer:IContainer = kernel.getCurrentContainer(); 
 
         defaultContainer.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeA,
             activateAsSingelton: false
         }));
 
         defaultContainer.registerDependencyMetadata('fakeTypeA', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeA,
             activateAsSingelton: false
         }));        
@@ -37,13 +37,13 @@ describe('with containeraized resolution', function() {
         containerB.setSupportContainersAliases(['default']);   
 
         containerB.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeB,
             activateAsSingelton: false
         }));
 
         containerB.registerDependencyMetadata('fakeTypeB', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeB,
             activateAsSingelton: false
         }));
@@ -53,13 +53,13 @@ describe('with containeraized resolution', function() {
         containerC.setSupportContainersAliases([containerBAlias]);       
 
         containerC.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeC,
             activateAsSingelton: false
         }));
 
         containerC.registerDependencyMetadata('fakeTypeC', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeC,
             activateAsSingelton: false
         }));        

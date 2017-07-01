@@ -21,6 +21,8 @@ gulp.task('create-source-definition', ['trasnpile-source'], function () {
                 .pipe(gulp.dest('distribution'));
 });
 
+gulp.task('build', ['create-source-definition']);
+
 gulp.task('trasnpile-test', ['create-source-definition'], function () {
     return gulp.src('Test/**/*')
                 .pipe(tsProject({allowJs: true}))

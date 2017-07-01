@@ -1,6 +1,0 @@
-ROAD MAP
-
-- Work the fluent syntax for all. (segregate the fluent syntax as an other implementation.)
-- Create a documentation.
-- Create a CI and CD.
-- Create a web page for Jems Framework.

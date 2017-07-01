@@ -20,37 +20,37 @@ describe('must throw an the error', function() {
         let container:IContainer = kernel.getDefaultContainer();
         
         container.registerDependencyMetadata( 'fakeTypeDependant1',({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeDependant1,
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeTypeDependant2',({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeDependant2,
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeTypeNotStrategy',({
-            servingStrategy: -1,
+            servicingStrategy: -1,
             activationReference: FakeTypeC,
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata( 'fakeTypeNULL',({
-            servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
+            servicingStrategy: jemsdi.ServicingStrategy.CONSTANT,
             activationReference: null,
             activateAsSingelton: false
         }));
         
         container.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: function() { this.fake = true; },
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: function() { this.fake = true; },
             activateAsSingelton: false
         }));

@@ -23,14 +23,14 @@ export default class Kernel implements IKernel {
 
         let defaultContainer = new Container(this, this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
-        this._containers[defaultContainer.name] = defaultContainer;
+        this._containers[defaultContainer.getName()] = defaultContainer;
         this._kernelConfiguration = new KernelConfiguration();
     }
 
     /**
      * Returns the configuration of the kernel.
      */
-    public get configuration():KernelConfiguration {
+    public getConfiguration():KernelConfiguration {
         return this._kernelConfiguration;
     }
 
@@ -41,7 +41,7 @@ export default class Kernel implements IKernel {
     public loadModules(modules:IModule[]):void {        
         modules.forEach(function(module:IModule) {
             module.initialize(this);
-        });        
+        }.bind(this));        
     }   
 
      /**

@@ -41,9 +41,9 @@ export default class Container implements IContainer {
     }
 
     /**
-     * Get the name of the container;
+     * Returns the name of the container.
      */
-    public get name():string { return this._name; };
+    public getName():string { return this._name; };
 
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.
@@ -162,7 +162,7 @@ export default class Container implements IContainer {
 
         this.validateAliasArgument(alias);
 
-        let resolutionConfiguration:ResolutionConfiguration = this._kernel.configuration.aliasSufixResolutionConfigurationMap['default'];
+        let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];
         let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
         let activatedObjects:any[] = [];
 
@@ -191,7 +191,7 @@ export default class Container implements IContainer {
                 let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
                 let activatedObject:any;
 
-                switch(identifierMetadataMap.metadata.servingStrategy) {
+                switch(identifierMetadataMap.metadata.servicingStrategy) {
                     case ServicingStrategy.CONSTANT:
                         activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
                         break;
@@ -228,8 +228,8 @@ export default class Container implements IContainer {
        
         let posibleSufixeMatch:string = '';
 
-        for(let aliasSufix in this._kernel.configuration.aliasSufixResolutionConfigurationMap) {
-            if (this._kernel.configuration.aliasSufixResolutionConfigurationMap.hasOwnProperty(aliasSufix) &&
+        for(let aliasSufix in this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap) {
+            if (this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap.hasOwnProperty(aliasSufix) &&
                 alias.endsWith(aliasSufix) &&
                 alias.length > posibleSufixeMatch.length) {
 
@@ -239,7 +239,7 @@ export default class Container implements IContainer {
         
         return {
             outAlias: alias.substring(0, alias.length - posibleSufixeMatch.length),
-            configuration: this._kernel.configuration.aliasSufixResolutionConfigurationMap[posibleSufixeMatch]
+            configuration: this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap[posibleSufixeMatch]
         };
     }
 
@@ -299,7 +299,7 @@ export default class Container implements IContainer {
                 throw new Errors.InvalidDataError(`The given support container alias [${alias}], is not in kernel.`);
         }        
 
-        this.validateCiclycDependency([this.name], aliases);
+        this.validateCiclycDependency([this.getName()], aliases);
 
         this._supportContainerAliases = aliases;
     }

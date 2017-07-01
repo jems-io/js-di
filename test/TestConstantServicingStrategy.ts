@@ -13,7 +13,7 @@ describe('with cosntant servicing strategy resolution', function() {
         let container:IContainer = kernel.getDefaultContainer();
 
         container.registerDependencyMetadata('fakeConstantType', ({
-            servingStrategy: jemsdi.ServicingStrategy.CONSTANT,
+            servicingStrategy: jemsdi.ServicingStrategy.CONSTANT,
             activationReference: constantInstance,
             activateAsSingelton: false
         }));

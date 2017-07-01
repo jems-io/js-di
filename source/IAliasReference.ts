@@ -3,7 +3,7 @@
  */
 export interface IAliasReference {
     /**
-     * Get the alias name.
+     * Returns the alias name.
      */
-    alias():string;
+    getAlias():string;
 }

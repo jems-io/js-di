@@ -2,9 +2,6 @@
 
 import * as assert from 'assert'
 import * as jemsdi from "../distribution/Index";
-// import FakeTypeA from './fake_types/FakeTypeA';
-// import FakeTypeB from './fake_types/FakeTypeB';
-// import FakeTypeC from "./fake_types/FakeTypeC";
 import { IContainer } from "../distribution/IContainer";
 
 describe('with an alias that contain sufixing configuration', function() {
@@ -15,19 +12,19 @@ describe('with an alias that contain sufixing configuration', function() {
         let container:IContainer = kernel.getDefaultContainer();
             
         container.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: function() { this.fake = true; },
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: function() { this.fake = true; },
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeType', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: function() { this.fake = true; },
             activateAsSingelton: false
         }));

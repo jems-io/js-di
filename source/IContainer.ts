@@ -7,7 +7,10 @@ import { IContainerActivator } from "./IContainerActivator";
 
 export interface IContainer {
 
-     name:string;
+    /**
+     * Returns the name of the container.
+     */
+     getName():string;
 
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.

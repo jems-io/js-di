@@ -15,19 +15,19 @@ describe('with instance servicing strategy resolution', function() {
         let container:IContainer = kernel.getDefaultContainer();
             
         container.registerDependencyMetadata('fakeTypeA', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeA,
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeTypeB', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeB,
             activateAsSingelton: false
         }));
 
         container.registerDependencyMetadata('fakeTypeC', ({
-            servingStrategy: jemsdi.ServicingStrategy.INSTANCE,
+            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
             activationReference: FakeTypeC,
             activateAsSingelton: false
         }));

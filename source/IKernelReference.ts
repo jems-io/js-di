@@ -5,7 +5,7 @@ import { IKernel } from "./Ikernel";
  */
 export interface IKernelReference {
     /**
-     * Get the kernel.
+     * Returns the kernel.
      */
-    kernel():IKernel;
+    getKernel():IKernel;
 }
