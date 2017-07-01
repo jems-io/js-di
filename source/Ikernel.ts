@@ -42,10 +42,11 @@ export interface IKernel {
     unbindWithAlias(alias:string):void;
 
     /**
-     * Unbind the dependency metadata with the given identifier from the container.
+     * Unbind the dependency metadata with the given identifier from the container resolution stack.
+     * @param alias Represents the alias that contain the identifier to look for.
      * @param identifier Represents the identifier to look for.
      */
-    unbindWithIdentifier(identifier:string):void;
+    unbindWithIdentifier(aslias:string, identifier:string):void;
 
     /**
      * Returns a boolean value specifying if the kernel can resolve given alias with the container.

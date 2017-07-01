@@ -6,6 +6,7 @@ import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./Ikernel";
 import { ServicingStrategy } from "./ServicingStrategy";
 import ContainerFluentSyntax from "./ContainerFluentSyntax";
+import ServingContextFluentSyntax from "./ServingContextFluentSyntax";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
@@ -41,8 +42,9 @@ export default class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      */
     public to(funtionReference:any):IServingContextFluentSyntax {
         
-        this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE);
-        return null;
+        return new ServingContextFluentSyntax(this.getAlias(),
+                                              this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE),
+                                              this.getKernel());
     }
 
     /**

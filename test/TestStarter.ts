@@ -8,6 +8,9 @@ describe('The kernel,', function() {
             // Test the instance servicing strategy
             require('./TestInstanceServicingStrategy');
 
+            // Test the instance servicing strategy fluently
+            require('./TestInstanceServicingStrategyFluently');
+
             // Test the constant servicing strategy
             require('./TestConstantServicingStrategy');
 
@@ -16,6 +19,9 @@ describe('The kernel,', function() {
 
             // Test the contention
             require('./TestContention');  
+
+             // Test the contention fluently
+            require('./TestContentionFluently'); 
             
             // Test the alias sufixing configuration
             require('./TestAliasSufixingConfiguration');            
