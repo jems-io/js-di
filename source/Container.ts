@@ -1,18 +1,15 @@
-import DependencyMetadata from "./DependencyMetadata";
+import { DependencyMetadata } from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
 import { ServicingStrategy } from "./ServicingStrategy";
 import * as Errors from "./Errors/Index";
 import { IKernel } from "./Ikernel";
-import ResolutionConfiguration from "./ResolutionConfiguration";
+import { ResolutionConfiguration } from "./ResolutionConfiguration";
 
 type IdentifierDependencyMetadataMap = {identifier:string, metadata:DependencyMetadata};
 type ResolutionConfigurationLookUpResult = {outAlias:string,configuration:ResolutionConfiguration};
 
-/**
- * Represents a container that contain aliases metadata and is capable of resolve dependencies.
- */
-export default class Container implements IContainer {
+class Container implements IContainer {
 
     private _aliasDependenciesMetadataMap:{[dependencyAlias:string]:{[dependencyIdentifier:string]:DependencyMetadata}};
     private _containerContent:{[dependencyAlias:string]:any}
@@ -20,6 +17,17 @@ export default class Container implements IContainer {
     private _kernel:IKernel;
     private _name:string;
 
+    /**
+     * Instance a new container.
+     * 
+     * @class
+     * @name Container
+     * @classdesc Represents a container that contain aliases metadata and is capable of resolve dependencies.
+     * @implements {module:jemsDI.IContainer}
+     * @memberof module:jemsDI
+     * @param {module:jemsDI.IKernel} kernel Represents the kernel that holds the container.
+     * @param {string} name Reoresents the name of the container.
+     */
     constructor(kernel:IKernel, name:string) {
 
         if (!kernel)
@@ -29,27 +37,26 @@ export default class Container implements IContainer {
         this._name = name;
         this._aliasDependenciesMetadataMap = {};
     }
-    
-    private validateAliasArgument(alias:string):void {
-        if (!alias)
-            throw new Errors.InvalidDataError('An alias must be provided to perform this operation.');
-    }
-
-    private validateIdentifierArgument(identifier:string):void{
-        if (!identifier)
-            throw new Errors.InvalidDataError('An identifier must be provided to perform this operation.');
-    }
 
     /**
      * Returns the name of the container.
+     * 
+     * @instance
+     * @method getName
+     * @memberof module:jemsDI.Container
+     * @returns {string} The name of the container.
      */
     public getName():string { return this._name; };
 
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.
-     * @param alias Represents the alias.
-     * @param dependencyMetadata Represents the dependency metadata.
-     * @returns Returns the dependency metadata generated identifier.
+     * 
+     * @instance
+     * @method registerDependencyMetadata
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias.
+     * @param {module:jemsDI.DependencyMetadata} dependencyMetadata Represents the dependency metadata.
+     * @returns {string} Returns the dependency metadata generated identifier.
      */
     public registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):string {
         
@@ -67,8 +74,12 @@ export default class Container implements IContainer {
 
      /**
      * Returns the registered dependencies metadata with the given alias.
-     * @param alias Represents the alias to look for.
-     * @returns Returns an array of dependencies metadata with the given alias.
+     * 
+     * @instance
+     * @method getDependenciesMetadataWithAlias
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to look for.
+     * @returns {string} Returns an array of dependencies metadata with the given alias.
      */
     public getDependenciesMetadataWithAlias(alias:string):DependencyMetadata[] {     
 
@@ -85,9 +96,13 @@ export default class Container implements IContainer {
 
     /**
      * Returns the registered dependency metadata with the given alias and identifier.
-     * @param alias Represents the alias to look for.
-     * @param identifier Represents the identifier to look for.
-     * @returns Return dependency metadata with the given identifier.    
+     * 
+     * @instance
+     * @method getDependencyMetadataWithIdentifier
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to look for.
+     * @param {string} identifier Represents the identifier to look for.
+     * @returns {string} Return dependency metadata with the given identifier.    
      */
     public getDependencyMetadataWithIdentifier(alias:string, identifier:string):DependencyMetadata {
 
@@ -110,7 +125,11 @@ export default class Container implements IContainer {
 
     /**
      * Unregister all registered dependencies metadata with the given alias.
-     * @param alias Represents the alias to to look for.
+     * 
+     * @instance
+     * @method unregisterDependenciesMetadataWithAlias
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to to look for.
      */
     public unregisterDependenciesMetadataWithAlias(alias:string):void {
 
@@ -124,8 +143,12 @@ export default class Container implements IContainer {
 
     /**
      * Unregister the dependency metadata with the given alias and identifier.
-     * @param alias Represents the alias to look for.
-     * @param identifier Represents the identifier to look for.
+     * 
+     * @instance
+     * @method unregisterDependencyMetadataWithIdentifier
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to look for.
+     * @param {string} identifier Represents the identifier to look for.
      */
     public unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):void {
 
@@ -144,7 +167,11 @@ export default class Container implements IContainer {
 
     /**
      * Returns a boolean value specifying if the container can or not resolve an alias.
-     * @param alias Represents the alias to resolve.
+     * 
+     * @instance
+     * @method canResolve
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to resolve.
      */
     public canResolve(alias:string):boolean {
 
@@ -155,13 +182,19 @@ export default class Container implements IContainer {
 
     /**
      * Returns a resolved object instance.
-     * @param alias Represents the alias to resolve.
-     * @param containerActivator Represents the container activator.
+     * 
+     * @instance
+     * @method resolve
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to resolve.
+     * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
+     * @returns {any} The resolved object.
      */
     public resolve(alias:string, containerActivator:IContainerActivator):any {
 
         this.validateAliasArgument(alias);
 
+        let originalAlias:string = alias;
         let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];
         let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
         let activatedObjects:any[] = [];
@@ -181,9 +214,9 @@ export default class Container implements IContainer {
             if (resolutionConfiguration.optional)
                 return null;
             else
-                return this.resolveWithSupport(alias, containerActivator);      
+                return this.resolveWithSupport(originalAlias, containerActivator);      
         else {   
-            if (resolutionConfiguration.quanty > 0 && resolutionConfiguration.quanty != identifierMetadataMapCollection.length)
+            if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != identifierMetadataMapCollection.length)
                 throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
 
             for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
@@ -211,14 +244,19 @@ export default class Container implements IContainer {
                 activatedObjects.push(activatedObject);
             }
 
-            return  resolutionConfiguration.quanty == 1 ? activatedObjects[0] : activatedObjects; 
+            return  resolutionConfiguration.quantity == 1 ? activatedObjects[0] : activatedObjects; 
         }   
     }
 
     /**
      * Returns a resolved object instance asynchronous.
-     * @param alias Represents the alias to resolve.
-     * @param containerActivator Represents the container activator.
+     * 
+     * @instance
+     * @method resolveAsync
+     * @memberof module:jemsDI.Container
+     * @param {string} alias Represents the alias to resolve.
+     * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
+     * @returns {Promise<any>} A promise that resolve the objects. 
      */
     public resolveAsync(alias:string, containerActivator:IContainerActivator):Promise<any> {
         return this.resolve(alias, containerActivator);
@@ -285,7 +323,11 @@ export default class Container implements IContainer {
 
       /**
      * Set a list of container alias that will support the container resolutions.
-     * @param aliases Represents the list of container alias that support the container.
+     * 
+     * @instance
+     * @method setSupportContainersAliases
+     * @memberof module:jemsDI.Container
+     * @param {string[]} aliases Represents the list of container alias that support the container.
      */
     public setSupportContainersAliases(aliases:string[]):void {
         if (!aliases || (aliases && !aliases.length)) {
@@ -302,6 +344,16 @@ export default class Container implements IContainer {
         this.validateCiclycDependency([this.getName()], aliases);
 
         this._supportContainerAliases = aliases;
+    }
+      
+    private validateAliasArgument(alias:string):void {
+        if (!alias)
+            throw new Errors.InvalidDataError('An alias must be provided to perform this operation.');
+    }
+
+    private validateIdentifierArgument(identifier:string):void{
+        if (!identifier)
+            throw new Errors.InvalidDataError('An identifier must be provided to perform this operation.');
     }
 
     private validateCiclycDependency(stack:string[], supports:string[]):void {
@@ -326,6 +378,11 @@ export default class Container implements IContainer {
 
     /**
      * Get the list of container alias that are supporting the container resolutions.
+     * 
+     * @instance
+     * @method getSupportContainersAliases
+     * @memberof module:jemsDI.Container
+     * @return {string[]} The alises of the supports container.
      */
     public getSupportContainersAliases():string[] {
         return this._supportContainerAliases;
@@ -333,6 +390,10 @@ export default class Container implements IContainer {
 
     /**
      * Clean the list of support container alias.
+     * 
+     * @instance
+     * @method cleanSupportContainersAlias
+     * @memberof module:jemsDI.Container
      */
     public cleanSupportContainersAlias():void {
         this._supportContainerAliases = undefined;
@@ -340,6 +401,10 @@ export default class Container implements IContainer {
 
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use.
+     * 
+     * @instance
+     * @method dispose
+     * @memberof module:jemsDI.Container
      */
     public dispose():void {
         for (var dependencyAlias in this._aliasDependenciesMetadataMap){
@@ -351,6 +416,11 @@ export default class Container implements IContainer {
 
     /**
      * Dispose and release all instances in the container allowin the GC destroy it if no references are in use asynchronous.
+     * 
+     * @instance
+     * @method disposeAsync
+     * @memberof module:jemsDI.Container
+     * @returns {Promise<void>} A promise that dispose the container.
      */
     public async disposeAsync():Promise<void> {
         this.dispose();
@@ -386,3 +456,5 @@ export default class Container implements IContainer {
         return !(!this._containerContent[alias]);
     }
 }
+
+export { Container as Container };

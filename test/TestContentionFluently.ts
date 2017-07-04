@@ -2,9 +2,9 @@
 
 import * as assert from 'assert'
 import * as jemsdi from "../distribution/Index";
-import FakeTypeA from './fake_types/FakeTypeA';
-import FakeTypeB from './fake_types/FakeTypeB';
-import FakeTypeC from "./fake_types/FakeTypeC";
+import { FakeTypeA } from './fake_types/FakeTypeA';
+import { FakeTypeB } from './fake_types/FakeTypeB';
+import { FakeTypeC } from "./fake_types/FakeTypeC";
 import { IContainer } from "../distribution/IContainer";
 
 describe('with a fluent containeraized resolution', function() {

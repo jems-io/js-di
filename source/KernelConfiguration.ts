@@ -1,10 +1,18 @@
-import ResolutionConfiguration from "./ResolutionConfiguration";
+import { ResolutionConfiguration } from "./ResolutionConfiguration";
 
-/**
- * Represents a kernel configuration, it define the kernel behavior.
- */
-export default class KernelConfiguration {
+
+class KernelConfiguration {
         
+    /**
+     * Instance a new kernel configuration.
+     * 
+     * @class
+     * @name KernelConfiguration
+     * @classdesc Represents a kernel configuration, it define the kernel behavior.
+     * @memberof module:jemsDI
+     * 
+     * @property {Map<string,module:jemsDI.ResolutionConfiguration>} aliasSufixResolutionConfigurationMap Represents the flags that will be avaluated in the alias.
+     */
     constructor() {
         this.loadDefaultFlags();
     }
@@ -18,27 +26,29 @@ export default class KernelConfiguration {
     private loadDefaultFlags():void {
         this.aliasSufixResolutionConfigurationMap = {};
         this.aliasSufixResolutionConfigurationMap['default'] = {
-            quanty: 1,
+            quantity: 1,
             optional: false,
             dependencyFilter: undefined
         };
 
         this.aliasSufixResolutionConfigurationMap['List'] = {
-            quanty: 0,
+            quantity: 0,
             optional: false,
             dependencyFilter: undefined
         };
 
         this.aliasSufixResolutionConfigurationMap['Optional'] = {
-            quanty: 1,
+            quantity: 1,
             optional: true,
             dependencyFilter: undefined
         };
 
         this.aliasSufixResolutionConfigurationMap['OptionalList'] = {
-            quanty: 0,
+            quantity: 0,
             optional: true,
             dependencyFilter: undefined
         };
     }
 }
+
+export { KernelConfiguration as KernelConfiguration };

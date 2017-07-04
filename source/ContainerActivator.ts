@@ -1,17 +1,24 @@
-import DependencyMetadata from "./DependencyMetadata";
+import { DependencyMetadata } from "./DependencyMetadata";
 import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
 import * as Errors from "./Errors/Index";
 import { IContainer } from "./IContainer";
 
-/**
- * Represenst an activator that can activate objects.
- */
-export default class ContainerActivator implements IContainerActivator {
+class ContainerActivator implements IContainerActivator {
 
     private _container:IContainer;
     private _activationStack:string[];
 
+    /**
+     * Instance a new container activator.
+     * 
+     * @class
+     * @name ContainerActivator
+     * @classdesc Represenst an activator that can activate objects.
+     * @implements {module:jemsDI.IContainerActivator}
+     * @param {module:jemsDI.IContainer} container Represents the container that will use the activator.
+     * @memberof module:jemsDI
+     */
     constructor(container:IContainer) {
         this._container = container;
         this._activationStack = [];        
@@ -19,7 +26,12 @@ export default class ContainerActivator implements IContainerActivator {
 
     /**
      * Return an activated instance of the given function reference.
-     * @param dependencyMetadata Represenst the metadata that contains the function reference to activate.
+     * 
+     * @instance
+     * @method activate
+     * @memberof module:jemsDI.ContainerActivator
+     * @param {string} alias Represenst the alias that will be ativated.
+     * @param {string} functionReference Represenst the function reference to activate.
      */
     public activate(alias:string, dependencyMetadata:DependencyMetadata):any {
 
@@ -31,13 +43,17 @@ export default class ContainerActivator implements IContainerActivator {
 
         this.removeAliasFromStack(alias);
 
-        return acivatedObject;
-        
+        return acivatedObject;                
     }
 
     /**
      * Return the result of the invokation of the given function reference.
-     * @param dependencyMetadata Represenst the metadata that contains the function reference to invoke.
+     * 
+     * @instance
+     * @method invoke
+     * @memberof module:jemsDI.ContainerActivator
+     * @param {string} alias Represenst the alias that will be invoked.
+     * @param {string} functionReference Represenst the function reference to invoke.
      */
     public invoke(alias:string, dependencyMetadata:DependencyMetadata):any {
         
@@ -83,7 +99,22 @@ export default class ContainerActivator implements IContainerActivator {
 
     private getFunctionArgumentsNames(functionReference:any):string[] {
 
-        var args:string = functionReference.toString().match(/function\s.*?\(([^)]*)\)/)[1];
+        let stringObject:string = functionReference.toString();
+        let stringObjectLower = stringObject.toLowerCase();
+        var args:string = '';
+
+        if (stringObjectLower.startsWith('function')) {
+            args = stringObject.match(/function\s.*?\(([^)]*)\)/)[1];
+        }
+        else if (stringObjectLower.startsWith('class')) {
+
+            let constructorIndex = stringObjectLower.indexOf('constructor');
+
+            if (constructorIndex >= 0) {
+                stringObject = stringObject.substr(constructorIndex);
+                args = stringObject.match('constructor\\s*\\((.*?)\\)')[1];
+            }
+        }
  
         // Split the arguments string into an array comma delimited.
         return args.split(',').map(function(arg:string) {
@@ -95,3 +126,5 @@ export default class ContainerActivator implements IContainerActivator {
         })
     }
 }
+
+export { ContainerActivator as ContainerActivator };

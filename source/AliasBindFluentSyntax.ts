@@ -1,25 +1,27 @@
 import { IAliasReference } from "./IAliasReference";
 import { IKernelReference } from "./IKernelReference";
-import { IServingContextFluentSyntax } from "./IServingContextFluentSyntax";
+import { IServicingContextFluentSyntax } from "./IServicingContextFluentSyntax";
 import { IContainerFluentSyntax } from "./IContainerFluentSyntax";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./Ikernel";
 import { ServicingStrategy } from "./ServicingStrategy";
-import ContainerFluentSyntax from "./ContainerFluentSyntax";
-import ServingContextFluentSyntax from "./ServingContextFluentSyntax";
+import { ContainerFluentSyntax } from "./ContainerFluentSyntax";
+import { ServicingContextFluentSyntax } from "./ServicingContextFluentSyntax";
 
-/**
- * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
- */
-export default class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
-    
+class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     private _alias:string;
     private _kernel:IKernel;
 
     /**
      * Instance a new alias bind fluent syntax connector.
-     * @param alias Represets the alias to bind.
-     * @param kernel Represents the kernel that is binding the alias.
+     * 
+     * @class
+     * @name AliasBindFluentSyntax
+     * @classdesc Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
+     * @implements {module:jemsDI.IAliasBindFluentSyntax}
+     * @memberof module:jemsDI
+     * @param {string} alias - Represets the alias to bind.
+     * @param {string} kernel - Represents the kernel that is binding the alias. 
      */
     constructor(alias:string, kernel:IKernel) {
         this._alias = alias;
@@ -27,29 +29,49 @@ export default class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     }
     
     /**
-     * Returns the alias name.
+     * Returns the alias.
+     * 
+     * @instance
+     * @method getAlias
+     * @memberof module:jemsDI.AliasBindFluentSyntax
+     * @returns {string} The context alias.
      */
     public getAlias(): string { return this._alias; }
 
     /**
      * Returns the kernel.
+     * 
+     * @instance
+     * @method getKernel
+     * @memberof module:jemsDI.AliasBindFluentSyntax
+     * @returns {module:jemsDI.IKernel} The context kernel.
      */
     public getKernel(): IKernel { return this._kernel; }
 
     /**
-     * Register the alias with a instance serving strategy.
-     * @param Represents the funtion reference to instantiate.
+     * Register the context alias with an instance servicing strategy.
+     * 
+     * @instance
+     * @method to
+     * @memberof module:jemsDI.AliasBindFluentSyntax
+     * @param {function} funtionReference - Represents the funtion reference to instantiate.
+     * @returns {module:jemsDI.IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
-    public to(funtionReference:any):IServingContextFluentSyntax {
+    public to(funtionReference:any):IServicingContextFluentSyntax {
         
-        return new ServingContextFluentSyntax(this.getAlias(),
+        return new ServicingContextFluentSyntax(this.getAlias(),
                                               this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE),
                                               this.getKernel());
     }
 
     /**
-     * Register the alias with a constant serving strategy.
-     * @param Represents the object to return.
+     * Register the context alias with a constant servicing strategy.
+     * 
+     * @instance
+     * @method toConstant
+     * @memberof module:jemsDI.AliasBindFluentSyntax
+     * @param {any} object - Represents the object to return.
+     * @returns {module:jemsDI.IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toConstant(object:any):IContainerFluentSyntax {
         
@@ -59,8 +81,13 @@ export default class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     }
 
     /**
-     * Register the alias with a builder function serving strategy.
-     * @param Represents the function that will be invoked to generate the object.
+     * Register the context alias with a builder function servicing strategy.
+     * 
+     * @instance
+     * @method toBuilderFunction
+     * @memberof module:jemsDI.AliasBindFluentSyntax
+     * @param {function} builder - Represents the function that will be invoked to generate the object.
+     * @returns {module:jemsDI.IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toBuilderFunction(builder:any):IContainerFluentSyntax {
         
@@ -77,3 +104,5 @@ export default class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
         });
     }
 }
+
+export { AliasBindFluentSyntax as AliasBindFluentSyntax };

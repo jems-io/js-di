@@ -3,7 +3,7 @@ var ts = require('gulp-typescript');
 var mocha = require('gulp-mocha');
 var clean = require('gulp-clean');
 
-var tsProject = ts.createProject('ts.config.json');
+var tsProject = ts.createProject('./configurations/typescript.json');
  
 gulp.task('default', ['clean-test']);
 

@@ -1,6 +1,6 @@
-import FakeTypeA from "./FakeTypeA";
+import { FakeTypeA } from "./FakeTypeA";
 
-export default class FakeTypeB {
+export class FakeTypeB {
     constructor(fakeTypeA:FakeTypeA) { this.fackeTypeAIntance = fakeTypeA; }
     public fackeTypeAIntance:FakeTypeA;
 }
