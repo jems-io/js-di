@@ -4,8 +4,10 @@ var mocha = require('gulp-mocha');
 var clean = require('gulp-clean');
 
 var tsProject = ts.createProject('./configurations/typescript.json');
- 
-gulp.task('default', ['clean-test']);
+
+// =========================================================================
+//                              Build Tasks
+// =========================================================================
 
 gulp.task('trasnpile-source', function () {
     return gulp.src('Source/**/*')
@@ -21,9 +23,17 @@ gulp.task('create-source-definition', ['trasnpile-source'], function () {
                 .pipe(gulp.dest('distribution'));
 });
 
-gulp.task('build', ['create-source-definition']);
+gulp.task('build', ['create-source-definition'], function() {
+    console.log('=========================================');
+    console.log('   Source code and definition builded');
+    console.log('=========================================');
+});
 
-gulp.task('trasnpile-test', ['create-source-definition'], function () {
+// =========================================================================
+//                              Test Tasks
+// =========================================================================
+
+gulp.task('trasnpile-test', function () {
     return gulp.src('Test/**/*')
                 .pipe(tsProject({allowJs: true}))
                 .js
@@ -40,6 +50,9 @@ gulp.task('clean-test', ['run-test'], function () {
     .pipe(clean());
 });
 
-gulp.task('distribute-source', ['clean-test'], function () {
-
+gulp.task('test', ['clean-test'], function() {
+    console.log('=========================================');
+    console.log('            Test performed');
+    console.log('=========================================');
 });
+
