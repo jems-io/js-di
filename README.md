@@ -1,4 +1,9 @@
+
 ### Dependency Injection (Node.js)
+
+[![Build Status](https://travis-ci.org/JemsFramework/di.svg?branch=release-current)](https://travis-ci.org/JemsFramework/di)
+
+
 #### For **JemsFramework**
 By *Francisco Mercedes <franciscomerdot@gmail.com>*
 
@@ -23,13 +28,13 @@ Instead of metadata obtained from extra code in our code, it will use the argume
 1. Intall the package. (Is a production dependency)
 
     ```
-    npm install jems-di
+    npm install '@jems/di'
     ```
 
 2. Instantiate the kernel.
 
     ```javascript
-    let jemsDI = require('jems-di');
+    let jemsDI = require('@jems/di');
     let kernel = new jemsDI.Kernel();
     ```
 
@@ -65,7 +70,7 @@ Instead of metadata obtained from extra code in our code, it will use the argume
 Imagine a money collection company that have two customer, each customer sends the debtors bill information to the company through files, but each company have a different file structure and serialization, the lemma of the collection company is that they adapt to your business. Also a notification must be delivered when the output file it's done, but the custmer decide how they want to be notified. Let's put it in code with this DI library.
 
 ```javascript
-let jemsDI = require('jems-di');
+let jemsDI = require('@jems/di');
 let kernel = new jemsDI.Kernel();
 
 // The collection company output builder, same for both customers
