@@ -1,0 +1,6 @@
+distribution/
+node_modules/
+test_transpiled/
+documentation/
+typings/
+

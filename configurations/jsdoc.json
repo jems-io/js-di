@@ -1,0 +1,9 @@
+{
+    "opts": {
+        "destination": "./documentation/",
+        "recurse": true
+    },
+    "source": {
+        "include": ["./distribution/", "./README.md", "./package.json"]
+    }
+}
