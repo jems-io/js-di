@@ -230,7 +230,7 @@ So what we are doing is.
 
 4. We register those classes in the kernel, some of them in a particular container.
     
-    **Note**: You can note the we register `MailNotifier` two times, one in the container in use that currently is the default and another in the customer two container, this is because we want that the customer two don't use the two notifiers registered in his support container, instead because it can resolve the alias, it will use the dependency metadata registered in the container.
+    **Note**: You can note that we register `MailNotifier` two times, one in the container in use that currently is the default and another in the customer two container, this is because we want that the customer two don't use the two notifiers registered in his support container, instead because it can resolve the alias, it will use the dependency metadata registered in the container.
 
     With that we cover that the customer decide how they want to be notified. 
 
@@ -243,5 +243,5 @@ So what we are doing is.
 
 ### **Documentation**
 
-See the documentation in the [Jems DI - Documentation Page](http://opensource.soflutionx.com/documentation/@jems/di/last)
+See the documentation in the [Jems DI - Documentation Page](http://opensource.softlutionx.com/documentation/@jems/di/last)
 
