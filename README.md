@@ -243,5 +243,5 @@ So what we are doing is.
 
 ### **Documentation**
 
-See the documentation in the [Jems DI - Documentation Page](http://jemsframework.soflutionx.com/documentation/jems-di/last/index.html)
+See the documentation in the [Jems DI - Documentation Page](http://opensource.soflutionx.com/documentation/@jems/di/last)
 
