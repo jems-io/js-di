@@ -1,0 +1,89 @@
+branches:
+  only:
+  - release-current
+  - release-pre
+  - development
+language: node_js
+node_js:
+- '6'
+before_script:
+- npm install
+- npm install -g gulp-cli
+- npm install -g jsdoc
+- git config --global push.default matching
+- git config --global user.email "franciscomerdot@gmail.com"
+- git config --global user.name "Travis-CI"
+- git config credential.helper "store --file=.git/credentials"
+- echo "https://${GitHub_Token}:@github.com" > .git/credentials
+script:
+- npm run transpile
+- npm run test
+- npm run zip
+deploy:  
+- provider: script
+  skip_cleanup: true
+  script: npm version patch -m "[skip ci] Patching, upgrading the version to %s"
+  on:
+    branch: development
+- provider: script
+  skip_cleanup: true
+  script: npm version prerelease -m "[skip ci] Pre-releasing, upgrading the version to %s"
+  on:
+    branch: release-pre
+- provider: script
+  skip_cleanup: true
+  script: npm version minor -m "[skip ci] Releasing, upgrading the version to %s"
+  on:
+    branch: release-current
+- provider: script
+  skip_cleanup: true
+  script: git push origin HEAD:$TRAVIS_BRANCH
+  on:
+    all_branches: true
+- provider: script
+  skip_cleanup: true
+  script: git push --tags
+  on:
+    branch: release-pre
+- provider: script
+  skip_cleanup: true
+  script: git push --tags
+  on:
+    branch: release-current
+- provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: $GitHub_Token
+  file: distribution.zip
+  on:
+    branch: release-pre
+- provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: $GitHub_Token
+  file: distribution.zip
+  on:
+    branch: release-current
+- provider: npm
+  skip_cleanup: true
+  email: "franciscomerdot@gmail.com"
+  api_key: $NPM_Token
+  on:
+    branch: release-pre
+- provider: npm
+  skip_cleanup: true
+  email: "franciscomerdot@gmail.com"
+  api_key: $NPM_Token
+  on:
+    branch: release-current
+- provider: script
+  skip_cleanup: true
+  script: gulp ftp-upload --sourcePath "./documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH"
+  on:
+    branch: release-pre
+- provider: script
+  skip_cleanup: true
+  script: gulp ftp-upload --sourcePath "./documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH"
+  on:
+    branch: release-current
+
