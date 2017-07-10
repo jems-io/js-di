@@ -86,3 +86,4 @@ deploy:
   script: npm run generate_documentation && gulp ftp-upload --sourcePath "./documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH"
   on:
     branch: release-current
+
