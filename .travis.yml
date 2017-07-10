@@ -46,7 +46,7 @@ deploy:
   script: git push --tags
   on:
     branch: release-pre
-  - provider: script
+- provider: script
   skip_cleanup: true
   script: git push --tags
   on:
