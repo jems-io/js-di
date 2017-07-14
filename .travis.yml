@@ -32,7 +32,7 @@ deploy:
     branch: release-pre
 - provider: script
   skip_cleanup: true
-  script: npm version minor -m "[skip ci] Releasing, upgrading the version to %s"
+  script: npm version patch -m "[skip ci] Releasing, upgrading the version to %s"
   on:
     branch: release-current
 - provider: script
