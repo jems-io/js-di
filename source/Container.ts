@@ -60,7 +60,7 @@ class Container implements IContainer {
      */
     public registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):string {
         
-        this.validateAliasArgument(alias);        
+        this.validateReference(alias);        
         
         let dependencyIdentifier:string = Math.random().toString(36).substring(10);
 
@@ -83,7 +83,7 @@ class Container implements IContainer {
      */
     public getDependenciesMetadataWithAlias(alias:string):DependencyMetadata[] {     
 
-        this.validateAliasArgument(alias);
+        this.validateReference(alias);
 
         let toReturnDependenciesMetadata:DependencyMetadata[] = [];
                
@@ -106,7 +106,7 @@ class Container implements IContainer {
      */
     public getDependencyMetadataWithIdentifier(alias:string, identifier:string):DependencyMetadata {
 
-        this.validateAliasArgument(alias);
+        this.validateReference(alias);
         this.validateIdentifierArgument(identifier);
 
         let dependencyIdentifierMap = this._aliasDependenciesMetadataMap[alias];
@@ -133,7 +133,7 @@ class Container implements IContainer {
      */
     public unregisterDependenciesMetadataWithAlias(alias:string):void {
 
-        this.validateAliasArgument(alias);
+        this.validateReference(alias);
 
         if (this._aliasDependenciesMetadataMap[alias])
             delete this._aliasDependenciesMetadataMap[alias];
@@ -152,7 +152,7 @@ class Container implements IContainer {
      */
     public unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):void {
 
-        this.validateAliasArgument(alias);
+        this.validateReference(alias);
         this.validateIdentifierArgument(identifier);
 
         let dependencyIdentifierMap = this._aliasDependenciesMetadataMap[alias];
@@ -175,91 +175,97 @@ class Container implements IContainer {
      */
     public canResolve(alias:string):boolean {
 
-        this.validateAliasArgument(alias);       
+        this.validateReference(alias);       
 
         return !(!(this.getDependenciesMetadataWithAlias(alias)).length);
     }
 
     /**
-     * Returns a resolved object instance.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
-     * @instance
      * @method resolve
-     * @memberof module:jemsDI.Container
-     * @param {string} alias Represents the alias to resolve.
+     * @instance
+     * @memberof module:jemsDI.IContainer
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {any} The resolved object.
      */
-    public resolve(alias:string, containerActivator:IContainerActivator):any {
+    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):any {
 
-        this.validateAliasArgument(alias);
+        this.validateReference(reference);
 
-        let originalAlias:string = alias;
-        let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];
-        let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
-        let activatedObjects:any[] = [];
+        if (typeof reference === 'string') {
+            let alias:string = <string>reference;
+            let originalAlias:string = alias;
+            let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];
+            let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
+            let activatedObjects:any[] = [];
 
-        if (!identifierMetadataMapCollection.length) {
-            let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = this.getResolutionConfigurationForAlias(alias);
+            if (!identifierMetadataMapCollection.length) {
+                let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = this.getResolutionConfigurationForAlias(alias);
 
-            if (resolutionConfigurationLookUpResult && resolutionConfigurationLookUpResult.outAlias != alias) {
+                if (resolutionConfigurationLookUpResult && resolutionConfigurationLookUpResult.outAlias != alias) {
 
-                alias = resolutionConfigurationLookUpResult.outAlias;
-                resolutionConfiguration = resolutionConfigurationLookUpResult.configuration;
-                identifierMetadataMapCollection = this.getIdentifierMetadataMapCollection(alias);
+                    alias = resolutionConfigurationLookUpResult.outAlias;
+                    resolutionConfiguration = resolutionConfigurationLookUpResult.configuration;
+                    identifierMetadataMapCollection = this.getIdentifierMetadataMapCollection(alias);
+                }
             }
-        }
 
-        if (!identifierMetadataMapCollection.length)
-            if (resolutionConfiguration.optional)
-                return null;
-            else
-                return this.resolveWithSupport(originalAlias, containerActivator);      
-        else {   
-            if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != identifierMetadataMapCollection.length)
-                throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
+            if (!identifierMetadataMapCollection.length)
+                if (resolutionConfiguration.optional)
+                    return null;
+                else
+                    return this.resolveWithSupport(originalAlias, containerActivator);      
+            else {   
+                if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != identifierMetadataMapCollection.length)
+                    throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
 
-            for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
-            {   
-                let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
-                let activatedObject:any;
+                for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
+                {   
+                    let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
+                    let activatedObject:any;
 
-                switch(identifierMetadataMap.metadata.servicingStrategy) {
-                    case ServicingStrategy.CONSTANT:
-                        activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
-                        break;
-                    case ServicingStrategy.BUILDER_FUNCTION:
-                        activatedObject = this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                        break;
-                    case ServicingStrategy.INSTANCE:
-                        activatedObject = this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                        break;
-                    default:
-                        throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
+                    switch(identifierMetadataMap.metadata.servicingStrategy) {
+                        case ServicingStrategy.CONSTANT:
+                            activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
+                            break;
+                        case ServicingStrategy.BUILDER_FUNCTION:
+                            activatedObject = this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                            break;
+                        case ServicingStrategy.INSTANCE:
+                            activatedObject = this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
+                            break;
+                        default:
+                            throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
+                    }
+
+                    if (!activatedObject)
+                        throw new Errors.ActivationFailError('The activated object result in a null or undefined value, the activation fail');
+                    
+                    activatedObjects.push(activatedObject);
                 }
 
-                if (!activatedObject)
-                    throw new Errors.ActivationFailError('The activated object result in a null or undefined value, the activation fail');
-                
-                activatedObjects.push(activatedObject);
+                return  resolutionConfiguration.quantity == 1 ? activatedObjects[0] : activatedObjects; 
             }
-
-            return  resolutionConfiguration.quantity == 1 ? activatedObjects[0] : activatedObjects; 
-        }   
+        }  
+        else {
+            return containerActivator.activateReference(reference);
+        }
     }
 
     /**
      * Returns a resolved object instance asynchronous.
      * 
-     * @instance
      * @method resolveAsync
-     * @memberof module:jemsDI.Container
-     * @param {string} alias Represents the alias to resolve.
+     * @instance
+     * @memberof module:jemsDI.IContainer
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {Promise<any>} A promise that resolve the objects. 
-     */
-    public resolveAsync(alias:string, containerActivator:IContainerActivator):Promise<any> {
-        return this.resolve(alias, containerActivator);
+     */ 
+    public resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):Promise<any> {
+        return this.resolve(reference, containerActivator);
     }
 
     private getResolutionConfigurationForAlias(alias:string):ResolutionConfigurationLookUpResult {
@@ -346,7 +352,7 @@ class Container implements IContainer {
         this._supportContainerAliases = aliases;
     }
       
-    private validateAliasArgument(alias:string):void {
+    private validateReference(alias:any):void {
         if (!alias)
             throw new Errors.InvalidDataError('An alias must be provided to perform this operation.');
     }
@@ -443,8 +449,8 @@ class Container implements IContainer {
         if (metadata.activateAsSingelton && this.existsInContent(identifier))
             return this._containerContent[identifier];
         
-        let activatedObject:any = useInvokation ? containerActivator.invoke(alias, metadata) : 
-                                                  containerActivator.activate(alias, metadata); 
+        let activatedObject:any = useInvokation ? containerActivator.invokeAlias(alias, metadata.activationReference): 
+                                                  containerActivator.activateAlias(alias, metadata.activationReference); 
         
         if (metadata.activateAsSingelton && activatedObject)
             this._containerContent[identifier] = activatedObject;

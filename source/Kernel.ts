@@ -125,28 +125,28 @@ class Kernel implements IKernel {
     }
     
     /**
-     * Return an resolved instance of that is registered with the given alias.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
-     * @instance
      * @method resolve
-     * @memberof module:jemsDI.Kernel
-     * @param {string} alias Represents the alias to look for.
+     * @instance
+     * @memberof module:jemsDI.IKernel
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      */
-    public resolve(alias:string):any {        
-        return this._currentContainer.resolve(alias, new ContainerActivator(this._currentContainer));  
+    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {        
+        return this._currentContainer.resolve(reference, new ContainerActivator(this._currentContainer));  
     }
 
     /**
-     * Return an resolved instance of that is registered with the given alias asynchronous.
+     * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
      * 
-     * @instance
      * @method resolveAsync
-     * @memberof module:jemsDI.Kernel
-     * @param {string} alias Represents the alias to look for.
+     * @instance
+     * @memberof module:jemsDI.IKernel     
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
-    public async resolveAsync(alias:string):Promise<any> {
-        return this.resolve(alias);
+    public resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):Promise<any> {
+        return this.resolve(reference);
     }
 
     /**

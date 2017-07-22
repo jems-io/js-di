@@ -25,21 +25,36 @@ class ContainerActivator implements IContainerActivator {
     }
 
     /**
+     * Return an activated instance of the given reference, it could be a class or function.     
+     * @method activateReference
+     * @instance
+     * @memberof module:jemsDI.IContainer
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any)} reference Represents the reference that want to be activated.
+     * @return {any} The resolved instance.
+     */
+    public activateReference(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any)):any {
+        var argumets = this.getFunctionArguments(reference);
+
+        let acivatedObject:any =new (Function.prototype.bind.apply(reference, argumets));
+
+        return acivatedObject;
+    }
+
+    /**
      * Return an activated instance of the given function reference.
      * 
+     * @method activateAlias
      * @instance
-     * @method activate
-     * @memberof module:jemsDI.ContainerActivator
+     * @memberof module:jemsDI.IContainer
      * @param {string} alias Represenst the alias that will be ativated.
      * @param {string} functionReference Represenst the function reference to activate.
+     * @return {any} The resolved instance.
      */
-    public activate(alias:string, dependencyMetadata:DependencyMetadata):any {
+    public activateAlias(alias:string, functionReference:any):any {
 
         this.addAliasToStack(alias);     
 
-        var argumets = this.getFunctionArguments(dependencyMetadata.activationReference);
-
-        let acivatedObject:any =new (Function.prototype.bind.apply(dependencyMetadata.activationReference, argumets));
+        let acivatedObject = this.activateReference(<(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any)>functionReference); 
 
         this.removeAliasFromStack(alias);
 
@@ -49,17 +64,18 @@ class ContainerActivator implements IContainerActivator {
     /**
      * Return the result of the invokation of the given function reference.
      * 
+     * @method invokeAlias
      * @instance
-     * @method invoke
-     * @memberof module:jemsDI.ContainerActivator
+     * @memberof module:jemsDI.IContainer
      * @param {string} alias Represenst the alias that will be invoked.
      * @param {string} functionReference Represenst the function reference to invoke.
+     * @return {any} The result of the invokation.
      */
-    public invoke(alias:string, dependencyMetadata:DependencyMetadata):any {
+    public invokeAlias(alias:string, functionReference:any):any {
         
         this.addAliasToStack(alias);
         
-        let acivatedObject:any = dependencyMetadata.activationReference.apply(this.getFunctionArguments(dependencyMetadata.activationReference));
+        let acivatedObject:any = functionReference.apply(this.getFunctionArguments(functionReference));
 
         this.removeAliasFromStack(alias);
 

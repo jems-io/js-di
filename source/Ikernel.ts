@@ -89,25 +89,26 @@ export interface IKernel {
     canResolve(alias:string):boolean;
 
     /**
-     * Return an resolved instance of that is registered with the given alias.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolve
      * @instance
      * @memberof module:jemsDI.IKernel
-     * @param {string} alias Represents the alias to look for.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @returns {any} The resolved object.
      */
-    resolve(alias:string):any;
+    resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any;
 
     /**
-     * Return an resolved instance of that is registered with the given alias asynchronous.
+     * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolveAsync
      * @instance
-     * @memberof module:jemsDI.IKernel
-     * @param {string} alias Represents the alias to look for.
+     * @memberof module:jemsDI.IKernel     
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
-    resolveAsync(alias:string):Promise<any>;
+    resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):Promise<any>;
 
     /**
      * Creates and returns a container with the given alias.
@@ -290,21 +291,22 @@ export interface IKernel {
      */
     
     /**
-     * Return an resolved instance of that is registered with the given alias.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolve
      * @instance
      * @memberof module:jemsDI.IKernel
-     * @param {string} alias Represents the alias to look for.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @returns {any} The resolved object.
      */
 
     /**
-     * Return an resolved instance of that is registered with the given alias asynchronous.
+     * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolveAsync
      * @instance
-     * @memberof module:jemsDI.IKernel
-     * @param {string} alias Represents the alias to look for.
+     * @memberof module:jemsDI.IKernel     
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
 

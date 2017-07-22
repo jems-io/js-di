@@ -85,16 +85,16 @@ export interface IContainer {
     canResolve(alias:string):boolean;
 
     /**
-     * Returns a resolved object instance.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolve
      * @instance
      * @memberof module:jemsDI.IContainer
-     * @param {string} alias Represents the alias to resolve.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {any} The resolved object.
      */
-    resolve(alias:string, containerActivator:IContainerActivator):any;
+    resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):any;
 
     /**
      * Returns a resolved object instance asynchronous.
@@ -102,11 +102,11 @@ export interface IContainer {
      * @method resolveAsync
      * @instance
      * @memberof module:jemsDI.IContainer
-     * @param {string} alias Represents the alias to resolve.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {Promise<any>} A promise that resolve the objects. 
      */ 
-    resolveAsync(alias:string, containerActivator:IContainerActivator):Promise<any>;
+    resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):Promise<any>;
 
     /**
      * Set a list of container alias that will support the container resolutions.
@@ -238,26 +238,26 @@ export interface IContainer {
      */
 
     /**
-     * Returns a resolved object instance.
+     * Return an resolved instance using the given reference that could be a class, function or alias.
      * 
      * @method resolve
      * @instance
      * @memberof module:jemsDI.IContainer
-     * @param {string} alias Represents the alias to resolve.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {any} The resolved object.
      */
-
+    
     /**
      * Returns a resolved object instance asynchronous.
      * 
      * @method resolveAsync
      * @instance
      * @memberof module:jemsDI.IContainer
-     * @param {string} alias Represents the alias to resolve.
+     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {module:jemsDI.IContainerActivator} containerActivator Represents the container activator.
      * @returns {Promise<any>} A promise that resolve the objects. 
-     */    
+     */     
 
     /**
      * Set a list of container alias that will support the container resolutions.
