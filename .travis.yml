@@ -7,9 +7,7 @@ language: node_js
 node_js:
 - '6'
 before_script:
-- npm install
-- npm install -g gulp-cli
-- npm install -g jsdoc
+- npm run setup
 - git config --global push.default matching
 - git config --global user.email "franciscomerdot@gmail.com"
 - git config --global user.name "Travis-CI"
