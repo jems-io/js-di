@@ -14,7 +14,7 @@
     "setup": "npm install gulp-cli -g && npm install jsdoc -g && npm install typings -g && npm install",
     "transpile": "gulp transpile",
     "test": "gulp test",
-    "generate_documentation": "jsdoc -c ./configurations/jsdoc.json",
+    "generate_documentation": "jsdoc -c ./jsdoc.json",
     "zip": "gulp zip"
   },
   "repository": {
