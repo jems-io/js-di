@@ -150,19 +150,23 @@ class Kernel implements IKernel {
     }
 
     /**
-     * Creates a container with the given alias.
+     * Creates and returns a container with the given alias.
      * 
-     * @instance
      * @method createContainer
-     * @memberof module:jemsDI.Kernel
+     * @instance
+     * @memberof module:jemsDI.IKernel
      * @param {string} alias Represents the alias of the container.
+     * @return {module:jemsDI.IContainer} The created container.
      */
-    public createContainer(alias:string):void {        
+    public createContainer(alias:string):IContainer {        
         if (!(this.hasContainer(alias))) {
-            this._containers[alias] =  new Container(this, alias);
+            this._containers[alias] =  new Container(this, alias);   
+            return this._containers[alias];        
         }
         else
             throw new Errors.InvalidDataError(`The given container alias [${alias}] is already registered`);
+
+        
     }
 
     /**

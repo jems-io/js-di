@@ -20,6 +20,9 @@ describe('The kernel,', function() {
             // Test the contention
             require('./TestContention');  
 
+            // Test the contention with fluent support
+            require('./TestContentionFluentSupport');            
+
              // Test the contention fluently
             require('./TestContentionFluently'); 
             

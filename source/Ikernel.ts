@@ -110,14 +110,15 @@ export interface IKernel {
     resolveAsync(alias:string):Promise<any>;
 
     /**
-     * Creates a container with the given alias.
+     * Creates and returns a container with the given alias.
      * 
      * @method createContainer
      * @instance
      * @memberof module:jemsDI.IKernel
      * @param {string} alias Represents the alias of the container.
+     * @return {module:jemsDI.IContainer} The created container.
      */
-    createContainer(alias:string):void;
+    createContainer(alias:string):IContainer;
 
     /**
      * Removes the container with the given alias.
@@ -308,12 +309,13 @@ export interface IKernel {
      */
 
     /**
-     * Creates a container with the given alias.
+     * Creates and returns a container with the given alias.
      * 
      * @method createContainer
      * @instance
      * @memberof module:jemsDI.IKernel
      * @param {string} alias Represents the alias of the container.
+     * @return {module:jemsDI.IContainer} The created container.
      */
 
     /**
