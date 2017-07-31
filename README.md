@@ -2,7 +2,7 @@
 ### Dependency Injection (Node.js)
 
 [![Build Status](https://travis-ci.org/JemsFramework/di.svg?branch=release-current)](https://travis-ci.org/JemsFramework/di)
-
+[![npm version](https://badge.fury.io/js/%40jems%2Fdi.svg)](https://badge.fury.io/js/%40jems%2Fdi)
 
 #### For **JemsFramework**
 By *Francisco Mercedes <franciscomerdot@gmail.com>*
