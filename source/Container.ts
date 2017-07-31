@@ -368,7 +368,7 @@ class Container implements IContainer {
             return;
 
         for(let supportAliasIndex = 0; supportAliasIndex < supports.length; supportAliasIndex++) {
-            for(let stackAliasIndex = 0; stackAliasIndex < supports.length; stackAliasIndex++) {
+            for(let stackAliasIndex = 0; stackAliasIndex < stack.length; stackAliasIndex++) {
                 
                 stack.push(supports[supportAliasIndex]);          
 
