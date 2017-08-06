@@ -11,10 +11,10 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install gulp-cli -g && npm install jsdoc -g && npm install typings -g && npm install",
+    "setup": "npm install gulp-cli -g && npm install typedoc -g && npm install typings -g && npm install",
     "transpile": "gulp transpile",
     "test": "gulp test",
-    "generate_documentation": "jsdoc -c ./jsdoc.json",
+    "generate_documentation": "typedoc --target ES6 --out ./documentation  ./source",
     "zip": "gulp zip"
   },
   "repository": {

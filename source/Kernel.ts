@@ -2,7 +2,7 @@ import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
-import { IKernel } from "./Ikernel";
+import { IKernel } from "./IKernel";
 import { IContainer } from "./IContainer";
 import { Container } from "./Container";
 import { ContainerActivator } from "./ContainerActivator";
@@ -10,24 +10,21 @@ import * as Errors from "./Errors/Index";
 import { KernelConfiguration } from "./KernelConfiguration";
 import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
 
-class Kernel implements IKernel {    
+/**
+ * Represents a kernel that manage the type registration, instance activation and servicing strategies.
+ * @private
+ */
+export class Kernel implements IKernel {    
 
     private _defaultContainerAlias:string = 'default';
     private _containers:{[containerAlias: string]:IContainer} = {};
     private _currentContainer:IContainer;
     private _kernelConfiguration:KernelConfiguration;
-
+    
     /**
      * Instance a new kernel.
-     * 
-     * @class
-     * @name Kernel
-     * @classdesc Represents a kernel that manage the type registration, instance activation and servicing strategies.
-     * @implements {module:jemsDI.IKernel}
-     * @memberof module:jemsDI
      */
     constructor() {
-
         let defaultContainer = new Container(this, this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
         this._containers[defaultContainer.getName()] = defaultContainer;
@@ -36,11 +33,7 @@ class Kernel implements IKernel {
 
     /**
      * Returns the configuration of the kernel.
-     * 
-     * @instance
-     * @method getConfiguration
-     * @memberof module:jemsDI.Kernel
-     * @returns {module:jemsDI.KernelConfiguration} The configuation of the kernel.
+     * @returns {KernelConfiguration} The configuation of the kernel.
      */
     public getConfiguration():KernelConfiguration {
         return this._kernelConfiguration;
@@ -48,11 +41,7 @@ class Kernel implements IKernel {
 
     /**
      * Load thegiven modules into the kernel.
-     * 
-     * @instance
-     * @method loadModules
-     * @memberof module:jemsDI.Kernel
-     * @param {module:jemsDI.IModule[]} modules Represents the modules that will be loaded in the kernel.
+     * @param {IModule[]} modules Represents the modules that will be loaded in the kernel.
      */
     public loadModules(modules:IModule[]):void {        
         modules.forEach(function(module:IModule) {
@@ -62,11 +51,7 @@ class Kernel implements IKernel {
 
      /**
      * Load the given modules into the kernel asynchronous.
-     * 
-     * @instance
-     * @method loadModulesAsync
-     * @memberof module:jemsDI.Kernel
-     * @param {module:jemsDI.IModule[]} modules Represents the modules that will be loaded in the kernel.
+     * @param {IModule[]} modules Represents the modules that will be loaded in the kernel.
      * @returns {Promise<void>} A Promise that load the modules.
      */
     public async loadModulesAsync(modules:IModule[]):Promise<void> {        
@@ -75,12 +60,8 @@ class Kernel implements IKernel {
 
     /**
      * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
-     * 
-     * @instance
-     * @method bind
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias to look for.
-     * @returns {module:jemsDI.IAliasBindFluentSyntax} A fluent bind.
+     * @returns {IAliasBindFluentSyntax} A fluent bind.
      */
     public bind(alias:string):IAliasBindFluentSyntax {
         return new AliasBindFluentSyntax(alias, this);
@@ -88,10 +69,6 @@ class Kernel implements IKernel {
 
     /**
      * Unbind all dependencies metadata with the given alias from the container resolution stack.
-     * 
-     * @instance
-     * @method unbindWithAlias
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias to look for.
      */
     public unbindWithAlias(alias:string):void {
@@ -100,10 +77,6 @@ class Kernel implements IKernel {
 
     /**
      * Unbind the dependency metadata with the given identifier from the container resolution stack.
-     * 
-     * @instance
-     * @method unbindWithIdentifier
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias that contain the identifier to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
@@ -113,10 +86,6 @@ class Kernel implements IKernel {
 
     /**
      * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.
-     * 
-     * @instance
-     * @method canResolve
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias to look for.
      * @returns {boolean} True if the kernel can resolve the given alias.
      */
@@ -126,10 +95,6 @@ class Kernel implements IKernel {
     
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * 
-     * @method resolve
-     * @instance
-     * @memberof module:jemsDI.IKernel
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      */
     public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {        
@@ -138,10 +103,6 @@ class Kernel implements IKernel {
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * 
-     * @method resolveAsync
-     * @instance
-     * @memberof module:jemsDI.IKernel     
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
@@ -151,12 +112,8 @@ class Kernel implements IKernel {
 
     /**
      * Creates and returns a container with the given alias.
-     * 
-     * @method createContainer
-     * @instance
-     * @memberof module:jemsDI.IKernel
      * @param {string} alias Represents the alias of the container.
-     * @return {module:jemsDI.IContainer} The created container.
+     * @return {IContainer} The created container.
      */
     public createContainer(alias:string):IContainer {        
         if (!(this.hasContainer(alias))) {
@@ -171,10 +128,6 @@ class Kernel implements IKernel {
 
     /**
      * Removes the container with the given alias.
-     * 
-     * @instance
-     * @method removeContainer
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias of the container.
      */
     public removeContainer(alias:string):void {
@@ -187,10 +140,6 @@ class Kernel implements IKernel {
 
     /**
      * Returns a boolean value specifying if the kernel has a container with the given alias.
-     * 
-     * @instance
-     * @method hasContainer
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias of the container.
      * @returns {boolean} True if the kernel has the container.
      */
@@ -200,10 +149,6 @@ class Kernel implements IKernel {
 
     /**
      * Use the container with the given alias as a servicing container for the kernel.
-     * 
-     * @instance
-     * @method useContainer
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias of the container.
      */
     public useContainer(alias:string):void {
@@ -216,10 +161,6 @@ class Kernel implements IKernel {
 
     /**
      * Use the default container as a servicing container for the kernel.
-     * 
-     * @instance
-     * @method useDefaultContainer
-     * @memberof module:jemsDI.Kernel
      */
     public useDefaultContainer():void {
         this._currentContainer = this._containers[this._defaultContainerAlias];
@@ -227,12 +168,8 @@ class Kernel implements IKernel {
 
     /**
      * Return the container with the given alias.
-     * 
-     * @instance
-     * @method getContainer
-     * @memberof module:jemsDI.Kernel
      * @param {string} alias Represents the alias to look for.
-     * @returns {module:jemsDI.IContainer} A container.
+     * @returns {IContainer} A container.
      */
     public getContainer(alias:string):IContainer {
         if (this.hasContainer(alias)) {
@@ -244,11 +181,7 @@ class Kernel implements IKernel {
 
     /**
      * Return the current container.
-     * 
-     * @instance
-     * @method getCurrentContainer
-     * @memberof module:jemsDI.Kernel
-     * @returns {module:jemsDI.IContainer} A container.
+     * @returns {IContainer} A container.
      */
     public getCurrentContainer():IContainer {
         if (this._currentContainer)
@@ -259,11 +192,7 @@ class Kernel implements IKernel {
 
     /**
      * Return the deafult container.
-     * 
-     * @instance
-     * @method getDefaultContainer
-     * @memberof module:jemsDI.Kernel
-     * @returns {module:jemsDI.IContainer} A container.
+     * @returns {IContainer} A container.
      */
     public getDefaultContainer():IContainer {
         return this._containers[this._defaultContainerAlias];
@@ -271,10 +200,6 @@ class Kernel implements IKernel {
 
     /**
      * Dispose and release all the objects and containers in the kernel.
-     * 
-     * @instance
-     * @method dispose
-     * @memberof module:jemsDI.Kernel
      */    
     public dispose():void {
         for (var containerAlias in this._containers){
@@ -287,15 +212,9 @@ class Kernel implements IKernel {
 
      /**
      * Dispose and release all the objects and containers in the kernel asynchronous.
-     * 
-     * @instance
-     * @method disposeAsync
-     * @memberof module:jemsDI.Kernel
      * @returns {Promise<void>} A promise that dispose the kernel.
      */    
     public async disposeAsync():Promise<void> {
         this.dispose();      
     }
 }
-
-export { Kernel as Kernel };

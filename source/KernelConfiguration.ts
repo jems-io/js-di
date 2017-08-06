@@ -1,17 +1,12 @@
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
 
-
-class KernelConfiguration {
+/**
+ * Represents a kernel configuration, it define the kernel behavior.
+ */
+export class KernelConfiguration {
         
     /**
      * Instance a new kernel configuration.
-     * 
-     * @class
-     * @name KernelConfiguration
-     * @classdesc Represents a kernel configuration, it define the kernel behavior.
-     * @memberof module:jemsDI
-     * 
-     * @property {Map<string,module:jemsDI.ResolutionConfiguration>} aliasSufixResolutionConfigurationMap Represents the flags that will be avaluated in the alias.
      */
     constructor() {
         this.loadDefaultFlags();
@@ -50,5 +45,3 @@ class KernelConfiguration {
         };
     }
 }
-
-export { KernelConfiguration as KernelConfiguration };

@@ -4,18 +4,17 @@ import { IContainerActivator } from "./IContainerActivator";
 import * as Errors from "./Errors/Index";
 import { IContainer } from "./IContainer";
 
-class ContainerActivator implements IContainerActivator {
+/**
+ * Represenst an activator that can activate objects.
+ * @private
+ */
+export class ContainerActivator implements IContainerActivator {
 
     private _container:IContainer;
     private _activationStack:string[];
 
     /**
      * Instance a new container activator.
-     * 
-     * @class
-     * @name ContainerActivator
-     * @classdesc Represenst an activator that can activate objects.
-     * @implements {module:jemsDI.IContainerActivator}
      * @param {module:jemsDI.IContainer} container Represents the container that will use the activator.
      * @memberof module:jemsDI
      */
@@ -26,9 +25,6 @@ class ContainerActivator implements IContainerActivator {
 
     /**
      * Return an activated instance of the given reference, it could be a class or function.     
-     * @method activateReference
-     * @instance
-     * @memberof module:jemsDI.IContainer
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any)} reference Represents the reference that want to be activated.
      * @return {any} The resolved instance.
      */
@@ -42,10 +38,6 @@ class ContainerActivator implements IContainerActivator {
 
     /**
      * Return an activated instance of the given function reference.
-     * 
-     * @method activateAlias
-     * @instance
-     * @memberof module:jemsDI.IContainer
      * @param {string} alias Represenst the alias that will be ativated.
      * @param {string} functionReference Represenst the function reference to activate.
      * @return {any} The resolved instance.
@@ -63,10 +55,6 @@ class ContainerActivator implements IContainerActivator {
 
     /**
      * Return the result of the invokation of the given function reference.
-     * 
-     * @method invokeAlias
-     * @instance
-     * @memberof module:jemsDI.IContainer
      * @param {string} alias Represenst the alias that will be invoked.
      * @param {string} functionReference Represenst the function reference to invoke.
      * @return {any} The result of the invokation.
@@ -142,5 +130,3 @@ class ContainerActivator implements IContainerActivator {
         })
     }
 }
-
-export { ContainerActivator as ContainerActivator };

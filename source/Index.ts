@@ -1,7 +1,5 @@
 /**
  * An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications.
- *
- * @module jemsDI
  */
 
 //Exporting accessible build-in Clasess
