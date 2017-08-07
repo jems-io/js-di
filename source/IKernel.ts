@@ -48,7 +48,7 @@ export interface IKernel {
      * @param {string} alias Represents the alias that contain the identifier to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    unbindWithIdentifier(aslias:string, identifier:string):void;
+    unbindWithIdentifier(alias:string, identifier:string):void;
 
     /**
      * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.

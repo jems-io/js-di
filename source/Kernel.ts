@@ -12,7 +12,7 @@ import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
- * @private
+ * @hidden
  */
 export class Kernel implements IKernel {    
 
@@ -80,8 +80,8 @@ export class Kernel implements IKernel {
      * @param {string} alias Represents the alias that contain the identifier to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    public unbindWithIdentifier(aslias:string, identifier:string):void {
-        this.getCurrentContainer().unregisterDependencyMetadataWithIdentifier(aslias, identifier);
+    public unbindWithIdentifier(alias:string, identifier:string):void {
+        this.getCurrentContainer().unregisterDependencyMetadataWithIdentifier(alias, identifier);
     }
 
     /**

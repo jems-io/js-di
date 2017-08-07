@@ -8,7 +8,7 @@ import { DependencyMetadata } from "./DependencyMetadata";
 
 /**
  * Represents a singelton fluent syntax to specify the kernel that must return the object as a singelton.
- * @private
+ * @hidden
  */
 export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
     

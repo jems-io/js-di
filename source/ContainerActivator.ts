@@ -6,7 +6,7 @@ import { IContainer } from "./IContainer";
 
 /**
  * Represenst an activator that can activate objects.
- * @private
+ * @hidden
  */
 export class ContainerActivator implements IContainerActivator {
 

@@ -9,7 +9,7 @@ import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
 
 /**
  * Represents a servicing context fluent syntax that allows the kernel spcify servicing specifications for register types and objects.
- * @private
+ * @hidden
  */
 export class ServicingContextFluentSyntax implements IServicingContextFluentSyntax {
     

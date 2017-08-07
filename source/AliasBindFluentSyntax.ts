@@ -10,7 +10,7 @@ import { ServicingContextFluentSyntax } from "./ServicingContextFluentSyntax";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
- * @private
+ * @hidden
  */
 export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     private _alias:string;
