@@ -12,7 +12,7 @@ import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
- * @hidden
+ * @private
  */
 export class Kernel implements IKernel {    
 

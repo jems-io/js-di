@@ -7,18 +7,18 @@ import { IKernel } from "./IKernel";
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
 
 /**
- * @hidden
+ * @private
  */
 type IdentifierDependencyMetadataMap = {identifier:string, metadata:DependencyMetadata};
 
 /**
- * @hidden
+ * @private
  */
 type ResolutionConfigurationLookUpResult = {outAlias:string,configuration:ResolutionConfiguration};
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
- * @hidden
+ * @private
  */
 export class Container implements IContainer {
 

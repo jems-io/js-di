@@ -10,7 +10,7 @@ import { ServicingContextFluentSyntax } from "./ServicingContextFluentSyntax";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
- * @hidden
+ * @private
  */
 export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     private _alias:string;
@@ -34,14 +34,14 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
 
     /**
      * Returns the kernel.
-     * @returns {module:jemsDI.IKernel} The context kernel.
+     * @returns {IKernel} The context kernel.
      */
     public getKernel(): IKernel { return this._kernel; }
 
     /**
      * Register the context alias with an instance servicing strategy.
      * @param {function} funtionReference - Represents the funtion reference to instantiate.
-     * @returns {module:jemsDI.IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
+     * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
     public to(funtionReference:any):IServicingContextFluentSyntax {
         
@@ -53,7 +53,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     /**
      * Register the context alias with a constant servicing strategy.
      * @param {any} object - Represents the object to return.
-     * @returns {module:jemsDI.IContainerFluentSyntax} The fluent syntax connector for containerization.
+     * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toConstant(object:any):IContainerFluentSyntax {
         
@@ -65,7 +65,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
     /**
      * Register the context alias with a builder function servicing strategy.
      * @param {function} builder - Represents the function that will be invoked to generate the object.
-     * @returns {module:jemsDI.IContainerFluentSyntax} The fluent syntax connector for containerization.
+     * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toBuilderFunction(builder:any):IContainerFluentSyntax {
         

@@ -9,7 +9,7 @@ import { IContainer } from "./IContainer";
 
 /**
  * Represents a container fluent syntax to specify a containers for the registered alias.
- * @hidden
+ * @private
  */
 export class ContainerFluentSyntax implements IContainerFluentSyntax {
     
