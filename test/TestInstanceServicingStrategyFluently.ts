@@ -9,7 +9,7 @@ import { IContainer } from "../distribution/IContainer";
 
 describe('with a fluent instance servicing strategy resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
 
      before(function() {
         kernel.bind('fakeTypeA').to(FakeTypeA);

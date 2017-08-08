@@ -6,7 +6,7 @@ import { IContainer } from "../distribution/IContainer";
 
 describe('with cosntant servicing strategy resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
     let constantInstance = {};
 
     before(function() {

@@ -9,7 +9,7 @@ import { IContainer } from "../distribution/IContainer";
 
 describe('with a fluent containeraized resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();    
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
     let containerBAlias = 'containerB';
     let containerCAlias = 'containerC';
 

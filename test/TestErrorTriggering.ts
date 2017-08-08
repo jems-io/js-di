@@ -9,7 +9,7 @@ import { FakeTypeC } from "./fake_types/FakeTypeC";
 
 describe('must throw an the error', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
 
     before(function() {
 

@@ -9,7 +9,7 @@ import { IContainer } from "../distribution/IContainer";
 
 describe('with instance servicing strategy resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
 
      before(function() {
         let container:IContainer = kernel.getDefaultContainer();
