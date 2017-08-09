@@ -4,8 +4,7 @@ import { IKernelReference } from "./IKernelReference";
 import { IAliasReference } from "./IAliasReference";
 import { IServicingContextFluentSyntax } from "./IServicingContextFluentSyntax";
 import { IKernel } from "./IKernel";
-import { ContainerFluentSyntax } from "./ContainerFluentSyntax";
-import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
+import contextualActivator from './ContextualActivator'
 
 /**
  * Represents a servicing context fluent syntax that allows the kernel spcify servicing specifications for register types and objects.
@@ -44,13 +43,13 @@ export class ServicingContextFluentSyntax implements IServicingContextFluentSynt
      * @param {string} containerAlias Represents the container alias that will contain the metadata.
      */
     inContainer(containerAlias: string): void {
-        new ContainerFluentSyntax(this.getIdentifier(), this.getKernel()).inContainer(containerAlias);
+        contextualActivator.getContextInstantiator<IKernel, IContainerFluentSyntax>('containerFluentSyntax')(this.getKernel(), this.getIdentifier()).inContainer(containerAlias);
     }
 
     /**
      * Specify the kernel to activate the object in the container with the given container alias.
      */
     asSingelton(): void {
-        new SingeltonFluentSyntax(this.getIdentifier(), this.getKernel()).asSingelton();  
+        contextualActivator.getContextInstantiator<IKernel, ISingeltonFluentSyntax>('singeltonFluentSyntax')(this.getKernel(), this.getIdentifier()).asSingelton();
     }
 }

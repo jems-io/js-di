@@ -5,8 +5,7 @@ import { IContainerFluentSyntax } from "./IContainerFluentSyntax";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";
 import { ServicingStrategy } from "./ServicingStrategy";
-import { ContainerFluentSyntax } from "./ContainerFluentSyntax";
-import { ServicingContextFluentSyntax } from "./ServicingContextFluentSyntax";
+import contextualActivator from './ContextualActivator'
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
@@ -44,8 +43,8 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
     public to(funtionReference:any):IServicingContextFluentSyntax {        
-        return new ServicingContextFluentSyntax(this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE),
-                                                this.getKernel());
+        let identifier:string = this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE);
+        return contextualActivator.getContextInstantiator<IKernel, IServicingContextFluentSyntax>('servicingContextFluentSyntax')(this._kernel, identifier);
     }
 
     /**
@@ -54,9 +53,8 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toConstant(object:any):IContainerFluentSyntax {
-        
-        return new ContainerFluentSyntax(this.registerAliasAndRelated(object, ServicingStrategy.CONSTANT),
-                                         this.getKernel());
+        let identifier:string = this.registerAliasAndRelated(object, ServicingStrategy.CONSTANT);
+        return contextualActivator.getContextInstantiator<IKernel, IContainerFluentSyntax>('containerFluentSyntax')(this._kernel, identifier);
     }
 
     /**
@@ -65,9 +63,8 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
     public toBuilderFunction(builder:any):IContainerFluentSyntax {
-        
-        return new ContainerFluentSyntax(this.registerAliasAndRelated(builder, ServicingStrategy.BUILDER_FUNCTION),
-                                         this.getKernel());
+        let identifier:string = this.registerAliasAndRelated(builder, ServicingStrategy.BUILDER_FUNCTION);
+        return contextualActivator.getContextInstantiator<IKernel, IContainerFluentSyntax>('containerFluentSyntax')(this._kernel, identifier);
     }
 
     private registerAliasAndRelated(related:any, servicingStrategy:ServicingStrategy):string {

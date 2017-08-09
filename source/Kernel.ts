@@ -1,14 +1,13 @@
+import * as Errors from "./Errors/Index";
 import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";
 import { IContainer } from "./IContainer";
-import { Container } from "./Container";
-import { ContainerActivator } from "./ContainerActivator";
-import * as Errors from "./Errors/Index";
 import { KernelConfiguration } from "./KernelConfiguration";
-import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
+import { IContainerActivator } from "./IContainerActivator";
+import contextualActivator from './ContextualActivator'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -25,7 +24,7 @@ export class Kernel implements IKernel {
      * Instance a new kernel.
      */
     constructor() {
-        let defaultContainer = new Container(this, this._defaultContainerAlias);
+        let defaultContainer = this.createContainer(this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
         this._containers[defaultContainer.getName()] = defaultContainer;
         this._kernelConfiguration = new KernelConfiguration();
@@ -64,7 +63,7 @@ export class Kernel implements IKernel {
      * @returns {IAliasBindFluentSyntax} A fluent bind.
      */
     public bind(alias:string):IAliasBindFluentSyntax {
-        return new AliasBindFluentSyntax(alias, this);
+        return contextualActivator.getContextInstantiator<IKernel, IAliasBindFluentSyntax>('aliasBindFluentSyntax')(this, alias);
     }
 
     /**
@@ -97,7 +96,8 @@ export class Kernel implements IKernel {
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      */
     public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {        
-        return this._currentContainer.resolve(reference, new ContainerActivator(this._currentContainer));  
+        let containerActivator:IContainerActivator = contextualActivator.getContextInstantiator<IContainer, IContainerActivator>('containerActivator')(this._currentContainer, '');    
+        return this._currentContainer.resolve(reference, containerActivator);  
     }
 
     /**
@@ -116,7 +116,7 @@ export class Kernel implements IKernel {
      */
     public createContainer(alias:string):IContainer {        
         if (!(this.hasContainer(alias))) {
-            this._containers[alias] =  new Container(this, alias);   
+            this._containers[alias] =  contextualActivator.getContextInstantiator<IKernel, IContainer>('container')(this, alias);   
             return this._containers[alias];        
         }
         else
