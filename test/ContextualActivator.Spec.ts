@@ -13,7 +13,7 @@ describe('The [ContainerActivator]', function() {
     })
 
 
-    it('should thow an error is the requested name is not registered.', function() {
+    it('should throw an error is the requested name is not registered.', function() {
         try {
         let contextualActivator:ContextualActivator = new ContextualActivator();
         contextualActivator.getContextInstantiator<any, any>('settedFunction')(null, null);
