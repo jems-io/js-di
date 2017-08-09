@@ -14,7 +14,7 @@
     "setup": "npm install gulp-cli -g && npm install typedoc -g && npm install typings -g && npm install",
     "transpile": "gulp transpile",
     "test": "gulp test",
-    "document": "typedoc --target ES6 --mode file --out ./documentation  ./source/Index.ts",
+    "document": "typedoc --target ES6 --mode file --excludePrivate --out ./documentation  ./source/Index.ts",
     "zip": "gulp zip"
   },
   "repository": {
