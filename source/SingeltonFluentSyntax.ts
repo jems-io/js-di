@@ -12,7 +12,6 @@ import { DependencyMetadata } from "./DependencyMetadata";
  */
 export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
     
-    private _alias:string;
     private _identifier:string;
     private _kernel:IKernel;
 
@@ -23,17 +22,10 @@ export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
      * @param {string} kernel Represents the kernel that is binding the alias.
      * @memberof module:jemsDI
      */
-    constructor(alias:string, identifier:string, kernel:IKernel) {
-        this._alias = alias;
+    constructor(identifier:string, kernel:IKernel) {
         this._identifier = identifier;
         this._kernel = kernel;
     }
-
-    /**
-     * Returns the alias.
-     * @returns {string} The context alias.
-     */
-    public getAlias(): string { return this._alias; }
 
     /**
      * Returns the identifier.
@@ -54,7 +46,7 @@ export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
         let kernel:IKernel = this.getKernel();
         let currentContainer:IContainer = kernel.getCurrentContainer();
  
-        let dependencyMetadata:DependencyMetadata = currentContainer.getDependencyMetadataWithIdentifier(this.getAlias(), this.getIdentifier());
+        let dependencyMetadata:DependencyMetadata = currentContainer.getDependencyMetadataWithIdentifier(this.getIdentifier());
 
         if (!dependencyMetadata)
             throw new Error(`The container ${currentContainer.getName()} doesn\'t contain the a dependency metadata with the identifier ${this.getIdentifier()}`);

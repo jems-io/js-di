@@ -19,21 +19,13 @@ export class ServicingContextFluentSyntax implements IServicingContextFluentSynt
 
     /**
      * Instance a new servicing context fluent syntax connector.
-     * @param {string} alias Represets the alias to bind.
      * @param {string} identifier Represents the identidier for the related object.
      * @param {string} kernel Represents the kernel that is binding the alias.
      */
-    constructor(alias:string, identifier:string, kernel:IKernel) {
-        this._alias = alias;
+    constructor(identifier:string, kernel:IKernel) {
         this._identifier = identifier;
         this._kernel = kernel;
     }
-
-    /**
-     * Returns the alias.
-     * @returns {string} The context alias.
-     */
-    public getAlias(): string { return this._alias; }
 
     /**
      * Returns the identifier.
@@ -52,13 +44,13 @@ export class ServicingContextFluentSyntax implements IServicingContextFluentSynt
      * @param {string} containerAlias Represents the container alias that will contain the metadata.
      */
     inContainer(containerAlias: string): void {
-        new ContainerFluentSyntax(this.getAlias(), this.getIdentifier(), this.getKernel()).inContainer(containerAlias);
+        new ContainerFluentSyntax(this.getIdentifier(), this.getKernel()).inContainer(containerAlias);
     }
 
     /**
      * Specify the kernel to activate the object in the container with the given container alias.
      */
     asSingelton(): void {
-        new SingeltonFluentSyntax(this.getAlias(), this.getIdentifier(), this.getKernel()).asSingelton();  
+        new SingeltonFluentSyntax(this.getIdentifier(), this.getKernel()).asSingelton();  
     }
 }

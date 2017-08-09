@@ -43,10 +43,8 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      * @param {function} funtionReference - Represents the funtion reference to instantiate.
      * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
-    public to(funtionReference:any):IServicingContextFluentSyntax {
-        
-        return new ServicingContextFluentSyntax(this.getAlias(),
-                                                this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE),
+    public to(funtionReference:any):IServicingContextFluentSyntax {        
+        return new ServicingContextFluentSyntax(this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE),
                                                 this.getKernel());
     }
 
@@ -57,8 +55,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      */
     public toConstant(object:any):IContainerFluentSyntax {
         
-        return new ContainerFluentSyntax(this.getAlias(),
-                                         this.registerAliasAndRelated(object, ServicingStrategy.CONSTANT),
+        return new ContainerFluentSyntax(this.registerAliasAndRelated(object, ServicingStrategy.CONSTANT),
                                          this.getKernel());
     }
 
@@ -69,8 +66,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      */
     public toBuilderFunction(builder:any):IContainerFluentSyntax {
         
-        return new ContainerFluentSyntax(this.getAlias(),
-                                         this.registerAliasAndRelated(builder, ServicingStrategy.BUILDER_FUNCTION),
+        return new ContainerFluentSyntax(this.registerAliasAndRelated(builder, ServicingStrategy.BUILDER_FUNCTION),
                                          this.getKernel());
     }
 
@@ -82,5 +78,3 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
         });
     }
 }
-
-// { AliasBindFluentSyntax as AliasBindFluentSyntax };

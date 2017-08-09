@@ -77,11 +77,10 @@ export class Kernel implements IKernel {
 
     /**
      * Unbind the dependency metadata with the given identifier from the container resolution stack.
-     * @param {string} alias Represents the alias that contain the identifier to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    public unbindWithIdentifier(alias:string, identifier:string):void {
-        this.getCurrentContainer().unregisterDependencyMetadataWithIdentifier(alias, identifier);
+    public unbindWithIdentifier(identifier:string):void {
+        this.getCurrentContainer().unregisterDependencyMetadataWithIdentifier(identifier);
     }
 
     /**

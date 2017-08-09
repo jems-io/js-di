@@ -15,8 +15,9 @@ var tsProject = ts.createProject('./typescript.json');
 gulp.task('trasnpile-source', function () {
     return gulp.src('./source/**/*')
                 .pipe(tsProject())
+                .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./distribution'));
+                .pipe(gulp.dest('./distribution'))                
 });
 
 gulp.task('create-source-definition', ['trasnpile-source'], function () {
@@ -39,8 +40,9 @@ gulp.task('transpile', ['create-source-definition'], function() {
 gulp.task('trasnpile-test', function () {
     return gulp.src('./test/**/*')
                 .pipe(tsProject({allowJs: true}))
+                .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./test_transpiled'));
+                .pipe(gulp.dest('./test_transpiled'))
 });
 
 gulp.task('run-test', ['trasnpile-test'], function () {

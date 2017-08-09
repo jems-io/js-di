@@ -23,6 +23,7 @@ type ResolutionConfigurationLookUpResult = {outAlias:string,configuration:Resolu
 export class Container implements IContainer {
 
     private _aliasDependenciesMetadataMap:{[dependencyAlias:string]:{[dependencyIdentifier:string]:DependencyMetadata}};
+    private _metadataIdentifierAliasMap:{[metadataIdentifier:string]:string};
     private _containerContent:{[dependencyAlias:string]:any}
     private _supportContainerAliases:string[];
     private _kernel:IKernel;
@@ -41,6 +42,7 @@ export class Container implements IContainer {
         this._kernel = kernel;
         this._name = name;
         this._aliasDependenciesMetadataMap = {};
+        this._metadataIdentifierAliasMap = {};
     }
 
     /**
@@ -59,14 +61,26 @@ export class Container implements IContainer {
         
         this.validateReference(alias);        
         
-        let dependencyIdentifier:string = Math.random().toString(36).substring(10);
+        let metadataIdentifier:string = Math.random().toString(36).substring(10);
+
+        if (this._metadataIdentifierAliasMap[metadataIdentifier])
+            throw Error('The metadata identifier already exists in other alias, this identifier must be unique.')
 
         if (!this._aliasDependenciesMetadataMap[alias])
             this._aliasDependenciesMetadataMap[alias] = {};
         
-        this._aliasDependenciesMetadataMap[alias][dependencyIdentifier] = dependencyMetadata;
+        this._aliasDependenciesMetadataMap[alias][metadataIdentifier] = dependencyMetadata;
+        this._metadataIdentifierAliasMap[metadataIdentifier] = alias;
         
-        return dependencyIdentifier;
+        return metadataIdentifier;
+    }
+
+    /**
+     * Return the alias that contain the metadta with the given identifier.
+     * @param {string} identifier Represents the identifier to look for.
+     */
+    public getIdentifierAlias(identifier:string):string {
+        return this._metadataIdentifierAliasMap[identifier];
     }
 
      /**
@@ -89,12 +103,13 @@ export class Container implements IContainer {
 
     /**
      * Returns the registered dependency metadata with the given alias and identifier.
-     * @param {string} alias Represents the alias to look for.
      * @param {string} identifier Represents the identifier to look for.
      * @returns {string} Return dependency metadata with the given identifier.    
      */
-    public getDependencyMetadataWithIdentifier(alias:string, identifier:string):DependencyMetadata {
+    public getDependencyMetadataWithIdentifier(identifier:string):DependencyMetadata {
 
+        let alias = this._metadataIdentifierAliasMap[identifier];
+        
         this.validateReference(alias);
         this.validateIdentifierArgument(identifier);
 
@@ -128,10 +143,11 @@ export class Container implements IContainer {
 
     /**
      * Unregister the dependency metadata with the given alias and identifier.
-     * @param {string} alias Represents the alias to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    public unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):void {
+    public unregisterDependencyMetadataWithIdentifier(identifier:string):void {
+
+        let alias = this._metadataIdentifierAliasMap[identifier];
 
         this.validateReference(alias);
         this.validateIdentifierArgument(identifier);

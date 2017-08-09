@@ -13,27 +13,18 @@ import { IContainer } from "./IContainer";
  */
 export class ContainerFluentSyntax implements IContainerFluentSyntax {
     
-    private _alias:string;
     private _identifier:string;
     private _kernel:IKernel;
 
     /**
      * Instance a new container fluent syntax connector.
-     * @param {string} alias Represets the alias to bind.
      * @param {string} identifier Represents the identidier for the related object.
      * @param {string} kernel Represents the kernel that is binding the alias.
      */
-    constructor(alias:string, identifier:string, kernel:IKernel) {
-        this._alias = alias;
+    constructor(identifier:string, kernel:IKernel) {
         this._identifier = identifier;
         this._kernel = kernel;
     }
-
-     /**
-     * Returns the alias.
-     * @returns {string} The context alias.
-     */
-    public getAlias(): string { return this._alias; }
 
     /**
      * Returns the identifier.
@@ -57,16 +48,17 @@ export class ContainerFluentSyntax implements IContainerFluentSyntax {
         let currentContainer:IContainer = kernel.getCurrentContainer();
 
         if (containerAlias == currentContainer.getName())
-            return;
+            return;        
 
-        let dependencyMetadata:DependencyMetadata = currentContainer.getDependencyMetadataWithIdentifier(this.getAlias(), this.getIdentifier());
+        let dependencyMetadata:DependencyMetadata = currentContainer.getDependencyMetadataWithIdentifier(this.getIdentifier());
+        let alias =  currentContainer.getIdentifierAlias(this.getIdentifier());        
 
         if (!dependencyMetadata)
             throw new Error(`The container ${currentContainer.getName()} doesn\'t contain the a dependency metadata with the identifier ${this.getIdentifier()}`);
 
-        currentContainer.unregisterDependencyMetadataWithIdentifier(this.getAlias(), this.getIdentifier())
+        currentContainer.unregisterDependencyMetadataWithIdentifier(this.getIdentifier())
 
         kernel.getContainer(containerAlias)
-              .registerDependencyMetadata(this.getAlias(), dependencyMetadata);
+              .registerDependencyMetadata(alias, dependencyMetadata);
     }
 }
