@@ -17,14 +17,14 @@ gulp.task('trasnpile-source', function () {
                 .pipe(tsProject())
                 .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./distribution'))                
+                .pipe(gulp.dest('./binaries/source'))                
 });
 
 gulp.task('create-source-definition', ['trasnpile-source'], function () {
     return gulp.src('./source/**/*')
                 .pipe(tsProject())
                 .dts
-                .pipe(gulp.dest('./distribution'));
+                .pipe(gulp.dest('./binaries/source'));
 });
 
 gulp.task('transpile', ['create-source-definition'], function() {
@@ -37,16 +37,16 @@ gulp.task('transpile', ['create-source-definition'], function() {
 //                              Test Tasks
 // =========================================================================
 
-gulp.task('trasnpile-test', function () {
+gulp.task('trasnpile-test', ['transpile'], function () {
     return gulp.src('./test/**/*')
-                .pipe(tsProject({allowJs: true}))
+                .pipe(tsProject())
                 .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./test_transpiled'))
+                .pipe(gulp.dest('./binaries/test'))
 });
 
 gulp.task('run-test', ['trasnpile-test'], function () {
-    return gulp.src(['./test_transpiled/TestStarter.js'])
+    return gulp.src(['./binaries/test/TestStarter.js' , './binaries/test/**/*.Spec.js'])
                .pipe(mocha());
 });
 
@@ -55,7 +55,7 @@ gulp.task('clean-test', ['run-test'], function () {
     .pipe(clean());
 });
 
-gulp.task('test', ['clean-test'], function() {
+gulp.task('test', ['run-test'], function() {
     console.log('=========================================');
     console.log('            Test performed');
     console.log('=========================================');

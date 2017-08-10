@@ -1,4 +1,4 @@
-distribution/
+binaries/
 node_modules/
 test_transpiled/
 documentation/
