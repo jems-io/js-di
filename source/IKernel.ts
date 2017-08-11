@@ -2,7 +2,6 @@ import { IModule } from './IModule'
 import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
-import { ContainerActivator } from "./ContainerActivator";
 import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
 
@@ -45,10 +44,9 @@ export interface IKernel {
 
     /**
      * Unbind the dependency metadata with the given identifier from the container resolution stack.
-     * @param {string} alias Represents the alias that contain the identifier to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    unbindWithIdentifier(alias:string, identifier:string):void;
+    unbindWithIdentifier(identifier:string):void;
 
     /**
      * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.

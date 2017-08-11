@@ -1,12 +1,12 @@
 /// <reference path="../typings/index.d.ts" />
 
 import * as assert from 'assert'
-import * as jemsdi from "../distribution/Index";
-import { IContainer } from "../distribution/IContainer";
+import * as jemsdi from "../source/Index";
+import { IContainer } from "../source/IContainer";
 
 describe('with an alias that contain sufixing configuration', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
 
      before(function() {
         let container:IContainer = kernel.getDefaultContainer();

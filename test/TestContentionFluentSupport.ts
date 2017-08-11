@@ -1,15 +1,15 @@
 /// <reference path="../typings/index.d.ts" />
 
 import * as assert from 'assert'
-import * as jemsdi from "../distribution/Index";
+import * as jemsdi from "../source/Index";
 import { FakeTypeA } from './fake_types/FakeTypeA';
 import { FakeTypeB } from './fake_types/FakeTypeB';
 import { FakeTypeC } from "./fake_types/FakeTypeC";
-import { IContainer } from "../distribution/IContainer";
+import { IContainer } from "../source/IContainer";
 
 describe('with fluent supported containeraized resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();    
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
     let containerBAlias = 'containerB';
     let containerCAlias = 'containerC';
 

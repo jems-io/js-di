@@ -6,7 +6,7 @@ import { IAliasReference } from "./IAliasReference";
 /**
  * Represents a container fluent syntax to specify a containers for the registered alias.
  */
-export interface IContainerFluentSyntax extends IAliasReference, IIdentifierReference, IKernelReference {
+export interface IContainerFluentSyntax extends IIdentifierReference, IKernelReference {
 
     /**
      * Specify the kernel to activate the object in the container with the given container alias.

@@ -1,8 +1,11 @@
 {
-    "compilerOptions": {        
-        "noImplicitAny": true,
+    "compilerOptions": {
         "lib": ["ES6"],
+        "target": "ES5",
+        "noEmitOnError": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,        
         "declaration": true,
-        "target": "ES5"
+        "pretty": true       
     } 
 }

@@ -11,10 +11,10 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install gulp-cli -g && npm install typedoc -g && npm install typings -g && npm install",
+    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install -g typings && npm install && typings i",
     "transpile": "gulp transpile",
     "test": "gulp test",
-    "document": "typedoc --target ES6 --mode file --out ./documentation  ./source/Index.ts",
+    "document": "typedoc --target ES6 --mode file --excludePrivate --out ./binaries/documentation  ./source/Index.ts",
     "zip": "gulp zip"
   },
   "repository": {

@@ -20,6 +20,12 @@ export interface IContainer {
      */
     registerDependencyMetadata(alias:string, dependencyMetadata:DependencyMetadata):string;
 
+    /**
+     * Return the alias that contain the metadta with the given identifier.
+     * @param {string} identifier Represents the identifier to look for.
+     */
+    getIdentifierAlias(identifier:string):string;
+
      /**
      * Returns the registered dependencies metadata with the given alias.
      * @param {string} alias Represents the alias to look for.
@@ -29,11 +35,10 @@ export interface IContainer {
 
     /**
      * Returns the registered dependency metadata with the given alias and identifier.
-     * @param {string} alias Represents the alias to look for.
      * @param {string} identifier Represents the identifier to look for.
      * @returns {string} Return dependency metadata with the given identifier.    
      */
-    getDependencyMetadataWithIdentifier(alias:string, identifier:string):DependencyMetadata;
+    getDependencyMetadataWithIdentifier(identifier:string):DependencyMetadata;
 
     /**
      * Unregister all registered dependencies metadata with the given alias.
@@ -43,10 +48,9 @@ export interface IContainer {
 
     /**
      * Unregister the dependency metadata with the given alias and identifier.
-     * @param {string} alias Represents the alias to look for.
      * @param {string} identifier Represents the identifier to look for.
      */
-    unregisterDependencyMetadataWithIdentifier(alias:string, identifier:string):void;
+    unregisterDependencyMetadataWithIdentifier(identifier:string):void;
 
     /**
      * Returns a boolean value specifying if the container can or not resolve an alias.

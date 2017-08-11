@@ -1,12 +1,12 @@
 /// <reference path="../typings/index.d.ts" />
 
 import * as assert from 'assert'
-import * as jemsdi from "../distribution/Index";
-import { IContainer } from "../distribution/IContainer";
+import * as jemsdi from "../source/Index";
+import { IContainer } from "../source/IContainer";
 
 describe('with cosntant servicing strategy resolution', function() {
 
-    let kernel:jemsdi.Kernel = new jemsdi.Kernel();
+    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
     let constantInstance = {};
 
     before(function() {
