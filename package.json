@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install -g typings && npm install",
+    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install -g typings && npm install && typings i",
     "transpile": "gulp transpile",
     "test": "gulp test",
     "document": "typedoc --target ES6 --mode file --excludePrivate --out ./binaries/documentation  ./source/Index.ts",
