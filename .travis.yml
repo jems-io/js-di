@@ -6,8 +6,6 @@ branches:
 language: node_js
 node_js:
 - '6'
-env:
-- PackageVersion=0.0.0
 before_script:
 - npm run setup
 - git config --global push.default matching
