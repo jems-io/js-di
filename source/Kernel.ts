@@ -8,6 +8,7 @@ import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
 import { IContainerActivator } from "./IContainerActivator";
 import contextualActivator from './ContextualActivator'
+import { ResolutionContext } from "./ResolutionContex";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -95,9 +96,19 @@ export class Kernel implements IKernel {
      * Return an resolved instance using the given reference that could be a class, function or alias.
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      */
-    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {        
-        let containerActivator:IContainerActivator = contextualActivator.getContextInstantiator<IContainer, IContainerActivator>('containerActivator')(this._currentContainer, '');    
-        return this._currentContainer.resolve(reference, containerActivator);  
+    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {    
+        
+        let resolutionContext:ResolutionContext = {
+            kernel: this,
+            originContainer: this._currentContainer,
+            currentContainer: this._currentContainer,
+            containerSupportingStack: [],
+            aliasResolutionStack: [],
+            targetResolutionStack: typeof reference !== 'string' ? [(<any> reference)] : [],
+            steps: ['The kernel creates the resolution context and start to resolve the given reference.']
+        };
+        
+        return this._currentContainer.resolve(reference, resolutionContext);  
     }
 
     /**
