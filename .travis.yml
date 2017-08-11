@@ -6,6 +6,8 @@ branches:
 language: node_js
 node_js:
 - '6'
+env:
+- PackageVersion=0.0.0
 before_script:
 - npm run setup
 - git config --global push.default matching
@@ -20,17 +22,17 @@ script:
 deploy:  
 - provider: script
   skip_cleanup: true
-  script: npm version patch -m "[skip ci] Patching, upgrading the version to %s"
+  script: PackageVersion='npm version patch -m "[skip ci] Patching, upgrading the version to %s"'
   on:
     branch: development
 - provider: script
   skip_cleanup: true
-  script: npm version prerelease -m "[skip ci] Pre-releasing, upgrading the version to %s"
+  script: PackageVersion='npm version prerelease -m "[skip ci] Pre-releasing, upgrading the version to %s"'
   on:
     branch: release-pre
 - provider: script
   skip_cleanup: true
-  script: npm version patch -m "[skip ci] Releasing, upgrading the version to %s"
+  script: PackageVersion='npm version patch -m "[skip ci] Releasing, upgrading the version to %s"'
   on:
     branch: release-current
 - provider: script
@@ -76,12 +78,12 @@ deploy:
     branch: release-current
 - provider: script
   skip_cleanup: true
-  script: npm run generate_documentation && gulp ftp-upload --sourcePath "./documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH"
+  script: npm run document && gulp ftp-upload --sourcePath "./binaries/documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH/@jems/$PackageVersion"
   on:
     branch: release-pre
 - provider: script
   skip_cleanup: true
-  script: npm run generate_documentation && gulp ftp-upload --sourcePath "./documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH"
+  script: npm run document && gulp ftp-upload --sourcePath "./binaries/documentation/**/*" --host "$AZURE_WA_FTP" --user "$AZURE_WA_USERNAME" --password "$AZURE_WA_PASSWORD" --remotePath "$AZURE_WA_DOC_PATH/@jems/$PackageVersion"
   on:
     branch: release-current
 

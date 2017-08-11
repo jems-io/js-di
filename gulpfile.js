@@ -66,7 +66,7 @@ gulp.task('test', ['run-test'], function() {
 // =========================================================================
  
 gulp.task('zip-distribution', function () {
-    return gulp.src('./distribution/*')
+    return gulp.src('./binaries/source/*')
                .pipe(zip('distribution.zip'))
                .pipe(gulp.dest('./'));
 
