@@ -20,17 +20,17 @@ script:
 deploy:  
 - provider: script
   skip_cleanup: true
-  script: PackageVersion=$(npm version patch -m "[skip ci] Patching, upgrading the version to %s") && echo $PackageVersion
+  script: PackageVersion="$(npm version patch -m "[skip ci] Patching, upgrading the version to %s")" && echo $PackageVersion
   on:
     branch: development
 - provider: script
   skip_cleanup: true
-  script: PackageVersion=$(npm version prerelease -m "[skip ci] Pre-releasing, upgrading the version to %s") && echo $PackageVersion
+  script: PackageVersion="$(npm version prerelease -m "[skip ci] Pre-releasing, upgrading the version to %s")" && echo $PackageVersion
   on:
     branch: release-pre
 - provider: script
   skip_cleanup: true
-  script: PackageVersion=$(npm version patch -m "[skip ci] Releasing, upgrading the version to %s") && echo $PackageVersion
+  script: PackageVersion="$(npm version patch -m "[skip ci] Releasing, upgrading the version to %s")" && echo $PackageVersion
   on:
     branch: release-current
 - provider: script
