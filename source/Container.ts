@@ -5,6 +5,8 @@ import { ServicingStrategy } from "./ServicingStrategy";
 import * as Errors from "./Errors/Index";
 import { IKernel } from "./IKernel";
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
+import { ResolutionContext } from "./ResolutionContex";
+import contextualActivator from './ContextualActivator'
 
 /**
  * @private
@@ -173,15 +175,17 @@ export class Container implements IContainer {
         return !(!(this.getDependenciesMetadataWithAlias(alias)).length);
     }
 
-    /**
-     * Return an resolved instance using the given reference that could be a class, function or alias.
+     /**
+     * Returns a resolved object instance asynchronous.
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
-     * @param {IContainerActivator} containerActivator Represents the container activator.
-     * @returns {any} The resolved object.
-     */
-    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):any {
+     * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
+     */ 
+    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):any {
 
+        resolutionContext.steps.push('Using container: [' + this.getName() + '] to resolve the ' + typeof reference + ': ' + (typeof reference === 'function' ? reference.name : reference));
         this.validateReference(reference);
+
+        let containerActivator:IContainerActivator = contextualActivator.getContextInstantiator<ResolutionContext, IContainerActivator>('containerActivator')(resolutionContext, '');
 
         if (typeof reference === 'string') {
             let alias:string = <string>reference;
@@ -205,7 +209,7 @@ export class Container implements IContainer {
                 if (resolutionConfiguration.optional)
                     return null;
                 else
-                    return this.resolveWithSupport(originalAlias, containerActivator);      
+                    return this.resolveWithSupport(originalAlias, resolutionContext);      
             else {   
                 if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != identifierMetadataMapCollection.length)
                     throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
@@ -246,11 +250,11 @@ export class Container implements IContainer {
     /**
      * Returns a resolved object instance asynchronous.
      * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
-     * @param {IContainerActivator} containerActivator Represents the container activator.
+     * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
      * @returns {Promise<any>} A promise that resolve the objects. 
      */ 
-    public resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, containerActivator:IContainerActivator):Promise<any> {
-        return this.resolve(reference, containerActivator);
+    public async resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):Promise<any> {
+        return this.resolve(reference, resolutionContext);
     }
 
     private getResolutionConfigurationForAlias(alias:string):ResolutionConfigurationLookUpResult {
@@ -272,15 +276,26 @@ export class Container implements IContainer {
         };
     }
 
-    private resolveWithSupport(alias:string, containerActivator:IContainerActivator):any {
+    private resolveWithSupport(alias:string, resolutionContext:ResolutionContext):any {
         
         if (this._supportContainerAliases) {
             for(let supportAliasIndex = 0; supportAliasIndex < this._supportContainerAliases.length; supportAliasIndex) {
                 try {
                     let supportAlias:string = this._supportContainerAliases[supportAliasIndex];
 
-                    return (this._kernel.getContainer(supportAlias))
-                                                    .resolve(alias, containerActivator);
+                    let supportContainer:IContainer = this._kernel.getContainer(supportAlias);
+
+                    resolutionContext.steps.push('Using support container: ' + supportContainer.getName());
+
+                    resolutionContext.containerSupportingStack.push(alias);
+                    resolutionContext.originContainer = supportContainer;
+
+                    let resolverObject:any = supportContainer.resolve(alias, resolutionContext);
+
+                    resolutionContext.containerSupportingStack.splice(resolutionContext.containerSupportingStack.length - 1, 1);;
+                    resolutionContext.originContainer = this;
+
+                    return resolverObject;
                 } catch (error) {
                     if (error instanceof Errors.UnregisteredAliasError)
                         break;

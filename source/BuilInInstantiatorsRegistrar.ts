@@ -20,6 +20,7 @@ import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
 
 import { ISingeltonFluentSyntax } from "./ISingeltonFluentSyntax";
 import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
+import { ResolutionContext } from "./ResolutionContex";
 
 /**
  * Represents a registrar to regiter all the build-in implementations.
@@ -36,7 +37,7 @@ export class BuilInInstantiatorsRegistrar {
         contextualActivator.setContextInstantiator<IKernel, IContainer>('container', (contextType, instanceIdentifier) => {
             return new Container(contextType, instanceIdentifier);
         });        
-        contextualActivator.setContextInstantiator<IContainer, IContainerActivator>('containerActivator', (contextType, instanceIdentifier) => {
+        contextualActivator.setContextInstantiator<ResolutionContext, IContainerActivator>('containerActivator', (contextType, instanceIdentifier) => {
             return new ContainerActivator(contextType);
         });
         contextualActivator.setContextInstantiator<IKernel, IAliasBindFluentSyntax>('aliasBindFluentSyntax', (contextType, instanceIdentifier) => {

@@ -3,6 +3,7 @@ import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
 import * as Errors from "./Errors/Index";
 import { IContainer } from "./IContainer";
+import { ResolutionContext } from "./ResolutionContex";
 
 /**
  * Represenst an activator that can activate objects.
@@ -10,17 +11,17 @@ import { IContainer } from "./IContainer";
  */
 export class ContainerActivator implements IContainerActivator {
 
+    private _resolutionContext:ResolutionContext;
     private _container:IContainer;
-    private _activationStack:string[];
 
     /**
      * Instance a new container activator.
      * @param {module:jemsDI.IContainer} container Represents the container that will use the activator.
      * @memberof module:jemsDI
      */
-    constructor(container:IContainer) {
-        this._container = container;
-        this._activationStack = [];        
+    constructor(resolutionContext:ResolutionContext) {
+        this._resolutionContext = resolutionContext;
+        this._container = resolutionContext.originContainer;
     }
 
     /**
@@ -70,33 +71,39 @@ export class ContainerActivator implements IContainerActivator {
         return acivatedObject;
     }
 
-    private addAliasToStack(alias:string):void {  
-
-        if (this._activationStack.indexOf(alias) >= 0) {
-            this._activationStack.push(alias);
-            throw new Errors.CyclicDependencyError('An cyclic dependency has been found for arguments in the resolution of an object.', this._activationStack);
+    private addAliasToStack(alias:string):void {
+        if (this._resolutionContext.aliasResolutionStack.indexOf(alias) >= 0) {
+            this._resolutionContext.aliasResolutionStack.push(alias);
+            throw new Errors.CyclicDependencyError('An cyclic dependency has been found for arguments in the resolution of an object.', this._resolutionContext.aliasResolutionStack);
         }
 
-        this._activationStack.push(alias);
+        this._resolutionContext.aliasResolutionStack.push(alias);
     }
 
     private removeAliasFromStack(alias:string):void {
 
-        let aliasIndex:number = this._activationStack.indexOf(alias);
+        let aliasIndex:number = this._resolutionContext.aliasResolutionStack.indexOf(alias);
         
-        this._activationStack.splice(aliasIndex, 1);
+        this._resolutionContext.aliasResolutionStack.splice(aliasIndex, 1);
     }
 
     private getFunctionArguments(functionReference:any):any[] {
 
         let functionArguments:any[] = [null];
         let functionArgumentsNames:string[] = this.getFunctionArgumentsNames(functionReference);
+
+        if (functionArgumentsNames.length)
+            this._resolutionContext.steps.push('Identifying dependencies: ' + functionArgumentsNames.join(', '));
         
+        this._resolutionContext.targetResolutionStack.push(functionReference);
+
         for(let argumentIndex = 0; argumentIndex < functionArgumentsNames.length; argumentIndex++) {
 
-            let argumentInstance:any = this._container.resolve(functionArgumentsNames[argumentIndex], this);  
+            let argumentInstance:any = this._container.resolve(functionArgumentsNames[argumentIndex], this._resolutionContext);  
             functionArguments.push(argumentInstance);
         }
+
+        this._resolutionContext.targetResolutionStack.splice(this._resolutionContext.targetResolutionStack.length - 1, 1);
 
         return functionArguments;
     }
