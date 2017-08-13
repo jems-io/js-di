@@ -33,17 +33,11 @@ export class BuilderFunctionSevicingStrategy implements ISevicingStrategy {
             throw new ServicingError(`The provided metadata reference target of type [${typeof referenceTarget}], is not argumentable.`);
 
         let argumetsNames:string[] = this._argumentsNamesProvider.getArgumentsNames(referenceTarget);
-        let argumets:any[] = [];
-
-        
+        let argumets:any[] = [];        
 
         argumetsNames.forEach((argumentName) => {
-            console.log('resolving:', argumentName);
             argumets.push(resolutionContext.originContainer.resolve(argumentName, resolutionContext));
-            console.log('result:', argumets);
-        });
-
-        
+        });        
 
         return referenceTarget.call(null, argumets);
     }
