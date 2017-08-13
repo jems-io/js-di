@@ -1,5 +1,7 @@
 import { ContextualActivator } from "./ContextualActivator";
 
+import { ResolutionContext } from "./ResolutionContex";
+
 import { IKernel } from "./IKernel";
 import { Kernel } from "./Kernel";
 
@@ -20,7 +22,10 @@ import { AliasBindFluentSyntax } from "./AliasBindFluentSyntax";
 
 import { ISingeltonFluentSyntax } from "./ISingeltonFluentSyntax";
 import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
-import { ResolutionContext } from "./ResolutionContex";
+
+import { IArgumentsNamesProvider } from "./IArgumentsNamesProvider"
+import { ArgumentsNamesProvider } from "./ArgumentsNamesProvider"
+
 
 /**
  * Represents a registrar to regiter all the build-in implementations.
@@ -51,6 +56,9 @@ export class BuilInInstantiatorsRegistrar {
         });
         contextualActivator.setContextInstantiator<IKernel, IServicingContextFluentSyntax>('servicingContextFluentSyntax', (contextType, instanceIdentifier) => {
             return new ServicingContextFluentSyntax(instanceIdentifier, contextType);
+        });
+        contextualActivator.setContextInstantiator<any, IArgumentsNamesProvider>('argumentsNamesProvider', (contextType, instanceIdentifier) => {
+            return new ArgumentsNamesProvider();
         });
     }
 }

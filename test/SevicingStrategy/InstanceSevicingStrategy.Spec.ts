@@ -1,17 +1,17 @@
 /// <reference path="../../typings/index.d.ts" />
 
 import * as assert from 'assert'
-import { IMock,Mock } from 'typemoq'
+import { IMock, Mock, Times } from 'typemoq'
 
 import { ResolutionContext } from "../../source/ResolutionContex";
 import { InstanceSevicingStrategy } from "../../source/SevicingStrategy/InstanceSevicingStrategy";
 import { IContainer } from "../../source/IContainer";
-
-class IntatiableFunction {};
-class IntatiableFunctionWithArgument { constructor(argument1:string) {} };
+import { ServicingError } from "../../source/Errors/ServicingError"
 
 describe('The [InstanceSevicingStrategy]', function() {
     it('should return an instance of the given reference target.', function() {
+        class IntatiableFunction {};
+
         let resolutionContext:ResolutionContext = new ResolutionContext();
     
         let instanceSevicingStrategy:InstanceSevicingStrategy = new InstanceSevicingStrategy();
@@ -21,7 +21,9 @@ describe('The [InstanceSevicingStrategy]', function() {
                  `The served isntance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunction}]`);
     })
 
-    it('should return an instance of the given reference target and resolve its dependencies with the context origin container.', function() {
+    it('should return an instance of the given reference target and resolve its dependencies with the context origin container.', function() {        
+        class IntatiableFunctionWithArgument { constructor(argument1:string) {} };
+
         let resolutionContext:ResolutionContext = new ResolutionContext();
         let containerMock:IMock<IContainer> = Mock.ofType<IContainer>();        
         containerMock.setup(x => x.resolve('argument1', resolutionContext)).returns(() => {});
@@ -32,5 +34,16 @@ describe('The [InstanceSevicingStrategy]', function() {
 
         assert.ok(servicingResult instanceof IntatiableFunctionWithArgument,
                  `The served isntance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunctionWithArgument}]`);
-    })    
+
+        containerMock.verify(x => x.resolve('argument1', resolutionContext), Times.once());
+    })  
+    
+    it('should throw an error if the given metadata reference target is not argumentable as a function, class or lambda.', function() { 
+        assert.throws(() => {
+            let resolutionContext:ResolutionContext = new ResolutionContext();
+
+            let instanceSevicingStrategy:InstanceSevicingStrategy = new InstanceSevicingStrategy();
+            let servicingResult:any = instanceSevicingStrategy.serve(resolutionContext, {});
+        }, ServicingError);
+    })
 })
