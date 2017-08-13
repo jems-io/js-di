@@ -36,7 +36,7 @@ export class InstanceSevicingStrategy implements ISevicingStrategy {
         let argumets:any[] = [null];
 
         argumetsNames.forEach((argumentName) => {
-            argumetsNames.push(resolutionContext.originContainer.resolve(argumentName, resolutionContext));
+            argumets.push(resolutionContext.originContainer.resolve(argumentName, resolutionContext));
         });
 
         return new (Function.prototype.bind.apply(referenceTarget, argumets));
