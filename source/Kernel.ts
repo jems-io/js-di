@@ -1,6 +1,5 @@
 import * as Errors from "./Errors/Index";
 import { IModule } from './IModule'
-import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";

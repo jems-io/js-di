@@ -1,5 +1,4 @@
 import { IModule } from './IModule'
-import { ServicingStrategy } from './ServicingStrategy'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IContainer } from "./IContainer";

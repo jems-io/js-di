@@ -38,7 +38,7 @@ gulp.task('transpile', ['create-source-definition'], function() {
 // =========================================================================
 
 gulp.task('trasnpile-test', ['transpile'], function () {
-    return gulp.src('./test/**/*')
+    return gulp.src(['./test/**/*'])
                 .pipe(tsProject())
                 .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js

@@ -21,7 +21,6 @@ export function createKernel():IKernel {
 // Exporting accessible build-in clasess.
 export * from './DependencyMetadata'
 export * from './ResolutionConfiguration'
-export * from './ServicingStrategy'
 
 // Exporting interfaces, that define the behavior.
 export * from './IAliasBindFluentSyntax';
@@ -35,6 +34,7 @@ export * from './IKernelReference';
 export * from './IModule';
 export * from './IServicingContextFluentSyntax';
 export * from './ISingeltonFluentSyntax';
+export * from "./ServicingStrategy/IServicingStrategy"
 
 // Exporting Errors
 export * from './Errors/Index';

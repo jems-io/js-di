@@ -5,28 +5,19 @@ describe('The kernel,', function() {
     describe('when is resolving,', function() {
 
         describe('if everithing is good,', function() {
-            // Test the instance servicing strategy
+            //Test the instance servicing strategy
             require('./TestInstanceServicingStrategy');
 
-            // Test the instance servicing strategy fluently
-            require('./TestInstanceServicingStrategyFluently');
-
-            // Test the constant servicing strategy
+            //Test the constant servicing strategy
             require('./TestConstantServicingStrategy');
 
-            // Test the function builder servicing strategy
+            //Test the function builder servicing strategy
             require('./TestBuilderFunctionServicingStrategy');
 
-            // Test the contention
-            require('./TestContention');  
-
-            // Test the contention with fluent support
-            require('./TestContentionFluentSupport');            
-
-             // Test the contention fluently
-            require('./TestContentionFluently'); 
+            //Test the contention
+            require('./TestContention');          
             
-            // Test the alias sufixing configuration
+            //Test the alias sufixing configuration
             require('./TestAliasSufixingConfiguration');            
         });
 

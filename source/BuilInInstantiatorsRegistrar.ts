@@ -26,6 +26,10 @@ import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
 import { IArgumentsNamesProvider } from "./IArgumentsNamesProvider"
 import { ArgumentsNamesProvider } from "./ArgumentsNamesProvider"
 
+import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
+import { InstanceServicingStrategy } from "./ServicingStrategy/InstanceServicingStrategy"
+import { ConstantServicingStrategy } from "./ServicingStrategy/ConstantServicingStrategy"
+import { BuilderFunctionServicingStrategy } from "./ServicingStrategy/BuilderFunctionServicingStrategy"
 
 /**
  * Represents a registrar to regiter all the build-in implementations.
@@ -59,6 +63,20 @@ export class BuilInInstantiatorsRegistrar {
         });
         contextualActivator.setContextInstantiator<any, IArgumentsNamesProvider>('argumentsNamesProvider', (contextType, instanceIdentifier) => {
             return new ArgumentsNamesProvider();
+        });
+
+        this.registeServicingStrategies(contextualActivator);
+    }
+
+    private registeServicingStrategies(contextualActivator: ContextualActivator):void {
+        contextualActivator.setContextInstantiator<any, IServicingStrategy>('instaceServicingStrategy', (contextType, instanceIdentifier) => {
+            return new InstanceServicingStrategy();
+        });
+        contextualActivator.setContextInstantiator<any, IServicingStrategy>('constantServicingStrategy', (contextType, instanceIdentifier) => {
+            return new ConstantServicingStrategy();
+        });
+        contextualActivator.setContextInstantiator<any, IServicingStrategy>('builderFunctionServicingStrategy', (contextType, instanceIdentifier) => {
+            return new BuilderFunctionServicingStrategy();
         });
     }
 }

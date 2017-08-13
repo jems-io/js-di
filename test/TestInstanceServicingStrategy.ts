@@ -12,25 +12,10 @@ describe('with instance servicing strategy resolution', function() {
     let kernel:jemsdi.IKernel =  jemsdi.createKernel();
 
      before(function() {
-        let container:IContainer = kernel.getDefaultContainer();
-            
-        container.registerDependencyMetadata('fakeTypeA', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeA,
-            activateAsSingelton: false
-        }));
-
-        container.registerDependencyMetadata('fakeTypeB', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeB,
-            activateAsSingelton: false
-        }));
-
-        container.registerDependencyMetadata('fakeTypeC', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeC,
-            activateAsSingelton: false
-        }));
+         
+        kernel.bind('fakeTypeA').to(FakeTypeA);
+        kernel.bind('fakeTypeB').to(FakeTypeB);
+        kernel.bind('fakeTypeC').to(FakeTypeC);
      });
 
     it('should resolve an instance of FakeTypeA with fakeTypeA alias', function() {
