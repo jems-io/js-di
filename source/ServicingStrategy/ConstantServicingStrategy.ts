@@ -1,14 +1,14 @@
 import contextualActivator from '../ContextualActivator'
 
 import { ResolutionContext } from "../ResolutionContex";
-import { ISevicingStrategy } from "./ISevicingStrategy";
+import { IServicingStrategy } from "./IServicingStrategy";
 import { IArgumentsNamesProvider } from "../IArgumentsNamesProvider";
 import { ServicingError } from "../../source/Errors/ServicingError"
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets as a constant.
  */
-export class ConstantSevicingStrategy implements ISevicingStrategy {
+export class ConstantServicingStrategy implements IServicingStrategy {
     /**
      * Instantiate and serve the given reference target transformation.
      * @param resolutionContext Represents the resolution context of the servicing.

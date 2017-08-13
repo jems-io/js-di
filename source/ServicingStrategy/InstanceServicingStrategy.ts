@@ -1,14 +1,14 @@
 import contextualActivator from '../ContextualActivator'
 
 import { ResolutionContext } from "../ResolutionContex";
-import { ISevicingStrategy } from "./ISevicingStrategy";
+import { IServicingStrategy } from "./IServicingStrategy";
 import { IArgumentsNamesProvider } from "../IArgumentsNamesProvider";
 import { ServicingError } from "../../source/Errors/ServicingError"
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets as an instance.
  */
-export class InstanceSevicingStrategy implements ISevicingStrategy {
+export class InstanceServicingStrategy implements IServicingStrategy {
     /**
      * Represents the arguments name provider that identify the arguments in a argumentable reference.
      */

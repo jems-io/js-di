@@ -3,17 +3,17 @@
 import * as assert from 'assert'
 
 import { ResolutionContext } from "../../source/ResolutionContex";
-import { ConstantSevicingStrategy } from "../../source/SevicingStrategy/ConstantSevicingStrategy";
+import { ConstantServicingStrategy } from "../../source/ServicingStrategy/ConstantServicingStrategy";
 import { IContainer } from "../../source/IContainer";
 import { ServicingError } from "../../source/Errors/ServicingError"
 
-describe('The [ConstantSevicingStrategy]', function() {
+describe('The [ConstantServicingStrategy]', function() {
     it('should return the given reference target.', function() {
         let referece = { id : 1 };
         let resolutionContext:ResolutionContext = new ResolutionContext();
         
-        let constantSevicingStrategy:ConstantSevicingStrategy = new ConstantSevicingStrategy();
-        let servicingResult:any = constantSevicingStrategy.serve(resolutionContext, referece);
+        let constantServicingStrategy:ConstantServicingStrategy = new ConstantServicingStrategy();
+        let servicingResult:any = constantServicingStrategy.serve(resolutionContext, referece);
 
         assert.equal(servicingResult, referece,
                  `The served reference is [${servicingResult}] when it should be [${referece}]`);
@@ -22,14 +22,14 @@ describe('The [ConstantSevicingStrategy]', function() {
     it('should trow an error if the given reference target is undefined or null.', function() {
         let resolutionContext:ResolutionContext = new ResolutionContext();
 
-        let constantSevicingStrategy:ConstantSevicingStrategy = new ConstantSevicingStrategy();
+        let constantServicingStrategy:ConstantServicingStrategy = new ConstantServicingStrategy();
 
         assert.throws(() => {            
-            let servicingResult:any = constantSevicingStrategy.serve(resolutionContext, undefined);
+            let servicingResult:any = constantServicingStrategy.serve(resolutionContext, undefined);
         }, ServicingError);
 
         assert.throws(() => {            
-            let servicingResult:any = constantSevicingStrategy.serve(resolutionContext, null);
+            let servicingResult:any = constantServicingStrategy.serve(resolutionContext, null);
         }, ServicingError);
     });
 });

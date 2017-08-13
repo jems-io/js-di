@@ -4,18 +4,18 @@ import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
 import { ResolutionContext } from "../../source/ResolutionContex";
-import { InstanceSevicingStrategy } from "../../source/SevicingStrategy/InstanceSevicingStrategy";
+import { InstanceServicingStrategy } from "../../source/ServicingStrategy/InstanceServicingStrategy";
 import { IContainer } from "../../source/IContainer";
 import { ServicingError } from "../../source/Errors/ServicingError"
 
-describe('The [InstanceSevicingStrategy]', function() {
+describe('The [InstanceServicingStrategy]', function() {
     it('should return an instance of the given reference target.', function() {
         class IntatiableFunction {};
 
         let resolutionContext:ResolutionContext = new ResolutionContext();
     
-        let instanceSevicingStrategy:InstanceSevicingStrategy = new InstanceSevicingStrategy();
-        let servicingResult:any = instanceSevicingStrategy.serve(resolutionContext, IntatiableFunction);
+        let instanceServicingStrategy:InstanceServicingStrategy = new InstanceServicingStrategy();
+        let servicingResult:any = instanceServicingStrategy.serve(resolutionContext, IntatiableFunction);
 
         assert.ok(servicingResult instanceof IntatiableFunction,
                  `The served instance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunction}]`);
@@ -29,8 +29,8 @@ describe('The [InstanceSevicingStrategy]', function() {
         containerMock.setup(x => x.resolve('argument1', It.isAny())).returns(() => {});
         resolutionContext.originContainer = containerMock.object;
     
-        let instanceSevicingStrategy:InstanceSevicingStrategy = new InstanceSevicingStrategy();
-        let servicingResult:any = instanceSevicingStrategy.serve(resolutionContext, IntatiableFunctionWithArgument);
+        let instanceServicingStrategy:InstanceServicingStrategy = new InstanceServicingStrategy();
+        let servicingResult:any = instanceServicingStrategy.serve(resolutionContext, IntatiableFunctionWithArgument);
 
         assert.ok(servicingResult instanceof IntatiableFunctionWithArgument,
                  `The served instance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunctionWithArgument}]`);
@@ -42,8 +42,8 @@ describe('The [InstanceSevicingStrategy]', function() {
         assert.throws(() => {
             let resolutionContext:ResolutionContext = new ResolutionContext();
 
-            let instanceSevicingStrategy:InstanceSevicingStrategy = new InstanceSevicingStrategy();
-            let servicingResult:any = instanceSevicingStrategy.serve(resolutionContext, {});
+            let instanceServicingStrategy:InstanceServicingStrategy = new InstanceServicingStrategy();
+            let servicingResult:any = instanceServicingStrategy.serve(resolutionContext, {});
         }, ServicingError);
     })
 })

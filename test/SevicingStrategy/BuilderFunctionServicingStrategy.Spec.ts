@@ -4,16 +4,16 @@ import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
 import { ResolutionContext } from "../../source/ResolutionContex";
-import { BuilderFunctionSevicingStrategy } from "../../source/SevicingStrategy/BuilderFunctionSevicingStrategy";
+import { BuilderFunctionServicingStrategy } from "../../source/ServicingStrategy/BuilderFunctionServicingStrategy";
 import { IContainer } from "../../source/IContainer";
 import { ServicingError } from "../../source/Errors/ServicingError"
 
-describe('The [BuilderFunctionSevicingStrategy]', function() {
+describe('The [BuilderFunctionServicingStrategy]', function() {
     it('should return the result of the invokation of the given reference target.', function() {
         let resolutionContext:ResolutionContext = new ResolutionContext();
     
-        let builderFunctionSevicingStrategy:BuilderFunctionSevicingStrategy = new BuilderFunctionSevicingStrategy();
-        let servicingResult:any = builderFunctionSevicingStrategy.serve(resolutionContext, () => 123);
+        let builderFunctionServicingStrategy:BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy();
+        let servicingResult:any = builderFunctionServicingStrategy.serve(resolutionContext, () => 123);
 
         assert.equal(servicingResult, 123,
                  `The served result is [${servicingResult}] when it should be [123]`);
@@ -25,8 +25,8 @@ describe('The [BuilderFunctionSevicingStrategy]', function() {
         containerMock.setup(x => x.resolve('argument1', It.isAny())).returns(() => 'moto');
         resolutionContext.originContainer = containerMock.object;
     
-        let builderFunctionSevicingStrategy:BuilderFunctionSevicingStrategy = new BuilderFunctionSevicingStrategy();
-        let servicingResult:any = builderFunctionSevicingStrategy.serve(resolutionContext, (argument1:string) => 'hello ' + argument1);
+        let builderFunctionServicingStrategy:BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy();
+        let servicingResult:any = builderFunctionServicingStrategy.serve(resolutionContext, (argument1:string) => 'hello ' + argument1);
 
         assert.equal(servicingResult, 'hello moto',
                  `The served result is [${servicingResult}] when it should be [hello moto]`);
@@ -38,8 +38,8 @@ describe('The [BuilderFunctionSevicingStrategy]', function() {
         assert.throws(() => {
             let resolutionContext:ResolutionContext = new ResolutionContext();
 
-            let builderFunctionSevicingStrategy:BuilderFunctionSevicingStrategy = new BuilderFunctionSevicingStrategy();
-            let servicingResult:any = builderFunctionSevicingStrategy.serve(resolutionContext, {});
+            let builderFunctionServicingStrategy:BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy();
+            let servicingResult:any = builderFunctionServicingStrategy.serve(resolutionContext, {});
         }, ServicingError);
     })
 })
