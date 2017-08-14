@@ -10,14 +10,7 @@ describe('with builder function servicing strategy resolution', function() {
     let constantInstance = {};
 
     before(function () {
-
-        let container:IContainer = kernel.getDefaultContainer();
-        
-        container.registerDependencyMetadata('fakeFunctionBuilder', ({
-            servicingStrategy: jemsdi.ServicingStrategy.BUILDER_FUNCTION,
-            activationReference: function() { return constantInstance; },
-            activateAsSingelton: false
-        }));            
+        kernel.bind('fakeFunctionBuilder').toBuilderFunction(function() { return constantInstance; });
     });
 
     it('should resolve the function value', function () {

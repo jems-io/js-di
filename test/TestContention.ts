@@ -15,54 +15,17 @@ describe('with containeraized resolution', function() {
 
      before(function() {
 
-        kernel.createContainer(containerBAlias);
-        kernel.createContainer(containerCAlias);
+        kernel.createContainer(containerBAlias).setSupportContainersAliases(['default']);
+        kernel.createContainer(containerCAlias).setSupportContainersAliases([containerBAlias]);
 
-        let defaultContainer:IContainer = kernel.getCurrentContainer(); 
+        kernel.bind('fakeType').to(FakeTypeA);
+        kernel.bind('fakeTypeA').to(FakeTypeA);
 
-        defaultContainer.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeA,
-            activateAsSingelton: false
-        }));
+        kernel.bind('fakeType').to(FakeTypeB).inContainer(containerBAlias);
+        kernel.bind('fakeTypeB').to(FakeTypeB).inContainer(containerBAlias);
 
-        defaultContainer.registerDependencyMetadata('fakeTypeA', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeA,
-            activateAsSingelton: false
-        }));        
-
-        let containerB:IContainer = kernel.getContainer(containerBAlias);
-
-        containerB.setSupportContainersAliases(['default']);   
-
-        containerB.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeB,
-            activateAsSingelton: false
-        }));
-
-        containerB.registerDependencyMetadata('fakeTypeB', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeB,
-            activateAsSingelton: false
-        }));
-        
-        let containerC:IContainer = kernel.getContainer(containerCAlias);
-
-        containerC.setSupportContainersAliases([containerBAlias]);       
-
-        containerC.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeC,
-            activateAsSingelton: false
-        }));
-
-        containerC.registerDependencyMetadata('fakeTypeC', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: FakeTypeC,
-            activateAsSingelton: false
-        }));        
+        kernel.bind('fakeType').to(FakeTypeC).inContainer(containerCAlias);
+        kernel.bind('fakeTypeC').to(FakeTypeC).inContainer(containerCAlias);       
      });
     
     it('should resolve an instance of FakeTypeA with fakeType alias because is registered in the container that is currently in use.', function() {

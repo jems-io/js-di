@@ -16,7 +16,7 @@ describe('The [ContainerActivator]', function() {
         contextualActivator.getContextInstantiator<any, any>('settedFunction')(null, null);
         }
         catch(error) {
-            assert.ok(error);
+            assert.ok(error instanceof Error);
         }
     })
 })

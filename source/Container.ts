@@ -1,11 +1,11 @@
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
-import { ServicingStrategy } from "./ServicingStrategy";
+import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
 import * as Errors from "./Errors/Index";
 import { IKernel } from "./IKernel";
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 import contextualActivator from './ContextualActivator'
 
 /**
@@ -190,7 +190,7 @@ export class Container implements IContainer {
         if (typeof reference === 'string') {
             let alias:string = <string>reference;
             let originalAlias:string = alias;
-            let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];
+            let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];     
             let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
             let activatedObjects:any[] = [];
 
@@ -219,23 +219,14 @@ export class Container implements IContainer {
                     let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
                     let activatedObject:any;
 
-                    switch(identifierMetadataMap.metadata.servicingStrategy) {
-                        case ServicingStrategy.CONSTANT:
-                            activatedObject = this.getConstantActivation(identifierMetadataMap.metadata);
-                            break;
-                        case ServicingStrategy.BUILDER_FUNCTION:
-                            activatedObject = this.getBuilderFunctionActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                            break;
-                        case ServicingStrategy.INSTANCE:
-                            activatedObject = this.getInstanceActivation(alias, identifierMetadataMap.identifier, identifierMetadataMap.metadata, containerActivator);
-                            break;
-                        default:
-                            throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
-                    }
+                    if (!identifierMetadataMap.metadata.servicingStrategy)
+                        throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
 
-                    if (!activatedObject)
-                        throw new Errors.ActivationFailError('The activated object result in a null or undefined value, the activation fail');
-                    
+                    activatedObject = identifierMetadataMap.metadata
+                                                           .deliveryStrategy
+                                                           .deliver(resolutionContext,
+                                                                    identifierMetadataMap.metadata);
+
                     activatedObjects.push(activatedObject);
                 }
 
@@ -410,32 +401,6 @@ export class Container implements IContainer {
      */
     public async disposeAsync():Promise<void> {
         this.dispose();
-    }
-
-    private getConstantActivation(metadata:DependencyMetadata):any {        
-        return metadata.activationReference;
-    }
-
-    private getBuilderFunctionActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {
-        return this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
-    }
-
-    private getInstanceActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {        
-        return this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
-    }
-
-    private getActivatedObject(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):any {
-
-        if (metadata.activateAsSingelton && this.existsInContent(identifier))
-            return this._containerContent[identifier];
-        
-        let activatedObject:any = useInvokation ? containerActivator.invokeAlias(alias, metadata.activationReference): 
-                                                  containerActivator.activateAlias(alias, metadata.activationReference); 
-        
-        if (metadata.activateAsSingelton && activatedObject)
-            this._containerContent[identifier] = activatedObject;
-        
-        return activatedObject;
     }
 
     private existsInContent(alias:string):boolean {

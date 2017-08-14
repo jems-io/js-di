@@ -9,25 +9,9 @@ describe('with an alias that contain sufixing configuration', function() {
     let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
 
      before(function() {
-        let container:IContainer = kernel.getDefaultContainer();
-            
-        container.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: function() { this.fake = true; },
-            activateAsSingelton: false
-        }));
-
-        container.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: function() { this.fake = true; },
-            activateAsSingelton: false
-        }));
-
-        container.registerDependencyMetadata('fakeType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.INSTANCE,
-            activationReference: function() { this.fake = true; },
-            activateAsSingelton: false
-        }));
+        kernel.bind('fakeType').to(function() { this.fake = true; });
+        kernel.bind('fakeType').to(function() { this.fake = true; });
+        kernel.bind('fakeType').to(function() { this.fake = true; });        
      });
 
    it('should resolve an array with instances of FakeTypeA, FakeTypeB, FakeTypeC with fakeType alias when is using the List sufix.', function() {

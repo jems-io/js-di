@@ -10,14 +10,7 @@ describe('with cosntant servicing strategy resolution', function() {
     let constantInstance = {};
 
     before(function() {
-        let container:IContainer = kernel.getDefaultContainer();
-
-        container.registerDependencyMetadata('fakeConstantType', ({
-            servicingStrategy: jemsdi.ServicingStrategy.CONSTANT,
-            activationReference: constantInstance,
-            activateAsSingelton: false
-        }));
-        
+        kernel.bind('fakeConstantType').toConstant(constantInstance);        
     });
 
     it('should resolve the registered object', function() {

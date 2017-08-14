@@ -4,8 +4,9 @@ import { IServicingContextFluentSyntax } from "./IServicingContextFluentSyntax";
 import { IContainerFluentSyntax } from "./IContainerFluentSyntax";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";
-import { ServicingStrategy } from "./ServicingStrategy";
+import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
 import contextualActivator from './ContextualActivator'
+import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
@@ -39,39 +40,53 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
 
     /**
      * Register the context alias with an instance servicing strategy.
-     * @param {function} funtionReference - Represents the funtion reference to instantiate.
+     * @param {function} reference - Represents the funtion reference to instantiate.
      * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
-    public to(funtionReference:any):IServicingContextFluentSyntax {        
-        let identifier:string = this.registerAliasAndRelated(funtionReference, ServicingStrategy.INSTANCE);
+    public to(reference:any):IServicingContextFluentSyntax {        
+        let servicingStrategy:IServicingStrategy = contextualActivator.getContextInstantiator<any, IServicingStrategy>('instaceServicingStrategy')(null, '');
+        let identifier:string = this.registerAliasAndRelated(reference, servicingStrategy);
         return contextualActivator.getContextInstantiator<IKernel, IServicingContextFluentSyntax>('servicingContextFluentSyntax')(this._kernel, identifier);
     }
 
     /**
      * Register the context alias with a constant servicing strategy.
-     * @param {any} object - Represents the object to return.
+     * @param {any} reference - Represents the reference to return.
      * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
-    public toConstant(object:any):IContainerFluentSyntax {
-        let identifier:string = this.registerAliasAndRelated(object, ServicingStrategy.CONSTANT);
+    public toConstant(reference:any):IContainerFluentSyntax {
+        let servicingStrategy:IServicingStrategy = contextualActivator.getContextInstantiator<any, IServicingStrategy>('constantServicingStrategy')(null, '');
+        let identifier:string = this.registerAliasAndRelated(reference, servicingStrategy);
         return contextualActivator.getContextInstantiator<IKernel, IContainerFluentSyntax>('containerFluentSyntax')(this._kernel, identifier);
     }
 
     /**
      * Register the context alias with a builder function servicing strategy.
-     * @param {function} builder - Represents the function that will be invoked to generate the object.
+     * @param {function} reference - Represents the function that will be invoked to generate the object.
      * @returns {IContainerFluentSyntax} The fluent syntax connector for containerization.
      */
-    public toBuilderFunction(builder:any):IContainerFluentSyntax {
-        let identifier:string = this.registerAliasAndRelated(builder, ServicingStrategy.BUILDER_FUNCTION);
+    public toBuilderFunction(reference:any):IContainerFluentSyntax {
+        let servicingStrategy:IServicingStrategy = contextualActivator.getContextInstantiator<any, IServicingStrategy>('builderFunctionServicingStrategy')(null, '');
+        let identifier:string = this.registerAliasAndRelated(reference, servicingStrategy);
         return contextualActivator.getContextInstantiator<IKernel, IContainerFluentSyntax>('containerFluentSyntax')(this._kernel, identifier);
     }
 
-    private registerAliasAndRelated(related:any, servicingStrategy:ServicingStrategy):string {
+    /**
+     * Register the context alias with the provided servicing strategy.
+     * @param reference Reresents the reference to be served.
+     * @param servicingStrategy Represents the servicing strategy that will serve the reference.
+     * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
+     */
+    toCustomServicingStragy(reference:any, servicingStrategy:IServicingStrategy):IServicingContextFluentSyntax {
+        let identifier:string = this.registerAliasAndRelated(reference, servicingStrategy);
+        return contextualActivator.getContextInstantiator<IKernel, IServicingContextFluentSyntax>('servicingContextFluentSyntax')(this._kernel, identifier);
+    }
+
+    private registerAliasAndRelated(related:any, servicingStrategy:IServicingStrategy):string {
         return this.getKernel().getCurrentContainer().registerDependencyMetadata(this.getAlias(), {
             activationReference: related,
             servicingStrategy: servicingStrategy,
-            activateAsSingelton: false
+            deliveryStrategy: contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy')(null, '')
         });
     }
 }
