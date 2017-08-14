@@ -81,8 +81,7 @@ describe('must throw an the error', function() {
             kernel.getDefaultContainer().setSupportContainersAliases(['ContainerA']);
 
             assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.');
-        } catch (error) {    
-            console.log(error);        
+        } catch (error) {     
             assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError:\n\n' + error.message);                 
         }          
     });
