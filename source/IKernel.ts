@@ -3,6 +3,7 @@ import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
+import { ResolutionOption } from "./ResolutionOption"
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
@@ -64,10 +65,10 @@ export interface IKernel {
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
      * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {resolutionOption} 
      * @return {any} The resolved object.
-     * 
      */
-    resolve(reference:{ new () } | Function | string):any;
+    resolve(reference:{ new () } | Function | string, resolutionOption:ResolutionOption):any;
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
