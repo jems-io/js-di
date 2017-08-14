@@ -6,6 +6,7 @@ import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";
 import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
 import contextualActivator from './ContextualActivator'
+import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.
@@ -85,7 +86,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
         return this.getKernel().getCurrentContainer().registerDependencyMetadata(this.getAlias(), {
             activationReference: related,
             servicingStrategy: servicingStrategy,
-            activateAsSingelton: false
+            deliveryStrategy: contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy')(null, '')
         });
     }
 }

@@ -1,4 +1,5 @@
 import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
+import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy"
          
 /**
  * Represents the alias metadata that contain the activation and servicing information of the alias.
@@ -15,7 +16,7 @@ export class DependencyMetadata {
     servicingStrategy:IServicingStrategy;
 
     /**
-     * Get or set a boolean value specifyiong if the reference mus be activated as a singelton.
+     * Get or set the delivery strategy.
      */
-    activateAsSingelton:boolean;
+    deliveryStrategy:IDeliveryStrategy;
 }

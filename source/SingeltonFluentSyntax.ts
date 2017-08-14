@@ -5,6 +5,9 @@ import { IKernel } from "./IKernel";
 import { ISingeltonFluentSyntax } from "./ISingeltonFluentSyntax";
 import { IContainer } from "./IContainer";
 import { DependencyMetadata } from "./DependencyMetadata";
+import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
+
+import contextualActivator from "./ContextualActivator"
 
 /**
  * Represents a singelton fluent syntax to specify the kernel that must return the object as a singelton.
@@ -40,9 +43,41 @@ export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
     public getKernel(): IKernel { return this._kernel; }
     
     /**
-     * Specify the kernel to serv the object as singelton with the given alias.
+     * Specify the kernel to deliver the object as per call with the given alias.
+     */
+    public asPerCall():void {
+        this.getDependencyMetadata().deliveryStrategy = contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy')(null, '');
+    }
+
+    /**
+     * Specify the kernel to deliver the object as per resolution with the given alias.
+     */
+    public asPerResolution():void {
+        this.getDependencyMetadata().deliveryStrategy = contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perResolutionDeliveryStrategy')(null, '');
+    }
+
+    /**
+     * Specify the kernel to deliver the object as containerized with the given alias.
+     */
+    public asContainerized():void {
+        this.getDependencyMetadata().deliveryStrategy = contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('containerizedDeliveryStrategy')(null, '');
+    }
+
+    /**
+     * Specify the kernel to deliver the object as singelton with the given alias.
      */
     public asSingelton():void {
+        this.getDependencyMetadata().deliveryStrategy = contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('singletonDeliveryStrategy')(null, '');
+    }
+
+    /**
+     * Specify the kernel to deliver the object as custom with the given alias.
+     */
+    public asCustom(deliveryStrategy:IDeliveryStrategy):void {
+        this.getDependencyMetadata().deliveryStrategy = deliveryStrategy;
+    }
+
+    private getDependencyMetadata():DependencyMetadata {
         let kernel:IKernel = this.getKernel();
         let currentContainer:IContainer = kernel.getCurrentContainer();
  
@@ -51,6 +86,6 @@ export class SingeltonFluentSyntax implements ISingeltonFluentSyntax {
         if (!dependencyMetadata)
             throw new Error(`The container ${currentContainer.getName()} doesn\'t contain the a dependency metadata with the identifier ${this.getIdentifier()}`);
         
-        dependencyMetadata.activateAsSingelton = true;
+        return dependencyMetadata;
     }
 }

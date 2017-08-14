@@ -31,6 +31,11 @@ import { InstanceServicingStrategy } from "./ServicingStrategy/InstanceServicing
 import { ConstantServicingStrategy } from "./ServicingStrategy/ConstantServicingStrategy"
 import { BuilderFunctionServicingStrategy } from "./ServicingStrategy/BuilderFunctionServicingStrategy"
 
+import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
+import { PerCallDeliveryStrategy } from "./DeliveryStrategy/PerCallDeliveryStrategy";
+import { PerResolutionDeliveryStrategy } from "./DeliveryStrategy/PerResolutionDeliveryStrategy";
+import { ContainerizedDeliveryStrategy } from "./DeliveryStrategy/ContainerizedDeliveryStrategy";
+import { SingletonDeliveryStrategy } from "./DeliveryStrategy/SingletonDeliveryStrategy";
 /**
  * Represents a registrar to regiter all the build-in implementations.
  * @private
@@ -66,6 +71,7 @@ export class BuilInInstantiatorsRegistrar {
         });
 
         this.registeServicingStrategies(contextualActivator);
+        this.registeDeliveryStrategies(contextualActivator);
     }
 
     private registeServicingStrategies(contextualActivator: ContextualActivator):void {
@@ -77,6 +83,21 @@ export class BuilInInstantiatorsRegistrar {
         });
         contextualActivator.setContextInstantiator<any, IServicingStrategy>('builderFunctionServicingStrategy', (contextType, instanceIdentifier) => {
             return new BuilderFunctionServicingStrategy();
+        });
+    }
+
+    private registeDeliveryStrategies(contextualActivator: ContextualActivator):void {
+        contextualActivator.setContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy', (contextType, instanceIdentifier) => {
+            return new PerCallDeliveryStrategy();
+        });
+        contextualActivator.setContextInstantiator<any, IDeliveryStrategy>('perResolutionDeliveryStrategy', (contextType, instanceIdentifier) => {
+            return new PerResolutionDeliveryStrategy();
+        });
+        contextualActivator.setContextInstantiator<any, IDeliveryStrategy>('containerizedDeliveryStrategy', (contextType, instanceIdentifier) => {
+            return new ContainerizedDeliveryStrategy();
+        });
+        contextualActivator.setContextInstantiator<any, IDeliveryStrategy>('singletonDeliveryStrategy', (contextType, instanceIdentifier) => {
+            return new SingletonDeliveryStrategy();
         });
     }
 }

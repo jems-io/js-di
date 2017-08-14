@@ -43,7 +43,7 @@ describe('must throw an the error', function() {
             let resolvedObject:any = kernel.resolve('fakeTypeNULL');             
             assert.ok(false, 'Must throw the exception because the activation result is null.');
         } catch (error) {            
-            assert.equal(error.name, 'ServicingError', 'The error is not an instance of ServicingError');                 
+            assert.equal(error.name, 'DeliveryError', 'The error is not an instance of ServicingError');                 
         }      
     });
 

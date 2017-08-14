@@ -223,9 +223,9 @@ export class Container implements IContainer {
                         throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
 
                     activatedObject = identifierMetadataMap.metadata
-                                                           .servicingStrategy
-                                                           .serve(resolutionContext,
-                                                             identifierMetadataMap.metadata.activationReference);
+                                                           .deliveryStrategy
+                                                           .deliver(resolutionContext,
+                                                                    identifierMetadataMap.metadata);
 
                     activatedObjects.push(activatedObject);
                 }
@@ -401,32 +401,6 @@ export class Container implements IContainer {
      */
     public async disposeAsync():Promise<void> {
         this.dispose();
-    }
-
-    private getConstantActivation(metadata:DependencyMetadata):any {        
-        return metadata.activationReference;
-    }
-
-    private getBuilderFunctionActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {
-        return this.getActivatedObject(alias, identifier, metadata, containerActivator, true);
-    }
-
-    private getInstanceActivation(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator):any {        
-        return this.getActivatedObject(alias, identifier, metadata, containerActivator, false);
-    }
-
-    private getActivatedObject(alias:string, identifier:string, metadata:DependencyMetadata, containerActivator:IContainerActivator, useInvokation:boolean):any {
-
-        if (metadata.activateAsSingelton && this.existsInContent(identifier))
-            return this._containerContent[identifier];
-        
-        let activatedObject:any = useInvokation ? containerActivator.invokeAlias(alias, metadata.activationReference): 
-                                                  containerActivator.activateAlias(alias, metadata.activationReference); 
-        
-        if (metadata.activateAsSingelton && activatedObject)
-            this._containerContent[identifier] = activatedObject;
-        
-        return activatedObject;
     }
 
     private existsInContent(alias:string):boolean {
