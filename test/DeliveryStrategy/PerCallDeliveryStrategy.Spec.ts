@@ -9,7 +9,7 @@ import { IServicingStrategy } from "../../source/ServicingStrategy/IServicingStr
 import { DependencyMetadata } from "../../source/DependencyMetadata";
 import { DeliveryError } from "../../source/Errors/DeliveryError";
 
-describe('The [PerCalleliveryStrategy]', function() {
+describe('The [PerCallDeliveryStrategy]', function() {
     it('should return a new instance of reference target in the given dependency metadata.', function() {
         class InstantiableClass {};
         let perCallDeliveryStrategy:PerCallDeliveryStrategy = new PerCallDeliveryStrategy();        
