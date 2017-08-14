@@ -7,6 +7,7 @@ import { ResolutionContext } from "../../source/ResolutionContext";
 import { PerCallDeliveryStrategy } from "../../source/DeliveryStrategy/PerCallDeliveryStrategy";
 import { IServicingStrategy } from "../../source/ServicingStrategy/IServicingStrategy";
 import { DependencyMetadata } from "../../source/DependencyMetadata";
+import { DeliveryError } from "../../source/Errors/DeliveryError";
 
 describe('The [PerCalleliveryStrategy]', function() {
     it('should return a new instance of reference target in the given dependency metadata.', function() {
@@ -17,6 +18,7 @@ describe('The [PerCalleliveryStrategy]', function() {
                                                                .returns(() => new InstantiableClass());
 
         let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
+        dependencyMetadata.activationReference = InstantiableClass;
         dependencyMetadata.servicingStrategy = servicingStrategyMock.object;
         
         let deliveryResult1:any = perCallDeliveryStrategy.deliver(new ResolutionContext(), dependencyMetadata);
@@ -30,4 +32,32 @@ describe('The [PerCalleliveryStrategy]', function() {
         
         servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.atLeast(2))
     });
+
+    it('should throw an error if the given resolution context is not valid.', function() {
+        assert.throws(() => {
+            new PerCallDeliveryStrategy().deliver(null, null); 
+        }, DeliveryError)
+    });
+
+    it('should throw an error if the given dependency metadata is not valid.', function() {
+        assert.throws(() => {
+            new PerCallDeliveryStrategy().deliver(new ResolutionContext(), null); 
+        }, DeliveryError)
+    });
+
+    it('should throw an error if the given dependency reference is not valid.', function() {
+        assert.throws(() => {
+            let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
+            new PerCallDeliveryStrategy().deliver(new ResolutionContext(), dependencyMetadata); 
+        }, DeliveryError)
+    });
+
+    it('should throw an error if the given dependency servicing strategy is not valid.', function() {
+        assert.throws(() => {
+            let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
+            dependencyMetadata.activationReference = {};
+            new PerCallDeliveryStrategy().deliver(new ResolutionContext(), dependencyMetadata); 
+        }, DeliveryError)
+    });
+
 });
