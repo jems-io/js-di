@@ -56,17 +56,25 @@ export interface IKernel {
 
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @return {any} The resolved object.
      */
-    resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any;
+    resolve(reference:{ new () } | Function | string):any;
+
+    /**
+     * Return an resolved instance using the given reference that could be a class, function or alias.
+     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @return {any} The resolved object.
+     * 
+     */
+    resolve(reference:{ new () } | Function | string):any;
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @return {Promise<any>} A promise that resolve the objects.
      */
-    resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):Promise<any>;
+    resolveAsync(reference:{ new () } | Function | string):Promise<any>;
 
     /**
      * Creates and returns a container with the given alias.
