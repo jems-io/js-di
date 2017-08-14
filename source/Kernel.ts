@@ -7,7 +7,7 @@ import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
 import { IContainerActivator } from "./IContainerActivator";
 import contextualActivator from './ContextualActivator'
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.

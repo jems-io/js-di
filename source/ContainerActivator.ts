@@ -3,7 +3,7 @@ import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
 import * as Errors from "./Errors/Index";
 import { IContainer } from "./IContainer";
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 
 /**
  * Represenst an activator that can activate objects.

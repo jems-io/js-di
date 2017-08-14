@@ -2,7 +2,7 @@
 
 import * as assert from 'assert'
 
-import { ResolutionContext } from "../../source/ResolutionContex";
+import { ResolutionContext } from "../../source/ResolutionContext";
 import { ConstantServicingStrategy } from "../../source/ServicingStrategy/ConstantServicingStrategy";
 import { IContainer } from "../../source/IContainer";
 import { ServicingError } from "../../source/Errors/ServicingError"

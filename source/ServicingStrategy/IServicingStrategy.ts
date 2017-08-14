@@ -1,4 +1,4 @@
-import { ResolutionContext } from "../ResolutionContex";
+import { ResolutionContext } from "../ResolutionContext";
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets.

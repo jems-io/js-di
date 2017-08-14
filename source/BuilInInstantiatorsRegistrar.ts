@@ -1,6 +1,6 @@
 import { ContextualActivator } from "./ContextualActivator";
 
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 
 import { IKernel } from "./IKernel";
 import { Kernel } from "./Kernel";

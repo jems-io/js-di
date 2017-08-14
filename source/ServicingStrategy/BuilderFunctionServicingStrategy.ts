@@ -1,6 +1,6 @@
 import contextualActivator from '../ContextualActivator'
 
-import { ResolutionContext } from "../ResolutionContex";
+import { ResolutionContext } from "../ResolutionContext";
 import { IServicingStrategy } from "./IServicingStrategy";
 import { IArgumentsNamesProvider } from "../IArgumentsNamesProvider";
 import { ServicingError } from "../../source/Errors/ServicingError"

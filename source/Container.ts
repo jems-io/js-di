@@ -5,7 +5,7 @@ import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
 import * as Errors from "./Errors/Index";
 import { IKernel } from "./IKernel";
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 import contextualActivator from './ContextualActivator'
 
 /**

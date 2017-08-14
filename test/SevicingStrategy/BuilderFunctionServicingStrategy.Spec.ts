@@ -3,7 +3,7 @@
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContex";
+import { ResolutionContext } from "../../source/ResolutionContext";
 import { BuilderFunctionServicingStrategy } from "../../source/ServicingStrategy/BuilderFunctionServicingStrategy";
 import { IContainer } from "../../source/IContainer";
 import { ServicingError } from "../../source/Errors/ServicingError"

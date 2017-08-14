@@ -1,6 +1,6 @@
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
-import { ResolutionContext } from "./ResolutionContex";
+import { ResolutionContext } from "./ResolutionContext";
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
