@@ -44,7 +44,7 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
      * @returns {IServicingContextFluentSyntax} The fluent syntax connector for servicing specifications.
      */
     public to(reference:any):IServicingContextFluentSyntax {        
-        let servicingStrategy:IServicingStrategy = contextualActivator.getContextInstantiator<any, IServicingStrategy>('instaceServicingStrategy')(null, '');
+        let servicingStrategy:IServicingStrategy = contextualActivator.getContextInstantiator<any, IServicingStrategy>('instanceServicingStrategy')(null, '');
         let identifier:string = this.registerAliasAndRelated(reference, servicingStrategy);
         return contextualActivator.getContextInstantiator<IKernel, IServicingContextFluentSyntax>('servicingContextFluentSyntax')(this._kernel, identifier);
     }

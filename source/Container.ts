@@ -177,10 +177,10 @@ export class Container implements IContainer {
 
      /**
      * Returns a resolved object instance asynchronous.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
      */ 
-    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):any {
+    public resolve(reference:{ new ():any } | Function | string, resolutionContext:ResolutionContext):any {
 
         resolutionContext.steps.push('Using container: [' + this.getName() + '] to resolve the ' + typeof reference + ': ' + (typeof reference === 'function' ? reference.name : reference));
         this.validateReference(reference);
@@ -222,29 +222,43 @@ export class Container implements IContainer {
                     if (!identifierMetadataMap.metadata.servicingStrategy)
                         throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
 
+                    if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.beforeResolveEach)
+                        resolutionContext.resolutionOption.beforeResolveEach(resolutionContext, identifierMetadataMap.metadata)
+
                     activatedObject = identifierMetadataMap.metadata
                                                            .deliveryStrategy
                                                            .deliver(resolutionContext,
                                                                     identifierMetadataMap.metadata);
+                    
+                    if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolveEach)
+                        resolutionContext.resolutionOption.afterResolveEach(resolutionContext, identifierMetadataMap.metadata)
 
                     activatedObjects.push(activatedObject);
                 }
+
+                if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve)
+                    resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObjects)                
 
                 return  resolutionConfiguration.quantity == 1 ? activatedObjects[0] : activatedObjects; 
             }
         }  
         else {
-            return containerActivator.activateReference(reference);
+            let activatedObject:any = contextualActivator.getContextInstantiator<any, IServicingStrategy>('instanceServicingStrategy')(null, '').serve(resolutionContext, reference);
+            
+            if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve)
+                resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObject)
+
+            return activatedObject;
         }
     }
 
     /**
      * Returns a resolved object instance asynchronous.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
      * @returns {Promise<any>} A promise that resolve the objects. 
      */ 
-    public async resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):Promise<any> {
+    public async resolveAsync(reference:{ new ():any } | Function | string, resolutionContext:ResolutionContext):Promise<any> {
         return this.resolve(reference, resolutionContext);
     }
 

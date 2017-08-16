@@ -55,27 +55,21 @@ export interface IKernel {
      */
     canResolve(alias:string):boolean;
 
-    /**
+     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @return {any} The resolved object.
      */
-    resolve(reference:{ new () } | Function | string):any;
-
-    /**
-     * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
-     * @param {resolutionOption} 
-     * @return {any} The resolved object.
-     */
-    resolve(reference:{ new () } | Function | string, resolutionOption:ResolutionOption):any;
+    resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any;
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * @param {{ new () } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @return {Promise<any>} A promise that resolve the objects.
      */
-    resolveAsync(reference:{ new () } | Function | string):Promise<any>;
+    resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any>;
 
     /**
      * Creates and returns a container with the given alias.

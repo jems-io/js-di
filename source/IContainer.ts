@@ -61,19 +61,19 @@ export interface IContainer {
 
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
      * @returns {any} The resolved object.
      */
-    resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):any;
+    resolve(reference:{ new ():any } | Function | string, resolutionContext:ResolutionContext):any;
 
     /**
      * Returns a resolved object instance asynchronous.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
      * @param {ResolutionContext} resolutionContext Represents the context of the resolution.
      * @returns {Promise<any>} A promise that resolve the objects. 
      */ 
-    resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string, resolutionContext:ResolutionContext):Promise<any>;
+    resolveAsync(reference:{ new ():any } | Function | string, resolutionContext:ResolutionContext):Promise<any>;
 
     /**
      * Set a list of container alias that will support the container resolutions.

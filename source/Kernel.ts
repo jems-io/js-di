@@ -8,6 +8,7 @@ import { KernelConfiguration } from "./KernelConfiguration";
 import { IContainerActivator } from "./IContainerActivator";
 import contextualActivator from './ContextualActivator'
 import { ResolutionContext } from "./ResolutionContext";
+import { ResolutionOption } from "./ResolutionOption";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -93,10 +94,11 @@ export class Kernel implements IKernel {
     
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
+     * @return {any} The resolved object.
      */
-    public resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any {    
-        
+    public resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any {
         let resolutionContext:ResolutionContext = {
             kernel: this,
             originContainer: this._currentContainer,
@@ -104,18 +106,20 @@ export class Kernel implements IKernel {
             containerSupportingStack: [],
             aliasResolutionStack: [],
             targetResolutionStack: typeof reference !== 'string' ? [(<any> reference)] : [],
-            steps: ['The kernel creates the resolution context and start to resolve the given reference.']
+            steps: ['The kernel creates the resolution context and start to resolve the given reference.'],
+            resolutionOption: resolutionOption
         };
         
-        return this._currentContainer.resolve(reference, resolutionContext);  
+        return this._currentContainer.resolve(reference, resolutionContext);
     }
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
-    public resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):Promise<any> {
+    public resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any> {
         return this.resolve(reference);
     }
 
