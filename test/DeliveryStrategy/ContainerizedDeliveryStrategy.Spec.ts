@@ -70,36 +70,6 @@ describe('The [ContainerizedDeliveryStrategy]', function() {
         servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.atLeast(2))
     });
 
-    it('should throw an error if the given resolution context is not valid.', function() {
-        assert.throws(() => {
-            new ContainerizedDeliveryStrategy().deliver(null, null); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given resolution context original container is not valid.', function() {
-        assert.throws(() => {
-            new ContainerizedDeliveryStrategy().deliver(new ResolutionContext(), new DependencyMetadata()); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency metadata is not valid.', function() {
-        assert.throws(() => {
-            new ContainerizedDeliveryStrategy().deliver(new ResolutionContext(), null); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency reference is not valid.', function() {
-        assert.throws(() => {
-            new ContainerizedDeliveryStrategy().deliver(new ResolutionContext(), new DependencyMetadata()); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency servicing strategy is not valid.', function() {
-        assert.throws(() => {
-            let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
-            dependencyMetadata.activationReference = {};
-            new ContainerizedDeliveryStrategy().deliver(new ResolutionContext(), dependencyMetadata); 
-        }, DeliveryError)
-    });
+    require('./CommonDelivery.Test')(() => new ContainerizedDeliveryStrategy());
 
 });
