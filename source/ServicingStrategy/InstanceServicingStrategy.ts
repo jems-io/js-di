@@ -42,7 +42,7 @@ export class InstanceServicingStrategy implements IServicingStrategy {
                 resolutionContext.resolutionOption &&
                 resolutionContext.resolutionOption.dependencies &&
                 resolutionContext.resolutionOption.dependencies[argumentName]) {
-                argument = resolutionContext.resolutionOption.dependencies;
+                argument = resolutionContext.resolutionOption.dependencies[argumentName];
             } else {
                 argument = resolutionContext.originContainer.resolve(argumentName, resolutionContext)
             }                

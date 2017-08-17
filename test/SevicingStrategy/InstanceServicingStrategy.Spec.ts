@@ -46,4 +46,6 @@ describe('The [InstanceServicingStrategy]', function() {
             let servicingResult:any = instanceServicingStrategy.serve(resolutionContext, {});
         }, ServicingError);
     })
+
+    require('./CommonArgumentableServicig.Test')(() => new InstanceServicingStrategy());
 })
