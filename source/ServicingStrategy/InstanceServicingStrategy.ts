@@ -36,7 +36,18 @@ export class InstanceServicingStrategy implements IServicingStrategy {
         let argumets:any[] = [null];
 
         argumetsNames.forEach((argumentName) => {
-            argumets.push(resolutionContext.originContainer.resolve(argumentName, resolutionContext));
+            let argument:any;
+
+            if (resolutionContext &&
+                resolutionContext.resolutionOption &&
+                resolutionContext.resolutionOption.dependencies &&
+                resolutionContext.resolutionOption.dependencies[argumentName]) {
+                argument = resolutionContext.resolutionOption.dependencies[argumentName];
+            } else {
+                argument = resolutionContext.originContainer.resolve(argumentName, resolutionContext)
+            }                
+
+            argumets.push(argument);
         });
 
         return new (Function.prototype.bind.apply(referenceTarget, argumets));

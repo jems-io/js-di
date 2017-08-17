@@ -3,6 +3,7 @@ import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
+import { ResolutionOption } from "./ResolutionOption"
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
@@ -54,19 +55,21 @@ export interface IKernel {
      */
     canResolve(alias:string):boolean;
 
-    /**
+     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @return {any} The resolved object.
      */
-    resolve(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):any;
+    resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any;
 
     /**
      * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * @param {(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
+     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @return {Promise<any>} A promise that resolve the objects.
      */
-    resolveAsync(reference:(new (...constructorArguments:any[]) => any) | ((...functionArguments:any[])  => any) | string):Promise<any>;
+    resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any>;
 
     /**
      * Creates and returns a container with the given alias.

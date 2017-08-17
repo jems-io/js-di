@@ -33,31 +33,6 @@ describe('The [SingletonDeliveryStrategy]', function() {
         servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
     });
 
-    it('should throw an error if the given resolution context is not valid.', function() {
-        assert.throws(() => {
-            new SingletonDeliveryStrategy().deliver(null, null); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency metadata is not valid.', function() {
-        assert.throws(() => {
-            new SingletonDeliveryStrategy().deliver(new ResolutionContext(), null); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency reference is not valid.', function() {
-        assert.throws(() => {
-            let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
-            new SingletonDeliveryStrategy().deliver(new ResolutionContext(), dependencyMetadata); 
-        }, DeliveryError)
-    });
-
-    it('should throw an error if the given dependency servicing strategy is not valid.', function() {
-        assert.throws(() => {
-            let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
-            dependencyMetadata.activationReference = {};
-            new SingletonDeliveryStrategy().deliver(new ResolutionContext(), dependencyMetadata); 
-        }, DeliveryError)
-    });
+    require('./CommonDelivery.Test')(() => new SingletonDeliveryStrategy());
 
 });

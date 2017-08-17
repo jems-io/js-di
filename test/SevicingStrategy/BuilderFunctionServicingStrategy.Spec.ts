@@ -42,4 +42,6 @@ describe('The [BuilderFunctionServicingStrategy]', function() {
             let servicingResult:any = builderFunctionServicingStrategy.serve(resolutionContext, {});
         }, ServicingError);
     })
+
+    require('./CommonArgumentableServicig.Test')(() => new BuilderFunctionServicingStrategy());
 })
