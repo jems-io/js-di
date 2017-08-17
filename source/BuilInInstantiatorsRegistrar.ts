@@ -75,7 +75,7 @@ export class BuilInInstantiatorsRegistrar {
     }
 
     private registeServicingStrategies(contextualActivator: ContextualActivator):void {
-        contextualActivator.setContextInstantiator<any, IServicingStrategy>('instanceServicingStrategy1', (contextType, instanceIdentifier) => {
+        contextualActivator.setContextInstantiator<any, IServicingStrategy>('instanceServicingStrategy', (contextType, instanceIdentifier) => {
             return new InstanceServicingStrategy();
         });
         contextualActivator.setContextInstantiator<any, IServicingStrategy>('constantServicingStrategy', (contextType, instanceIdentifier) => {
