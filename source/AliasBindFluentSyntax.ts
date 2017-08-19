@@ -86,7 +86,8 @@ export class AliasBindFluentSyntax implements IAliasBindFluentSyntax {
         return this.getKernel().getCurrentContainer().registerDependencyMetadata(this.getAlias(), {
             activationReference: related,
             servicingStrategy: servicingStrategy,
-            deliveryStrategy: contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy')(null, '')
+            deliveryStrategy: contextualActivator.getContextInstantiator<any, IDeliveryStrategy>('perCallDeliveryStrategy')(null, ''),
+            validators: []
         });
     }
 }

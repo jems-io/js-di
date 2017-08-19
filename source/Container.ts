@@ -326,10 +326,18 @@ export class Container implements IContainer {
         if (dependencyIdentifierMap) {
             for (var dependencyIdentifier in dependencyIdentifierMap){
                 if (dependencyIdentifierMap.hasOwnProperty(dependencyIdentifier)) {
-                    toReturnDependenciesMetadataMapCollection.push({ 
-                        identifier: dependencyIdentifier, 
-                        metadata: dependencyIdentifierMap[dependencyIdentifier]
-                    });
+
+                    let metadata = dependencyIdentifierMap[dependencyIdentifier];
+
+                    //If contain validators, all validators must return true.
+                    if (!metadata.validators ||
+                        (metadata.validators &&
+                         metadata.validators.map(validator => validator(null, metadata)).indexOf(false) < 0)) {
+                            toReturnDependenciesMetadataMapCollection.push({ 
+                                identifier: dependencyIdentifier, 
+                                metadata: metadata
+                            });
+                        }
                 }
             }  
         }

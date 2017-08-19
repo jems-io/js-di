@@ -25,6 +25,5 @@ export class DependencyMetadata {
      * Represents the validators that determine if the metadata is valid for the resolution.
      */
     validators:((resolutionContext:ResolutionContext,
-                dependencyMetadata:DependencyMetadata, 
-                expectedAlias:string) => boolean)[]
+                dependencyMetadata:DependencyMetadata) => boolean)[]
 }
