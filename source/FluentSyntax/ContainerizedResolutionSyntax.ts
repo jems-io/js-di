@@ -3,11 +3,12 @@ import { IContainerizedResolutionSyntax } from "./IContainerizedResolutionSyntax
 import { IContainer } from "../IContainer";
 import { ResolutionContext } from "../ResolutionContext";
 import { IKernel } from "../IKernel";
+import { EventEmitter } from "events";
 
 /**
  * Represents a fluent extension that allows resolving dependencies with a container from the kernel fluently. 
  */
-export class ContainerizedResolutionSyntax implements IContainerizedResolutionSyntax {
+export class ContainerizedResolutionSyntax extends EventEmitter implements IContainerizedResolutionSyntax {
     /**
      * Represents the container that will perform the resolutions.
      */
@@ -18,6 +19,7 @@ export class ContainerizedResolutionSyntax implements IContainerizedResolutionSy
      * @param contaier 
      */
     constructor(contaier:IContainer) {
+        super()
         this._container = contaier;
     }
 
@@ -41,8 +43,7 @@ export class ContainerizedResolutionSyntax implements IContainerizedResolutionSy
         
         let resolutionResult:any = this._container.resolve(reference, resolutionContext);
         
-        if (this.onResolutionPerformed)
-            this.onResolutionPerformed(resolutionContext);
+        this.emit('resolution-performed', resolutionContext);
 
         return resolutionResult;
     }
@@ -56,9 +57,4 @@ export class ContainerizedResolutionSyntax implements IContainerizedResolutionSy
     public async resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any> {
         return this.resolve(this.resolve(reference, resolutionOption))
     }
-
-    /**
-     * Represents an callback triggered when a resolution is performed.
-     */
-    public onResolutionPerformed:(resolutionContext:ResolutionContext) => any;
 }

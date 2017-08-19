@@ -10,12 +10,13 @@ import contextualActivator from './ContextualActivator'
 import { ResolutionContext } from "./ResolutionContext";
 import { ResolutionOption } from "./ResolutionOption";
 import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
+import { EventEmitter } from 'events'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
  * @private
  */
-export class Kernel implements IKernel {    
+export class Kernel extends EventEmitter implements IKernel {    
 
     private _defaultContainerAlias:string = 'default';
     private _containers:{[containerAlias: string]:IContainer} = {};
@@ -26,6 +27,7 @@ export class Kernel implements IKernel {
      * Instance a new kernel.
      */
     constructor() {
+        super()
         let defaultContainer = this.createContainer(this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
         this._containers[defaultContainer.getName()] = defaultContainer;
@@ -101,10 +103,9 @@ export class Kernel implements IKernel {
      */
     public resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any {
         let containerizedResolutionSyntax:IContainerizedResolutionSyntax = contextualActivator.getContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax')(this._currentContainer, '');
-        containerizedResolutionSyntax.onResolutionPerformed = (resolutionContext:ResolutionContext) => {
-            if (this.onResolutionPerformed)
-                this.onResolutionPerformed(resolutionContext);
-        }
+        containerizedResolutionSyntax.on('resolution-performed', (resolutionContext:ResolutionContext) => {
+            this.emit('resolution-performed', resolutionContext);
+        });
 
         return containerizedResolutionSyntax.resolve(reference, resolutionOption);
     }
@@ -118,11 +119,6 @@ export class Kernel implements IKernel {
     public async resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any> {
         return this.resolve(reference);
     }
-
-    /**
-     * Represents an callback triggered when a resolution is performed.
-     */
-    onResolutionPerformed:(resolutionContext:ResolutionContext) => any;
 
     /**
      * Return a containerized resolution syntax that allow perform resolution with an exiting container.
@@ -141,7 +137,7 @@ export class Kernel implements IKernel {
         let temporalId:string = Math.random().toString(36).substring(10);
         let temporalContainer:IContainer = this.createContainer(temporalId);
         let containerizedResolutionSyntax:IContainerizedResolutionSyntax = contextualActivator.getContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax')(temporalContainer, '');
-        containerizedResolutionSyntax.onResolutionPerformed = () =>  this.removeContainer(temporalId)
+        containerizedResolutionSyntax.on('resolution-performed', () =>  this.removeContainer(temporalId))
 
         return containerizedResolutionSyntax;
     }    
