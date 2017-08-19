@@ -32,9 +32,9 @@ export class ResolutionContext {
     public aliasResolutionStack:string[];
 
     /**
-     * Represents the stack of target that are scheduled to be resolve in order to perform the resolution.
+     * Represents the stack of argumentable targets that are scheduled to be resolve in order to perform the resolution.
      */
-    public targetResolutionStack:string[];
+    public targetResolutionStack:Function[];
 
     /**
      * Represents the step already taken to perform the resolution.

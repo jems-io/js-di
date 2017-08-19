@@ -1,6 +1,7 @@
 import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
 import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy"
-         
+import { ResolutionContext } from "./ResolutionContext";
+
 /**
  * Represents the alias metadata that contain the activation and servicing information of the alias.
  */
@@ -19,4 +20,11 @@ export class DependencyMetadata {
      * Get or set the delivery strategy.
      */
     deliveryStrategy:IDeliveryStrategy;
+
+    /**
+     * Represents the validators that determine if the metadata is valid for the resolution.
+     */
+    validators:((resolutionContext:ResolutionContext,
+                dependencyMetadata:DependencyMetadata, 
+                expectedAlias:string) => boolean)[]
 }
