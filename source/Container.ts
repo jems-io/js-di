@@ -196,47 +196,47 @@ export class Container implements IContainer {
             let alias:string = <string>reference;
             let originalAlias:string = alias;
             let resolutionConfiguration:ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default'];     
-            let identifierMetadataMapCollection:IdentifierDependencyMetadataMap[] = this.getIdentifierMetadataMapCollection(alias);
+            let dependenciesMetadata:DependencyMetadata[] = this.getValidAliasMetadataCollection(alias, resolutionContext);
             let activatedObjects:any[] = [];
 
-            if (!identifierMetadataMapCollection.length) {
+            if (!dependenciesMetadata.length) {
                 let resolutionConfigurationLookUpResult:ResolutionConfigurationLookUpResult = this.getResolutionConfigurationForAlias(alias);
 
                 if (resolutionConfigurationLookUpResult && resolutionConfigurationLookUpResult.outAlias != alias) {
 
                     alias = resolutionConfigurationLookUpResult.outAlias;
                     resolutionConfiguration = resolutionConfigurationLookUpResult.configuration;
-                    identifierMetadataMapCollection = this.getIdentifierMetadataMapCollection(alias);
+                    dependenciesMetadata = this.getValidAliasMetadataCollection(alias, resolutionContext);
                 }
             }
 
-            if (!identifierMetadataMapCollection.length)
+            if (!dependenciesMetadata.length)
                 if (resolutionConfiguration.optional)
                     return null;
                 else
                     return this.resolveWithSupport(originalAlias, resolutionContext);      
             else {   
-                if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != identifierMetadataMapCollection.length)
+                if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity != dependenciesMetadata.length)
                     throw new Errors.ResolutionConfigurationError('The registered dependecy metadata quantity is not the expected in the reslution configuration.');
 
-                for(let metadataIndex:number = 0; metadataIndex < identifierMetadataMapCollection.length; metadataIndex++)
+                for(let metadataIndex:number = 0; metadataIndex < dependenciesMetadata.length; metadataIndex++)
                 {   
-                    let identifierMetadataMap:IdentifierDependencyMetadataMap = identifierMetadataMapCollection[metadataIndex];
+                    let dependencyMetadata:DependencyMetadata = dependenciesMetadata[metadataIndex];
                     let activatedObject:any;
 
-                    if (!identifierMetadataMap.metadata.servicingStrategy)
+                    if (!dependencyMetadata.servicingStrategy)
                         throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.');
 
                     if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.beforeResolveEach)
-                        resolutionContext.resolutionOption.beforeResolveEach(resolutionContext, identifierMetadataMap.metadata)
+                        resolutionContext.resolutionOption.beforeResolveEach(resolutionContext, dependencyMetadata)
 
-                    activatedObject = identifierMetadataMap.metadata
-                                                           .deliveryStrategy
-                                                           .deliver(resolutionContext,
-                                                                    identifierMetadataMap.metadata);
+                    activatedObject = dependencyMetadata
+                                      .deliveryStrategy
+                                      .deliver(resolutionContext,
+                                               dependencyMetadata);
                     
                     if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolveEach)
-                        resolutionContext.resolutionOption.afterResolveEach(resolutionContext, identifierMetadataMap.metadata)
+                        resolutionContext.resolutionOption.afterResolveEach(resolutionContext, dependencyMetadata)
 
                     activatedObjects.push(activatedObject);
                 }
@@ -325,17 +325,10 @@ export class Container implements IContainer {
 
         if (dependencyIdentifierMap) {
             for (var dependencyIdentifier in dependencyIdentifierMap){
-                if (dependencyIdentifierMap.hasOwnProperty(dependencyIdentifier)) {
-
-                    let metadata = dependencyIdentifierMap[dependencyIdentifier];
-
-                    //If contain validators, all validators must return true.
-                    if (!metadata.validators ||
-                        (metadata.validators &&
-                         metadata.validators.map(validator => validator(null, metadata)).indexOf(false) < 0)) {
+                if (dependencyIdentifierMap.hasOwnProperty(dependencyIdentifier)) {{
                             toReturnDependenciesMetadataMapCollection.push({ 
                                 identifier: dependencyIdentifier, 
-                                metadata: metadata
+                                metadata: dependencyIdentifierMap[dependencyIdentifier]
                             });
                         }
                 }
@@ -343,7 +336,17 @@ export class Container implements IContainer {
         }
 
         return toReturnDependenciesMetadataMapCollection;
-    };
+    }
+
+    private getValidAliasMetadataCollection(alias:string, resolutionContext:ResolutionContext) {
+        return this.getIdentifierMetadataMapCollection(alias).filter(map => {                    
+                    return (!map.metadata.validators ||
+                           (map.metadata.validators &&
+                            map.metadata.validators.map(validator => {
+                                return validator(resolutionContext, map.metadata)
+                            }).indexOf(false) < 0)) //If contain validators, all validators must return true.                         
+        }).map(map => map.metadata);
+    }
 
       /**
      * Set a list of container alias that will support the container resolutions.
