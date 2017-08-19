@@ -21,9 +21,6 @@ export = function(servicingStrategyProvider:() => IServicingStrategy) {
                 resolvedArgument: toResolveArgument
             }
         })
-
-        console.log(servicingResult);
-
         assert.equal(servicingResult.resolvedArgument, 'Hello Moto');
     })
 }

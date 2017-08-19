@@ -1,6 +1,7 @@
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { ResolutionContext } from "./ResolutionContext";
+import { IKernel } from "./IKernel";
 
 /**
  * Represents a container that contain aliases metadata and is capable of resolve dependencies.
@@ -11,7 +12,12 @@ export interface IContainer {
      * Returns the name of the container.
      * @returns {string} The name of the kernel.
      */
-     getName():string;
+    getName():string;
+
+    /**
+     * Represents the kernel that owns the container;
+     */
+    getKernel():IKernel;
 
     /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.

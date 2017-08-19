@@ -36,6 +36,10 @@ import { PerCallDeliveryStrategy } from "./DeliveryStrategy/PerCallDeliveryStrat
 import { PerResolutionDeliveryStrategy } from "./DeliveryStrategy/PerResolutionDeliveryStrategy";
 import { ContainerizedDeliveryStrategy } from "./DeliveryStrategy/ContainerizedDeliveryStrategy";
 import { SingletonDeliveryStrategy } from "./DeliveryStrategy/SingletonDeliveryStrategy";
+
+import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
+import { ContainerizedResolutionSyntax } from "./FluentSyntax/ContainerizedResolutionSyntax";
+
 /**
  * Represents a registrar to regiter all the build-in implementations.
  * @private
@@ -68,6 +72,9 @@ export class BuilInInstantiatorsRegistrar {
         });
         contextualActivator.setContextInstantiator<any, IArgumentsNamesProvider>('argumentsNamesProvider', (contextType, instanceIdentifier) => {
             return new ArgumentsNamesProvider();
+        });
+        contextualActivator.setContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax', (contextType, instanceIdentifier) => {
+            return new ContainerizedResolutionSyntax(contextType);
         });
 
         this.registeServicingStrategies(contextualActivator);
