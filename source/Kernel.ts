@@ -9,12 +9,14 @@ import { IContainerActivator } from "./IContainerActivator";
 import contextualActivator from './ContextualActivator'
 import { ResolutionContext } from "./ResolutionContext";
 import { ResolutionOption } from "./ResolutionOption";
+import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
+import { EventEmitter } from 'events'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
  * @private
  */
-export class Kernel implements IKernel {    
+export class Kernel extends EventEmitter implements IKernel {    
 
     private _defaultContainerAlias:string = 'default';
     private _containers:{[containerAlias: string]:IContainer} = {};
@@ -25,6 +27,7 @@ export class Kernel implements IKernel {
      * Instance a new kernel.
      */
     constructor() {
+        super()
         let defaultContainer = this.createContainer(this._defaultContainerAlias);
         this._currentContainer = defaultContainer;
         this._containers[defaultContainer.getName()] = defaultContainer;
@@ -99,18 +102,12 @@ export class Kernel implements IKernel {
      * @return {any} The resolved object.
      */
     public resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any {
-        let resolutionContext:ResolutionContext = {
-            kernel: this,
-            originContainer: this._currentContainer,
-            currentContainer: this._currentContainer,
-            containerSupportingStack: [],
-            aliasResolutionStack: [],
-            targetResolutionStack: typeof reference !== 'string' ? [(<any> reference)] : [],
-            steps: ['The kernel creates the resolution context and start to resolve the given reference.'],
-            resolutionOption: resolutionOption
-        };
-        
-        return this._currentContainer.resolve(reference, resolutionContext);
+        let containerizedResolutionSyntax:IContainerizedResolutionSyntax = contextualActivator.getContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax')(this._currentContainer, '');
+        containerizedResolutionSyntax.on('resolution-performed', (resolutionContext:ResolutionContext) => {
+            this.emit('resolution-performed', resolutionContext);
+        });
+
+        return containerizedResolutionSyntax.resolve(reference, resolutionOption);
     }
 
     /**
@@ -119,9 +116,31 @@ export class Kernel implements IKernel {
      * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
      * @returns {Promise<any>} A promise that resolve the objects.
      */
-    public resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any> {
+    public async resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any> {
         return this.resolve(reference);
     }
+
+    /**
+     * Return a containerized resolution syntax that allow perform resolution with an exiting container.
+     * @param alias Represents the alias of the container to look for.
+     * @return {IContainerizedResolutionSyntax} The containerized resolution systax. 
+     */
+    public usingContainer(alias:string):IContainerizedResolutionSyntax {
+        return contextualActivator.getContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax')(this.getContainer(alias), '');
+    }
+
+    /**
+     * Return a containerized resolution syntax that allow perform resolution with an temporal container.
+     * @return {IContainerizedResolutionSyntax} The containerized resolution systax. 
+     */
+    public usingTemporalContainer():IContainerizedResolutionSyntax {
+        let temporalId:string = Math.random().toString(36).substring(10);
+        let temporalContainer:IContainer = this.createContainer(temporalId);
+        let containerizedResolutionSyntax:IContainerizedResolutionSyntax = contextualActivator.getContextInstantiator<IContainer, IContainerizedResolutionSyntax>('containerizedResolutionSyntax')(temporalContainer, '');
+        containerizedResolutionSyntax.on('resolution-performed', () =>  this.removeContainer(temporalId))
+
+        return containerizedResolutionSyntax;
+    }    
 
     /**
      * Creates and returns a container with the given alias.

@@ -4,11 +4,12 @@ import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
 import { ResolutionOption } from "./ResolutionOption"
+import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
  */
-export interface IKernel {
+export interface IKernel extends IContainerizedResolutionSyntax {
 
     /**
      * Returns the configuration of the kernel.
@@ -55,21 +56,18 @@ export interface IKernel {
      */
     canResolve(alias:string):boolean;
 
-     /**
-     * Return an resolved instance using the given reference that could be a class, function or alias.
-     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
-     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
-     * @return {any} The resolved object.
+    /**
+     * Return a containerized resolution syntax that allow perform resolution with an exiting container.
+     * @param alias Represents the alias of the container to look for.
+     * @return {IContainerizedResolutionSyntax} The containerized resolution systax. 
      */
-    resolve(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):any;
+    usingContainer(alias:string):IContainerizedResolutionSyntax;
 
     /**
-     * Return a promise that provided a resolved instance using the given reference that could be a class, function or alias.
-     * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
-     * @param {ResolutionOption} resolutionOption Represents the options to resolve the the reference.
-     * @return {Promise<any>} A promise that resolve the objects.
+     * Return a containerized resolution syntax that allow perform resolution with an temporal container.
+     * @return {IContainerizedResolutionSyntax} The containerized resolution systax. 
      */
-    resolveAsync(reference:{ new ():any } | Function | string, resolutionOption?:ResolutionOption):Promise<any>;
+    usingTemporalContainer():IContainerizedResolutionSyntax;
 
     /**
      * Creates and returns a container with the given alias.

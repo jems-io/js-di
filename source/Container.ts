@@ -54,6 +54,11 @@ export class Container implements IContainer {
     public getName():string { return this._name; };
 
     /**
+     * Represents the kernel that owns the container;
+     */
+    public getKernel():IKernel { return this._kernel; }
+
+    /**
      * Returns the generated identifier and register the given metadata with the given alias for his future activation.
      * @param {string} alias Represents the alias.
      * @param {DependencyMetadata} dependencyMetadata Represents the dependency metadata.
