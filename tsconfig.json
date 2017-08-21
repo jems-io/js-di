@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
-        "lib": ["ES6", "dom"],
-        "target": "ES5",
+        "lib": ["es6"],
+        "target": "es5",
         "noEmitOnError": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,        
         "declaration": true,
-        "pretty": true       
-    } 
+        "pretty": true
+    },
+    "include": [
+        "./typings/index.d.ts"
+    ]
 }

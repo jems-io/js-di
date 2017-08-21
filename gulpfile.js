@@ -6,7 +6,7 @@ const zip = require('gulp-zip');
 const ftp = require( 'vinyl-ftp' );
 const gutil = require('gulp-util');
 
-var tsProject = ts.createProject('./typescript.json');
+var tsProject = ts.createProject('./tsconfig.json');
 
 // =========================================================================
 //                         Transpilation Tasks
