@@ -1,7 +1,7 @@
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IKernelReference } from "./IKernelReference";
 import { IContainerActivator } from "./IContainerActivator";
-import * as Errors from "./Errors/Index";
+import * as Errors from "./errors/Index";
 import { IContainer } from "./IContainer";
 import { ResolutionContext } from "./ResolutionContext";
 

@@ -26,19 +26,19 @@ import { SingeltonFluentSyntax } from "./SingeltonFluentSyntax";
 import { IArgumentsNamesProvider } from "./IArgumentsNamesProvider"
 import { ArgumentsNamesProvider } from "./ArgumentsNamesProvider"
 
-import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
-import { InstanceServicingStrategy } from "./ServicingStrategy/InstanceServicingStrategy"
-import { ConstantServicingStrategy } from "./ServicingStrategy/ConstantServicingStrategy"
-import { BuilderFunctionServicingStrategy } from "./ServicingStrategy/BuilderFunctionServicingStrategy"
+import { IServicingStrategy } from "./servicing-strategy/IServicingStrategy"
+import { InstanceServicingStrategy } from "./servicing-strategy/InstanceServicingStrategy"
+import { ConstantServicingStrategy } from "./servicing-strategy/ConstantServicingStrategy"
+import { BuilderFunctionServicingStrategy } from "./servicing-strategy/BuilderFunctionServicingStrategy"
 
-import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
-import { PerCallDeliveryStrategy } from "./DeliveryStrategy/PerCallDeliveryStrategy";
-import { PerResolutionDeliveryStrategy } from "./DeliveryStrategy/PerResolutionDeliveryStrategy";
-import { ContainerizedDeliveryStrategy } from "./DeliveryStrategy/ContainerizedDeliveryStrategy";
-import { SingletonDeliveryStrategy } from "./DeliveryStrategy/SingletonDeliveryStrategy";
+import { IDeliveryStrategy } from "./delivery-strategy/IDeliveryStrategy";
+import { PerCallDeliveryStrategy } from "./delivery-strategy/PerCallDeliveryStrategy";
+import { PerResolutionDeliveryStrategy } from "./delivery-strategy/PerResolutionDeliveryStrategy";
+import { ContainerizedDeliveryStrategy } from "./delivery-strategy/ContainerizedDeliveryStrategy";
+import { SingletonDeliveryStrategy } from "./delivery-strategy/SingletonDeliveryStrategy";
 
-import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
-import { ContainerizedResolutionSyntax } from "./FluentSyntax/ContainerizedResolutionSyntax";
+import { IContainerizedResolutionSyntax } from "./fluent-syntax/IContainerizedResolutionSyntax";
+import { ContainerizedResolutionSyntax } from "./fluent-syntax/ContainerizedResolutionSyntax";
 
 /**
  * Represents a registrar to regiter all the build-in implementations.

@@ -1,4 +1,4 @@
-import { IServicingStrategy } from "../ServicingStrategy/IServicingStrategy";
+import { IServicingStrategy } from "../servicing-strategy/IServicingStrategy";
 import { IInAndWhenSyntax } from "./IInAndWhenSyntax";
 
 /**

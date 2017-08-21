@@ -3,7 +3,7 @@ import contextualActivator from '../ContextualActivator'
 import { ResolutionContext } from "../ResolutionContext";
 import { IServicingStrategy } from "./IServicingStrategy";
 import { IArgumentsNamesProvider } from "../IArgumentsNamesProvider";
-import { ServicingError } from "../../source/Errors/ServicingError"
+import { ServicingError } from "../../source/errors/ServicingError"
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets as the result of an invokation.

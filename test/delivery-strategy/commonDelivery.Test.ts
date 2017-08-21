@@ -1,6 +1,6 @@
 import * as assert from 'assert'
-import { IDeliveryStrategy } from "../../source/DeliveryStrategy/IDeliveryStrategy";
-import { DeliveryError } from "../../source/Errors/DeliveryError";
+import { IDeliveryStrategy } from "../../source/delivery-strategy/IDeliveryStrategy";
+import { DeliveryError } from "../../source/errors/DeliveryError";
 import { ResolutionContext } from "../../source/ResolutionContext";
 import { DependencyMetadata } from "../../source/DependencyMetadata";
 

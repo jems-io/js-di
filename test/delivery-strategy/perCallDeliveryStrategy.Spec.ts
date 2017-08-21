@@ -4,10 +4,10 @@ import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
 import { ResolutionContext } from "../../source/ResolutionContext";
-import { PerCallDeliveryStrategy } from "../../source/DeliveryStrategy/PerCallDeliveryStrategy";
-import { IServicingStrategy } from "../../source/ServicingStrategy/IServicingStrategy";
+import { PerCallDeliveryStrategy } from "../../source/delivery-strategy/PerCallDeliveryStrategy";
+import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
 import { DependencyMetadata } from "../../source/DependencyMetadata";
-import { DeliveryError } from "../../source/Errors/DeliveryError";
+import { DeliveryError } from "../../source/errors/DeliveryError";
 
 describe('The [PerCallDeliveryStrategy]', function() {
     it('should return a new instance of reference target in the given dependency metadata.', function() {

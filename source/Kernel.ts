@@ -1,4 +1,4 @@
-import * as Errors from "./Errors/Index";
+import * as Errors from "./errors/Index";
 import { IModule } from './IModule'
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
@@ -9,7 +9,7 @@ import { IContainerActivator } from "./IContainerActivator";
 import contextualActivator from './ContextualActivator'
 import { ResolutionContext } from "./ResolutionContext";
 import { ResolutionOption } from "./ResolutionOption";
-import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
+import { IContainerizedResolutionSyntax } from "./fluent-syntax/IContainerizedResolutionSyntax";
 import { EventEmitter } from 'events'
 
 /**

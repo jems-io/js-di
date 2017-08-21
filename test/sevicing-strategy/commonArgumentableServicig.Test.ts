@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { IServicingStrategy } from "../../source/ServicingStrategy/IServicingStrategy";
+import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
 import { ResolutionContext } from "../../source/ResolutionContext";
 import { ResolutionOption } from "../../source/ResolutionOption";
 

@@ -5,7 +5,7 @@ import { IKernel } from "./IKernel";
 import { ISingeltonFluentSyntax } from "./ISingeltonFluentSyntax";
 import { IContainer } from "./IContainer";
 import { DependencyMetadata } from "./DependencyMetadata";
-import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
+import { IDeliveryStrategy } from "./delivery-strategy/IDeliveryStrategy";
 
 import contextualActivator from "./ContextualActivator"
 

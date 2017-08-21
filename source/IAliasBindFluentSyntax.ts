@@ -2,7 +2,7 @@ import { IAliasReference } from "./IAliasReference";
 import { IKernelReference } from "./IKernelReference";
 import { IServicingContextFluentSyntax } from "./IServicingContextFluentSyntax";
 import { IContainerFluentSyntax } from "./IContainerFluentSyntax";
-import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
+import { IServicingStrategy } from "./servicing-strategy/IServicingStrategy"
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.

@@ -1,5 +1,5 @@
-import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
-import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy"
+import { IServicingStrategy } from "./servicing-strategy/IServicingStrategy";
+import { IDeliveryStrategy } from "./delivery-strategy/IDeliveryStrategy"
 import { ResolutionContext } from "./ResolutionContext";
 
 /**

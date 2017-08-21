@@ -4,9 +4,9 @@ import { IServicingContextFluentSyntax } from "./IServicingContextFluentSyntax";
 import { IContainerFluentSyntax } from "./IContainerFluentSyntax";
 import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IKernel } from "./IKernel";
-import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy";
+import { IServicingStrategy } from "./servicing-strategy/IServicingStrategy";
 import contextualActivator from './ContextualActivator'
-import { IDeliveryStrategy } from "./DeliveryStrategy/IDeliveryStrategy";
+import { IDeliveryStrategy } from "./delivery-strategy/IDeliveryStrategy";
 
 /**
  * Represents an alias fluent context that allows the kernel register types and objects in a fluent api syntax.

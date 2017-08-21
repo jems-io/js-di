@@ -1,22 +1,18 @@
 import { ResolutionContext } from "../ResolutionContext";
 import { DependencyMetadata } from "../DependencyMetadata";
 import { IDeliveryStrategy } from "./IDeliveryStrategy";
-import { DeliveryError } from "../Errors/DeliveryError"
+import { DeliveryError } from "../errors/DeliveryError"
 
 /**
- * Represenst an strategy to deliver the same instance targets with an specific strategy.
+ * Represenst an strategy to deliver a new instance targets per resolution with an specific strategy.
  */
-export class SingletonDeliveryStrategy implements IDeliveryStrategy {
+export class PerResolutionDeliveryStrategy implements IDeliveryStrategy {
 
-    /**
-     * Represents a boolean value specifying if the target has been served.
-     */
-    private _isServed:boolean;
+    private _resolutionContextInstanceMap:{context:ResolutionContext, instance:any}[];
 
-    /**
-     * Represets an instance of the target.
-     */
-    private _instance:any;
+    constructor() {
+        this._resolutionContextInstanceMap = [];
+    }
 
     /**
      * Deliver the transformed reference in the provided dependency metadata.
@@ -37,10 +33,16 @@ export class SingletonDeliveryStrategy implements IDeliveryStrategy {
         if (!dependencyMetadata.servicingStrategy)
             throw new DeliveryError('The provided dependency metadata must have a valid servicing strategy.')
 
-        if (!this._isServed) {
-            this._instance = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference);
-            this._isServed = true;
-        }
-        return this._instance;        
+        let map = this._resolutionContextInstanceMap.find(map => map.context === resolutionContext);
+        let servingResult:any;
+        
+        if (!map) {
+            servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference);
+            this._resolutionContextInstanceMap.push({ context: resolutionContext, instance: servingResult });
+        } else
+            servingResult = map.instance;
+
+
+        return servingResult;        
     }
 }

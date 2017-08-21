@@ -3,7 +3,7 @@
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ContainerizedResolutionSyntax } from "../../source/FluentSyntax/ContainerizedResolutionSyntax"
+import { ContainerizedResolutionSyntax } from "../../source/fluent-syntax/ContainerizedResolutionSyntax"
 import { ResolutionContext } from "../../source/ResolutionContext";
 import { IContainer } from "../../source/IContainer";
 

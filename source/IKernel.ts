@@ -4,7 +4,7 @@ import { IAliasBindFluentSyntax } from "./IAliasBindFluentSyntax";
 import { IContainer } from "./IContainer";
 import { KernelConfiguration } from "./KernelConfiguration";
 import { ResolutionOption } from "./ResolutionOption"
-import { IContainerizedResolutionSyntax } from "./FluentSyntax/IContainerizedResolutionSyntax";
+import { IContainerizedResolutionSyntax } from "./fluent-syntax/IContainerizedResolutionSyntax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies

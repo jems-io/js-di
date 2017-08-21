@@ -1,4 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
+
 
 import * as assert from 'assert'
 import * as jemsdi from "../source/Index";

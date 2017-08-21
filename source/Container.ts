@@ -1,8 +1,8 @@
 import { DependencyMetadata } from "./DependencyMetadata";
 import { IContainerActivator } from "./IContainerActivator";
 import { IContainer } from "./IContainer";
-import { IServicingStrategy } from "./ServicingStrategy/IServicingStrategy"
-import * as Errors from "./Errors/Index";
+import { IServicingStrategy } from "./servicing-strategy/IServicingStrategy"
+import * as Errors from "./errors/Index";
 import { IKernel } from "./IKernel";
 import { ResolutionConfiguration } from "./ResolutionConfiguration";
 import { ResolutionContext } from "./ResolutionContext";

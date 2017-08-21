@@ -1,4 +1,4 @@
-/// <reference path="../typings/index.d.ts" />
+
 
 describe('The kernel,', function() {
 

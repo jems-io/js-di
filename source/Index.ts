@@ -34,10 +34,10 @@ export * from './IKernelReference';
 export * from './IModule';
 export * from './IServicingContextFluentSyntax';
 export * from './ISingeltonFluentSyntax';
-export * from "./ServicingStrategy/IServicingStrategy"
+export * from "./servicing-strategy/IServicingStrategy"
 
 // Exporting Errors
-export * from './Errors/Index';
+export * from './errors/Index';
 
 // Registering all build-in implementations.
 builInInstantiatorsRegistrar.registerBuildInImplementation(contextualActivator);

@@ -4,10 +4,10 @@ import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
 import { ResolutionContext } from "../../source/ResolutionContext";
-import { ContainerizedDeliveryStrategy } from "../../source/DeliveryStrategy/ContainerizedDeliveryStrategy";
-import { IServicingStrategy } from "../../source/ServicingStrategy/IServicingStrategy";
+import { ContainerizedDeliveryStrategy } from "../../source/delivery-strategy/ContainerizedDeliveryStrategy";
+import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
 import { DependencyMetadata } from "../../source/DependencyMetadata";
-import { DeliveryError } from "../../source/Errors/DeliveryError";
+import { DeliveryError } from "../../source/errors/DeliveryError";
 import { IContainer } from "../../source/IContainer";
 
 describe('The [ContainerizedDeliveryStrategy]', function() {

@@ -1,4 +1,4 @@
-import { IDeliveryStrategy } from "../DeliveryStrategy/IDeliveryStrategy";
+import { IDeliveryStrategy } from "../delivery-strategy/IDeliveryStrategy";
 import { IWhenSyntax } from "./IWhenSyntax";
 
 /**
