@@ -1,5 +1,5 @@
 import { ResolutionOption } from "../ResolutionOption";
-import { IContainerizedResolutionSyntax } from "./IContainerizedResolutionSyntax";
+import { ContainerizedResolutionSyntax } from "./containerizedResolutionSyntax";
 import { IContainer } from "../IContainer";
 import { ResolutionContext } from "../ResolutionContext";
 import { IKernel } from "../IKernel";
@@ -8,7 +8,7 @@ import { EventEmitter } from "events";
 /**
  * Represents a fluent extension that allows resolving dependencies with a container from the kernel fluently. 
  */
-export class ContainerizedResolutionSyntax extends EventEmitter implements IContainerizedResolutionSyntax {
+export class BuildInContainerizedResolutionSyntax extends EventEmitter implements IContainerizedResolutionSyntax {
     /**
      * Represents the container that will perform the resolutions.
      */

@@ -1,4 +1,4 @@
-import { BaseError } from './BaseError'
+import { BaseError } from './baseError'
 
 /**
  * Represents an error that occurs when something goes wrong serving a reference.

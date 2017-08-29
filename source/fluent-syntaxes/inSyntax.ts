@@ -1,38 +1,38 @@
-import { IDeliveryStrategy } from "../delivery-strategy/IDeliveryStrategy";
-import { IWhenSyntax } from "./IWhenSyntax";
+import { DeliveryStrategy } from "../delivery-strategy/deliveryStrategy";
+import { WhenSyntax } from "./whenSyntax";
 
 /**
  * Represents a fluent syntax extension to setup the current alias bind to a delivery strategy.
  */
-export interface IInSyntax {
+export interface InSyntax {
     /**
      * Setup the current alias bind to be served in each call.
      * @return A syntax extension to setup conditions.
      */
-    inPerCallMode():IWhenSyntax;
+    inPerCallMode():WhenSyntax;
 
     /**
      * Setup the current alias bind to be served once per each resolution process.
      * @return A syntax extension to setup conditions.
      */
-    inPerResolutionMode():IWhenSyntax;
+    inPerResolutionMode():WhenSyntax;
 
     /**
      * Setup the current alias bind to be served only once.
      * @return A syntax extension to setup conditions.
      */
-    inSingletonMode():IWhenSyntax;
+    inSingletonMode():WhenSyntax;
 
     /**
      * Setup the current alias bind to be served once per container.
      * @return A syntax extension to setup conditions.
      */
-    inContainerizedMode():IWhenSyntax;
+    inContainerizedMode():WhenSyntax;
 
     /**
      * Setup the current alias bind to be delivered with the given delivery strategy.
      * @param deliveryStrategy Represents the delivery strategy to deliver the reference.
      * @return A syntax extension to setup conditions.
      */
-    InMode(deliveryStrategy:IDeliveryStrategy):IWhenSyntax;
+    InMode(deliveryStrategy:IDeliveryStrategy):WhenSyntax;
 }

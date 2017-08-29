@@ -1,21 +1,21 @@
 import contextualActivator from '../ContextualActivator'
 
 import { ResolutionContext } from "../ResolutionContext";
-import { IServicingStrategy } from "./IServicingStrategy";
+import { ServicingStrategy } from "./servicingStrategy";
 import { IArgumentsNamesProvider } from "../IArgumentsNamesProvider";
-import { ServicingError } from "../../source/errors/ServicingError"
+import { ServicingError } from "../../source/errors/servicingError"
 
 /**
- * Represents a servicing strategy that transform and serve metadata reference targets as the result of an invokation.
+ * Represents a servicing strategy that transform and serve metadata reference targets as an instance.
  */
-export class BuilderFunctionServicingStrategy implements IServicingStrategy {
+export class InstanceServicingStrategy implements ServicingStrategy {
     /**
      * Represents the arguments name provider that identify the arguments in a argumentable reference.
      */
     private _argumentsNamesProvider:IArgumentsNamesProvider;
 
     /**
-     * Instantiate a new builer function servicing strategy.
+     * Instantiate a new instance servicing strategy.
      */
     constructor() {
         // Resolving it with poors man constructor. :(
@@ -23,20 +23,19 @@ export class BuilderFunctionServicingStrategy implements IServicingStrategy {
     }
 
     /**
-     * Invoke and serve the result of the invokation of the given reference target.
+     * Instantiate and serve the given reference target transformation.
      * @param resolutionContext Represents the resolution context of the servicing.
-     * @param referenceTarget Represents the reference target to invoke.
-     * @return The result of the invokation of the reference target.
+     * @param referenceTarget Represents the reference target to instantiate.
+     * @return The instantiated reference target.
      */
     public serve(resolutionContext:ResolutionContext , referenceTarget:any):any {
         if (!this._argumentsNamesProvider.isArgumetable(referenceTarget))
             throw new ServicingError(`The provided metadata reference target of type [${typeof referenceTarget}], is not argumentable.`);
 
         let argumetsNames:string[] = this._argumentsNamesProvider.getArgumentsNames(referenceTarget);
-        let argumets:any[] = [];        
+        let argumets:any[] = [null];
 
         argumetsNames.forEach((argumentName) => {
-
             let argument:any;
 
             if (resolutionContext &&
@@ -49,8 +48,8 @@ export class BuilderFunctionServicingStrategy implements IServicingStrategy {
             }                
 
             argumets.push(argument);
-        });        
+        });
 
-        return referenceTarget.call(null, argumets);
+        return new (Function.prototype.bind.apply(referenceTarget, argumets));
     }
 }

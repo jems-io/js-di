@@ -5,7 +5,7 @@ import { EventEmitter } from 'events';
 /**
  * Represents a fluent extension that allows resolving dependencies with a container from the kernel fluently. 
  */
-export interface IContainerizedResolutionSyntax extends EventEmitter {
+export interface ContainerizedResolutionSyntax extends EventEmitter {
     /**
      * Return an resolved instance using the given reference that could be a class, function or alias.
      * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.

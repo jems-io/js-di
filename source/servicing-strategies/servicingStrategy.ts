@@ -3,7 +3,7 @@ import { ResolutionContext } from "../ResolutionContext";
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets.
  */
-export interface IServicingStrategy {
+export interface ServicingStrategy {
 
     /**
      * Serve the result of the given reference target transformation.

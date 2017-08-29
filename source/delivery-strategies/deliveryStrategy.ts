@@ -4,7 +4,7 @@ import { DependencyMetadata } from "../DependencyMetadata";
 /**
  * Represenst an strategy to deliver targets with an specific strategy.
  */
-export interface IDeliveryStrategy {
+export interface DeliveryStrategy {
     /**
      * Deliver the transformed reference in the provided dependency metadata.
      * @param resolutionContext Represents the context in which the request was made.

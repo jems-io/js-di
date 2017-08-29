@@ -1,13 +1,13 @@
 import { ResolutionContext } from "../ResolutionContext";
 import { DependencyMetadata } from "../DependencyMetadata";
-import { IDeliveryStrategy } from "./IDeliveryStrategy";
-import { DeliveryError } from "../errors/DeliveryError"
+import { DeliveryStrategy } from "./deliveryStrategy";
+import { DeliveryError } from "../errors/deliveryError"
 import { IContainer } from "../IContainer";
 
 /**
  * Represenst an strategy to deliver a new instance targets per container with an specific strategy.
  */
-export class ContainerizedDeliveryStrategy implements IDeliveryStrategy {
+export class ContainerizedDeliveryStrategy implements DeliveryStrategy {
 
     private _containerInstanceMap:{container:IContainer, instance:any}[];
 

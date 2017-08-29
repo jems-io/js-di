@@ -1,23 +1,12 @@
 import { ResolutionContext } from "../ResolutionContext";
 import { DependencyMetadata } from "../DependencyMetadata";
-import { IDeliveryStrategy } from "./IDeliveryStrategy";
-import { DeliveryError } from "../errors/DeliveryError"
+import { DeliveryStrategy } from "./deliveryStrategy";
+import { DeliveryError } from "../errors/deliveryError"
 
 /**
- * Represenst an strategy to deliver the same instance targets with an specific strategy.
+ * Represenst an strategy to deliver a new instance targets with an specific strategy.
  */
-export class SingletonDeliveryStrategy implements IDeliveryStrategy {
-
-    /**
-     * Represents a boolean value specifying if the target has been served.
-     */
-    private _isServed:boolean;
-
-    /**
-     * Represets an instance of the target.
-     */
-    private _instance:any;
-
+export class PerCallDeliveryStrategy implements DeliveryStrategy {
     /**
      * Deliver the transformed reference in the provided dependency metadata.
      * @param resolutionContext Represents the context in which the request was made.
@@ -37,10 +26,6 @@ export class SingletonDeliveryStrategy implements IDeliveryStrategy {
         if (!dependencyMetadata.servicingStrategy)
             throw new DeliveryError('The provided dependency metadata must have a valid servicing strategy.')
 
-        if (!this._isServed) {
-            this._instance = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference);
-            this._isServed = true;
-        }
-        return this._instance;        
+        return dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference);        
     }
 }
