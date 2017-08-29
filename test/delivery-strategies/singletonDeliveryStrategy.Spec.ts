@@ -1,20 +1,18 @@
-
-
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { SingletonDeliveryStrategy } from "../../source/delivery-strategy/SingletonDeliveryStrategy";
-import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
-import { DependencyMetadata } from "../../source/DependencyMetadata";
-import { DeliveryError } from "../../source/errors/DeliveryError";
+import { ResolutionContext } from "../../src/resolutionContext";
+import { SingletonDeliveryStrategy } from "../../src/delivery-strategies/singletonDeliveryStrategy";
+import { ServicingStrategy } from "../../src/servicing-strategies/servicingStrategy";
+import { DependencyMetadata } from "../../src/dependencyMetadata";
+import { DeliveryError } from "../../src/errors/deliveryError";
 
 describe('The [SingletonDeliveryStrategy]', function() {
     it('should return the same instance of reference target in the given dependency metadata.', function() {
         class InstantiableClass {};
         let singletonDeliveryStrategy:SingletonDeliveryStrategy = new SingletonDeliveryStrategy();        
-        let servicingStrategyMock:IMock<IServicingStrategy> = Mock.ofType<IServicingStrategy>();
-        servicingStrategyMock.setup((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()))
+        let servicingStrategyMock:IMock<ServicingStrategy> = Mock.ofType<ServicingStrategy>();
+        servicingStrategyMock.setup((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()))
                                                                .returns(() => new InstantiableClass());
 
         let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
@@ -30,9 +28,9 @@ describe('The [SingletonDeliveryStrategy]', function() {
                  `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`);
         assert.equal(deliveryResult1, deliveryResult2, 'The delivered result should be equal');
         
-        servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
+        servicingStrategyMock.verify((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
     });
 
-    require('./CommonDelivery.Test')(() => new SingletonDeliveryStrategy());
+    require('./commonDelivery.Test')(() => new SingletonDeliveryStrategy());
 
 });

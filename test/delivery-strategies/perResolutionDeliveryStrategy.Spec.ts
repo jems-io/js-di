@@ -1,21 +1,19 @@
-
-
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { PerResolutionDeliveryStrategy } from "../../source/delivery-strategy/PerResolutionDeliveryStrategy";
-import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
-import { DependencyMetadata } from "../../source/DependencyMetadata";
-import { DeliveryError } from "../../source/errors/DeliveryError";
+import { ResolutionContext } from "../../src/resolutionContext";
+import { PerResolutionDeliveryStrategy } from "../../src/delivery-strategies/perResolutionDeliveryStrategy";
+import { ServicingStrategy } from "../../src/servicing-strategies/servicingStrategy";
+import { DependencyMetadata } from "../../src/dependencyMetadata";
+import { DeliveryError } from "../../src/errors/deliveryError";
 
 describe('The [PerResolutionDeliveryStrategy]', function() {
     it('should return a new instance of reference target per each resolution in the given dependency metadata.', function() {
         class InstantiableClass {};
         
         let perResolutionDeliveryStrategy:PerResolutionDeliveryStrategy = new PerResolutionDeliveryStrategy();        
-        let servicingStrategyMock:IMock<IServicingStrategy> = Mock.ofType<IServicingStrategy>();
-        servicingStrategyMock.setup((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()))
+        let servicingStrategyMock:IMock<ServicingStrategy> = Mock.ofType<ServicingStrategy>();
+        servicingStrategyMock.setup((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()))
                                                                .returns(() => new InstantiableClass());
 
         let resolutionContext:ResolutionContext = new ResolutionContext();
@@ -33,9 +31,9 @@ describe('The [PerResolutionDeliveryStrategy]', function() {
                  `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`);
         assert.equal(deliveryResult1, deliveryResult2, 'The delivered result should be equals');
         
-        servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
+        servicingStrategyMock.verify((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
     });
 
-    require('./CommonDelivery.Test')(() => new PerResolutionDeliveryStrategy());
+    require('./commonDelivery.Test')(() => new PerResolutionDeliveryStrategy());
 
 });

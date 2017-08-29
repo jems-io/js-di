@@ -1,9 +1,7 @@
-
-
 import * as assert from "assert"
 
-import injectedIntoAliasValidator from "../../source/MetadataValidator/InjectedIntoAliasValidator" 
-import { ResolutionContext } from "../../source/ResolutionContext";
+import injectedIntoAliasValidator from "../../src/metadata-validators/injectedIntoAliasValidator" 
+import { ResolutionContext } from "../../src/resolutionContext";
 
 
 describe('The [InjectedIntoAliasValidator]', function() {

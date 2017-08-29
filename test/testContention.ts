@@ -1,15 +1,13 @@
-
-
 import * as assert from 'assert'
-import * as jemsdi from "../source/Index";
-import { FakeTypeA } from './fake_types/FakeTypeA';
-import { FakeTypeB } from './fake_types/FakeTypeB';
-import { FakeTypeC } from "./fake_types/FakeTypeC";
-import { IContainer } from "../source/IContainer";
+
+import * as jemsdi from "../src/index";
+import { FakeTypeA } from './fake-types/fakeTypeA';
+import { FakeTypeB } from './fake-types/fakeTypeB';
+import { FakeTypeC } from "./fake-types/fakeTypeC";
 
 describe('with containeraized resolution', function() {
 
-    let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
+    let kernel:jemsdi.Kernel =  jemsdi.createKernel();    
     let containerBAlias = 'containerB';
     let containerCAlias = 'containerC';
 

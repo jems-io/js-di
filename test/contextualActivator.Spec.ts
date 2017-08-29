@@ -1,7 +1,6 @@
-
-
 import * as assert from 'assert'
-import { ContextualActivator } from '../source/ContextualActivator'
+
+import { ContextualActivator } from '../src/contextualActivator'
 
 describe('The [ContainerActivator]', function() {
     it('should return the result of the setted function with the requested name.', function() {

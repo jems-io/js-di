@@ -1,15 +1,13 @@
-
-
 import * as assert from 'assert'
-import * as jemsdi from "../source/Index";
-import { IContainer } from "../source/IContainer";
-import { FakeTypeDependant1 } from "./fake_types/FakeTypeDependant1";
-import { FakeTypeDependant2 } from "./fake_types/FakeTypeDependant2";
-import { FakeTypeC } from "./fake_types/FakeTypeC";
+
+import * as jemsdi from "../src/index";
+import { FakeTypeDependant1 } from "./fake-types/fakeTypeDependant1";
+import { FakeTypeDependant2 } from "./fake-types/fakeTypeDependant2";
+import { FakeTypeC } from "./fake-types/fakeTypeC";
 
 describe('must throw an the error', function() {
 
-    let kernel:jemsdi.IKernel =  jemsdi.createKernel();
+    let kernel:jemsdi.Kernel =  jemsdi.createKernel();
 
     before(function() {
         kernel.bind('fakeTypeDependant1').to(FakeTypeDependant1);

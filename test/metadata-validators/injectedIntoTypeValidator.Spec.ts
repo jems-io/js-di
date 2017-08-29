@@ -1,9 +1,7 @@
-
-
 import * as assert from "assert"
 
-import injectedIntoTypeValidator from "../../source/MetadataValidator/InjectedIntoTypeValidator" 
-import { ResolutionContext } from "../../source/ResolutionContext";
+import injectedIntoTypeValidator from "../../src/metadata-validators/injectedIntoTypeValidator" 
+import { ResolutionContext } from "../../src/resolutionContext";
 
 
 describe('The [InjectedIntoTypeValidator]', function() {

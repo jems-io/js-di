@@ -1,29 +1,27 @@
-
-
 describe('The kernel,', function() {
 
     describe('when is resolving,', function() {
 
         describe('if everithing is good,', function() {
             //Test the instance servicing strategy
-            require('./TestInstanceServicingStrategy');
+            require('./testInstanceServicingStrategy');
 
             //Test the constant servicing strategy
-            require('./TestConstantServicingStrategy');
+            require('./testConstantServicingStrategy');
 
             //Test the function builder servicing strategy
-            require('./TestBuilderFunctionServicingStrategy');
+            require('./testBuilderFunctionServicingStrategy');
 
             //Test the contention
-            require('./TestContention');          
+            require('./testContention');          
             
             //Test the alias sufixing configuration
-            require('./TestAliasSufixingConfiguration');            
+            require('./testAliasSufixingConfiguration');            
         });
 
         describe('if something is bad,', function() {
             // Test the error triggering
-            require('./TestErrorTriggering');
+            require('./testErrorTriggering');
         });
     });
 });

@@ -1,12 +1,10 @@
-
-
 import * as assert from 'assert'
-import * as jemsdi from "../source/Index";
-import { IContainer } from "../source/IContainer";
+
+import * as jemsdi from "../src/index";
 
 describe('with an alias that contain sufixing configuration', function() {
 
-    let kernel:jemsdi.IKernel =  jemsdi.createKernel();    
+    let kernel:jemsdi.Kernel =  jemsdi.createKernel();    
 
      before(function() {
         kernel.bind('fakeType').to(function() { this.fake = true; });

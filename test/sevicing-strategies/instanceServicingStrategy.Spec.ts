@@ -1,12 +1,10 @@
-
-
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { InstanceServicingStrategy } from "../../source/servicing-strategy/InstanceServicingStrategy";
-import { IContainer } from "../../source/IContainer";
-import { ServicingError } from "../../source/errors/ServicingError"
+import { ResolutionContext } from "../../src/resolutionContext";
+import { InstanceServicingStrategy } from "../../src/servicing-strategies/instanceServicingStrategy";
+import { Container } from "../../src/container";
+import { ServicingError } from "../../src/errors/servicingError"
 
 describe('The [InstanceServicingStrategy]', function() {
     it('should return an instance of the given reference target.', function() {
@@ -25,7 +23,7 @@ describe('The [InstanceServicingStrategy]', function() {
         class IntatiableFunctionWithArgument { constructor(argument1:string) {} };
 
         let resolutionContext:ResolutionContext = new ResolutionContext();
-        let containerMock:IMock<IContainer> = Mock.ofType<IContainer>();        
+        let containerMock:IMock<Container> = Mock.ofType<Container>();        
         containerMock.setup(x => x.resolve('argument1', It.isAny())).returns(() => {});
         resolutionContext.originContainer = containerMock.object;
     
@@ -47,5 +45,5 @@ describe('The [InstanceServicingStrategy]', function() {
         }, ServicingError);
     })
 
-    require('./CommonArgumentableServicig.Test')(() => new InstanceServicingStrategy());
+    require('./commonArgumentableServicig.Test')(() => new InstanceServicingStrategy());
 })

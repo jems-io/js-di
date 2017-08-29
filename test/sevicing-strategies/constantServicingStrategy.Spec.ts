@@ -1,11 +1,8 @@
-
-
 import * as assert from 'assert'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { ConstantServicingStrategy } from "../../source/servicing-strategy/ConstantServicingStrategy";
-import { IContainer } from "../../source/IContainer";
-import { ServicingError } from "../../source/errors/ServicingError"
+import { ResolutionContext } from "../../src/resolutionContext";
+import { ConstantServicingStrategy } from "../../src/servicing-strategies/constantServicingStrategy";
+import { ServicingError } from "../../src/errors/servicingError"
 
 describe('The [ConstantServicingStrategy]', function() {
     it('should return the given reference target.', function() {

@@ -1,12 +1,10 @@
-
-
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { BuilderFunctionServicingStrategy } from "../../source/servicing-strategy/BuilderFunctionServicingStrategy";
-import { IContainer } from "../../source/IContainer";
-import { ServicingError } from "../../source/errors/ServicingError"
+import { ResolutionContext } from "../../src/resolutionContext";
+import { BuilderFunctionServicingStrategy } from "../../src/servicing-strategies/builderFunctionServicingStrategy";
+import { Container } from "../../src/container";
+import { ServicingError } from "../../src/errors/servicingError"
 
 describe('The [BuilderFunctionServicingStrategy]', function() {
     it('should return the result of the invokation of the given reference target.', function() {
@@ -21,7 +19,7 @@ describe('The [BuilderFunctionServicingStrategy]', function() {
 
     it('should return the result of the invokation of the given reference target and resolve its dependencies with the context origin container.', function() {        
         let resolutionContext:ResolutionContext = new ResolutionContext();
-        let containerMock:IMock<IContainer> = Mock.ofType<IContainer>();        
+        let containerMock:IMock<Container> = Mock.ofType<Container>();        
         containerMock.setup(x => x.resolve('argument1', It.isAny())).returns(() => 'moto');
         resolutionContext.originContainer = containerMock.object;
     
@@ -43,5 +41,5 @@ describe('The [BuilderFunctionServicingStrategy]', function() {
         }, ServicingError);
     })
 
-    require('./CommonArgumentableServicig.Test')(() => new BuilderFunctionServicingStrategy());
+    require('./commonArgumentableServicig.Test')(() => new BuilderFunctionServicingStrategy());
 })

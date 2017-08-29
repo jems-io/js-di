@@ -1,7 +1,7 @@
 import * as assert from "assert"
 
-import ancestoIsValidator from "../../source/MetadataValidator/AncestoIsValidator" 
-import { DependencyMetadata } from "../../source/DependencyMetadata";
+import ancestoIsValidator from "../../src/metadata-validators/ancestoIsValidator" 
+import { DependencyMetadata } from "../../src/dependencyMetadata";
 
 
 describe('The [AncestoIsValidator]', function() {

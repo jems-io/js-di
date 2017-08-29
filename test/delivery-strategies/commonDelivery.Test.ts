@@ -1,10 +1,10 @@
 import * as assert from 'assert'
-import { IDeliveryStrategy } from "../../source/delivery-strategy/IDeliveryStrategy";
-import { DeliveryError } from "../../source/errors/DeliveryError";
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { DependencyMetadata } from "../../source/DependencyMetadata";
+import { DeliveryStrategy } from "../../src/delivery-strategies/deliveryStrategy";
+import { DeliveryError } from "../../src/errors/deliveryError";
+import { ResolutionContext } from "../../src/resolutionContext";
+import { DependencyMetadata } from "../../src/dependencyMetadata";
 
-export = function (deiverStratrategyProvider: () => IDeliveryStrategy) {
+export = function (deiverStratrategyProvider: () => DeliveryStrategy) {
 
     it('should throw an error if the given resolution context is not valid.', function() {
         assert.throws(() => {

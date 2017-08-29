@@ -1,26 +1,24 @@
-
-
 import * as assert from 'assert'
 import { IMock, Mock, It, Times } from 'typemoq'
 
-import { ResolutionContext } from "../../source/ResolutionContext";
-import { ContainerizedDeliveryStrategy } from "../../source/delivery-strategy/ContainerizedDeliveryStrategy";
-import { IServicingStrategy } from "../../source/servicing-strategy/IServicingStrategy";
-import { DependencyMetadata } from "../../source/DependencyMetadata";
-import { DeliveryError } from "../../source/errors/DeliveryError";
-import { IContainer } from "../../source/IContainer";
+import { ResolutionContext } from "../../src/resolutionContext";
+import { ContainerizedDeliveryStrategy } from "../../src/delivery-strategies/containerizedDeliveryStrategy";
+import { ServicingStrategy } from "../../src/servicing-strategies/servicingStrategy";
+import { DependencyMetadata } from "../../src/dependencyMetadata";
+import { DeliveryError } from "../../src/errors/deliveryError";
+import { Container } from "../../src/container";
 
 describe('The [ContainerizedDeliveryStrategy]', function() {
     it('should return the same reference target for the same container.', function() {
         class InstantiableClass {};
         
         let containerizedDeliveryStrategy:ContainerizedDeliveryStrategy = new ContainerizedDeliveryStrategy();        
-        let servicingStrategyMock:IMock<IServicingStrategy> = Mock.ofType<IServicingStrategy>();
-        servicingStrategyMock.setup((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()))
+        let servicingStrategyMock:IMock<ServicingStrategy> = Mock.ofType<ServicingStrategy>();
+        servicingStrategyMock.setup((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()))
                                                                .returns(() => new InstantiableClass());
 
         let resolutionContext:ResolutionContext = new ResolutionContext();
-        resolutionContext.originContainer = Mock.ofType<IContainer>().object;
+        resolutionContext.originContainer = Mock.ofType<Container>().object;
         let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
         dependencyMetadata.activationReference = InstantiableClass;
         dependencyMetadata.servicingStrategy = servicingStrategyMock.object;
@@ -35,22 +33,22 @@ describe('The [ContainerizedDeliveryStrategy]', function() {
                  `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`);
         assert.equal(deliveryResult1, deliveryResult2, 'The delivered result should be equals');
         
-        servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
+        servicingStrategyMock.verify((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
     });
 
     it('should return differents reference target for differents container.', function() {
         class InstantiableClass {};
         
         let containerizedDeliveryStrategy:ContainerizedDeliveryStrategy = new ContainerizedDeliveryStrategy();        
-        let servicingStrategyMock:IMock<IServicingStrategy> = Mock.ofType<IServicingStrategy>();
-        servicingStrategyMock.setup((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()))
+        let servicingStrategyMock:IMock<ServicingStrategy> = Mock.ofType<ServicingStrategy>();
+        servicingStrategyMock.setup((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()))
                                                                .returns(() => new InstantiableClass());
 
         let resolutionContext1:ResolutionContext = new ResolutionContext();
-        resolutionContext1.originContainer = Mock.ofType<IContainer>().object;
+        resolutionContext1.originContainer = Mock.ofType<Container>().object;
 
         let resolutionContext2:ResolutionContext = new ResolutionContext();
-        resolutionContext2.originContainer = Mock.ofType<IContainer>().object;
+        resolutionContext2.originContainer = Mock.ofType<Container>().object;
 
         let dependencyMetadata:DependencyMetadata = new DependencyMetadata();
         dependencyMetadata.activationReference = InstantiableClass;
@@ -67,9 +65,9 @@ describe('The [ContainerizedDeliveryStrategy]', function() {
                  `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`);
         assert.notEqual(deliveryResult1, deliveryResult2, 'The delivered result should be equals');
         
-        servicingStrategyMock.verify((x:IServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.atLeast(2))
+        servicingStrategyMock.verify((x:ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.atLeast(2))
     });
 
-    require('./CommonDelivery.Test')(() => new ContainerizedDeliveryStrategy());
+    require('./commonDelivery.Test')(() => new ContainerizedDeliveryStrategy());
 
 });
