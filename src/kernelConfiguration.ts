@@ -1,4 +1,6 @@
 import { ResolutionConfiguration } from "./resolutionConfiguration";
+import { ServicingStrategy } from "./servicing-strategies/servicingStrategy";
+import { DeliveryStrategy } from "./delivery-strategies/deliveryStrategy";
 
 /**
  * Represents a kernel configuration, it define the kernel behavior.
@@ -17,7 +19,19 @@ export class KernelConfiguration {
      */
     public aliasSufixResolutionConfigurationMap:{[aliasSufix:string]:ResolutionConfiguration};
 
+    /**
+     * Get or set the default servicing strategy.
+     */
+    public defaultServicingStrategy:ServicingStrategy;
 
+    /**
+     * Get or set the default delivery strategy.
+     */
+    public defaultDeliveryStrategy:DeliveryStrategy;
+
+    /**
+     * Load the default flags.
+     */
     private loadDefaultFlags():void {
         this.aliasSufixResolutionConfigurationMap = {};
         this.aliasSufixResolutionConfigurationMap['default'] = {

@@ -17,14 +17,14 @@ gulp.task('trasnpile-source', function () {
                 .pipe(tsProject())
                 .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./binaries/src'))                
+                .pipe(gulp.dest('./bin/src'))                
 });
 
 gulp.task('create-source-definition', ['trasnpile-source'], function () {
     return gulp.src('./src/**/*')
                 .pipe(tsProject())
                 .dts
-                .pipe(gulp.dest('./binaries/src'));
+                .pipe(gulp.dest('./bin/src'));
 });
 
 gulp.task('transpile', ['create-source-definition'], function() {
@@ -42,11 +42,11 @@ gulp.task('trasnpile-test', ['transpile'], function () {
                 .pipe(tsProject())
                 .on('error', function() { this.on("finish", () => process.exit(1)); })
                 .js
-                .pipe(gulp.dest('./binaries/test'))
+                .pipe(gulp.dest('./bin/test'))
 });
 
 gulp.task('run-test', ['trasnpile-test'], function () {
-    return gulp.src(['./binaries/test/testStarter.js' , './binaries/test/**/*.Spec.js'])
+    return gulp.src(['./bin/test/testStarter.js' , './bin/test/**/*.Spec.js'])
                .pipe(mocha());
 });
 
@@ -66,7 +66,7 @@ gulp.task('test', ['run-test'], function() {
 // =========================================================================
  
 gulp.task('zip-distribution', function () {
-    return gulp.src('./binaries/src/*')
+    return gulp.src('./bin/src/*')
                .pipe(zip('distribution.zip'))
                .pipe(gulp.dest('./'));
 

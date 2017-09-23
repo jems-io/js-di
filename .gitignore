@@ -1,7 +1,7 @@
-binaries/
 node_modules/
-test_transpiled/
-documentation/
 typings/
+
+bin/
+doc/
 
 npm-debug.log
