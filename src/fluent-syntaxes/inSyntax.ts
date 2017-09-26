@@ -34,5 +34,5 @@ export interface InSyntax {
      * @param deliveryStrategy Represents the delivery strategy to deliver the reference.
      * @return A syntax extension to setup conditions.
      */
-    InMode(deliveryStrategy:DeliveryStrategy):WhenSyntax;
+    inMode(deliveryStrategy:DeliveryStrategy):WhenSyntax;
 }
