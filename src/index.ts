@@ -23,17 +23,12 @@ export * from './dependencyMetadata'
 export * from './resolutionConfiguration'
 
 // Exporting interfaces, that define the behavior.
-export * from './aliasBindFluentSyntax';
-export * from './aliasReference';
 export * from './container';
 export * from './containerActivator';
-export * from './containerFluentSyntax';
 export * from './identifierReference';
 export * from './kernel';
 export * from './kernelReference';
 export * from './module';
-export * from './servicingContextFluentSyntax';
-export * from './singeltonFluentSyntax';
 export * from "./servicing-strategies/servicingStrategy"
 
 // Exporting Errors

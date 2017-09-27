@@ -1,10 +1,10 @@
 import { Module } from './module'
 import { DependencyMetadata } from "./dependencyMetadata";
-import { AliasBindFluentSyntax } from "./aliasBindFluentSyntax";
 import { Container } from "./container";
 import { KernelConfiguration } from "./kernelConfiguration";
 import { ResolutionOption } from "./resolutionOption"
 import { ContainerizedResolutionSyntax } from "./fluent-syntaxes/containerizedResolutionSyntax";
+import { InsideAndToSytax } from "./fluent-syntaxes/insideAndToSytax";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
@@ -33,9 +33,9 @@ export interface Kernel extends ContainerizedResolutionSyntax {
     /**
      * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
      * @param {string} alias Represents the alias to look for.
-     * @return {AliasBindFluentSyntax} A fluent bind.
+     * @return {InsideAndToSytax} A fluent bind.
      */
-    bind(alias:string):AliasBindFluentSyntax;
+    bind(alias:string):InsideAndToSytax;
 
     /**
      * Unbind all dependencies metadata with the given alias from the container resolution stack.

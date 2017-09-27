@@ -66,10 +66,10 @@ export class RelationSyntax implements BindSyntax, InsideAndToSytax {
      */
     public to(reference: any): AsAndInAndWhenSyntax {
 
-        if (!this._kernel.hasContainer(this._containerAlias))
+        if (this._containerAlias && !this._kernel.hasContainer(this._containerAlias))
             this._kernel.createContainer(this._containerAlias);
 
-        let container:Container = this._kernel.createContainer(this._containerAlias || 'default');
+        let container:Container = this._kernel.getContainer(this._containerAlias || 'default');
 
         let identifier:string = container.registerDependencyMetadata(this._alias, {
             activationReference: reference,

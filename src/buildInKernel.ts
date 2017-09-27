@@ -3,7 +3,6 @@
 import * as Errors from "./errors/index";
 import { Module } from './module'
 import { DependencyMetadata } from "./dependencyMetadata";
-import { AliasBindFluentSyntax } from "./aliasBindFluentSyntax";
 import { Kernel } from "./kernel";
 import { Container } from "./container";
 import { KernelConfiguration } from "./kernelConfiguration";
@@ -13,6 +12,10 @@ import { ResolutionContext } from "./resolutionContext";
 import { ResolutionOption } from "./resolutionOption";
 import { ContainerizedResolutionSyntax } from "./fluent-syntaxes/containerizedResolutionSyntax";
 import { EventEmitter } from 'events'
+import { RelationSyntax } from "./fluent-syntaxes/relationSyntax";
+import { InsideAndToSytax } from "./fluent-syntaxes/insideAndToSytax";
+import { InstanceServicingStrategy } from "./servicing-strategies/instanceServicingStrategy";
+import { PerCallDeliveryStrategy } from "./delivery-strategies/perCallDeliveryStrategy";
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -34,6 +37,9 @@ export class BuildInKernel extends EventEmitter implements Kernel {
         this._currentContainer = defaultContainer;
         this._containers[defaultContainer.getName()] = defaultContainer;
         this._kernelConfiguration = new KernelConfiguration();
+
+        this._kernelConfiguration.defaultServicingStrategy = new InstanceServicingStrategy();
+        this._kernelConfiguration.defaultDeliveryStrategy = new PerCallDeliveryStrategy();
     }
 
     /**
@@ -66,10 +72,10 @@ export class BuildInKernel extends EventEmitter implements Kernel {
     /**
      * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
      * @param {string} alias Represents the alias to look for.
-     * @returns {AliasBindFluentSyntax} A fluent bind.
+     * @returns {InsideAndToSytax} A fluent bind.
      */
-    public bind(alias:string):AliasBindFluentSyntax {
-        return contextualActivator.getContextInstantiator<Kernel, AliasBindFluentSyntax>('aliasBindFluentSyntax')(this, alias);
+    public bind(alias:string):InsideAndToSytax {
+        return new RelationSyntax(this).bind(alias);
     }
 
     /**

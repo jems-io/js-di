@@ -5,23 +5,11 @@ import { ResolutionContext } from "./resolutionContext";
 import { Kernel } from "./kernel";
 import { BuildInKernel } from "./buildInKernel";
 
-import { ServicingContextFluentSyntax } from './servicingContextFluentSyntax'
-import { BuildInServicingContextFluentSyntax } from './buildInServicingContextFluentSyntax'
-
-import { ContainerFluentSyntax } from "./containerFluentSyntax";
-import { BuildInContainerFluentSyntax } from "./buildInContainerFluentSyntax";
-
 import { Container } from "./container";
 import { BuildInContainer } from "./buildInContainer";
 
 import { ContainerActivator } from "./containerActivator";
 import { BuildInContainerActivator } from "./buildInContainerActivator";
-
-import { AliasBindFluentSyntax } from "./aliasBindFluentSyntax";
-import { BuildInAliasBindFluentSyntax } from "./buildInAliasBindFluentSyntax";
-
-import { SingeltonFluentSyntax } from "./singeltonFluentSyntax";
-import { BuildInSingeltonFluentSyntax } from "./buildInSingeltonFluentSyntax";
 
 import { ArgumentsNamesProvider } from "./argumentsNamesProvider"
 import { BuildInArgumentsNamesProvider } from "./buildInArgumentsNamesProvider"
@@ -57,18 +45,6 @@ export class BuilInInstantiatorsRegistrar {
         });        
         contextualActivator.setContextInstantiator<ResolutionContext, BuildInContainerActivator>('containerActivator', (contextType, instanceIdentifier) => {
             return new BuildInContainerActivator(contextType);
-        });
-        contextualActivator.setContextInstantiator<BuildInKernel, BuildInAliasBindFluentSyntax>('aliasBindFluentSyntax', (contextType, instanceIdentifier) => {
-            return new BuildInAliasBindFluentSyntax(instanceIdentifier, contextType);
-        });        
-        contextualActivator.setContextInstantiator<BuildInKernel, BuildInSingeltonFluentSyntax>('singeltonFluentSyntax', (contextType, instanceIdentifier) => {
-            return new BuildInSingeltonFluentSyntax(instanceIdentifier, contextType);
-        });
-        contextualActivator.setContextInstantiator<BuildInKernel, BuildInContainerFluentSyntax>('containerFluentSyntax', (contextType, instanceIdentifier) => {
-            return new BuildInContainerFluentSyntax(instanceIdentifier, contextType);
-        });
-        contextualActivator.setContextInstantiator<BuildInKernel, BuildInServicingContextFluentSyntax>('servicingContextFluentSyntax', (contextType, instanceIdentifier) => {
-            return new BuildInServicingContextFluentSyntax(instanceIdentifier, contextType);
         });
         contextualActivator.setContextInstantiator<any, BuildInArgumentsNamesProvider>('argumentsNamesProvider', (contextType, instanceIdentifier) => {
             return new BuildInArgumentsNamesProvider();
