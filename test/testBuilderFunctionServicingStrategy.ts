@@ -8,7 +8,7 @@ describe('with builder function servicing strategy resolution', function() {
     let constantInstance = {};
 
     before(function () {
-        kernel.bind('fakeFunctionBuilder').toBuilderFunction(function() { return constantInstance; });
+        kernel.bind('fakeFunctionBuilder').to(function() { return constantInstance; }).asBuilderFunction();
     });
 
     it('should resolve the function value', function () {

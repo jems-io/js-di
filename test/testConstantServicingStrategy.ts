@@ -8,7 +8,7 @@ describe('with cosntant servicing strategy resolution', function() {
     let constantInstance = {};
 
     before(function() {
-        kernel.bind('fakeConstantType').toConstant(constantInstance);        
+        kernel.bind('fakeConstantType').to(constantInstance).asConstant();        
     });
 
     it('should resolve the registered object', function() {

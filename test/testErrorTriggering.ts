@@ -12,8 +12,8 @@ describe('must throw an the error', function() {
     before(function() {
         kernel.bind('fakeTypeDependant1').to(FakeTypeDependant1);
         kernel.bind('fakeTypeDependant2').to(FakeTypeDependant2);
-        kernel.bind('fakeTypeNotStrategy').toCustomServicingStragy(FakeTypeC, null);
-        kernel.bind('fakeTypeNULL').toConstant(null);
+        kernel.bind('fakeTypeNotStrategy').to(FakeTypeC).as(null);
+        kernel.bind('fakeTypeNULL').to(null).asConstant();
         kernel.bind('fakeType').to(function() { this.fake = true; });
         kernel.bind('fakeType').to(function() { this.fake = true; });
     });

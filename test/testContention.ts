@@ -19,11 +19,11 @@ describe('with containeraized resolution', function() {
         kernel.bind('fakeType').to(FakeTypeA);
         kernel.bind('fakeTypeA').to(FakeTypeA);
 
-        kernel.bind('fakeType').to(FakeTypeB).inContainer(containerBAlias);
-        kernel.bind('fakeTypeB').to(FakeTypeB).inContainer(containerBAlias);
+        kernel.bind('fakeType').inside(containerBAlias).to(FakeTypeB);
+        kernel.bind('fakeTypeB').inside(containerBAlias).to(FakeTypeB);
 
-        kernel.bind('fakeType').to(FakeTypeC).inContainer(containerCAlias);
-        kernel.bind('fakeTypeC').to(FakeTypeC).inContainer(containerCAlias);       
+        kernel.bind('fakeType').inside(containerCAlias).to(FakeTypeC);
+        kernel.bind('fakeTypeC').inside(containerCAlias).to(FakeTypeC);       
      });
     
     it('should resolve an instance of FakeTypeA with fakeType alias because is registered in the container that is currently in use.', function() {
