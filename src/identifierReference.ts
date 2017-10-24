@@ -6,5 +6,5 @@ export interface IdentifierReference {
      * Returns the identifier.
      * @returns {string} The context identifier.
      */
-    getIdentifier():string;
+  getIdentifier (): string
 }

@@ -1,5 +1,8 @@
-import { FakeTypeDependant2 } from "./FakeTypeDependant2";
+import { FakeTypeDependant2 } from './fakeTypeDependant2'
 
 export class FakeTypeDependant1 {
-    constructor(fakeTypeDependant2:FakeTypeDependant2) {}
+
+  props: number
+
+  constructor (fakeTypeDependant2: FakeTypeDependant2) { this.props = 1 }
 }

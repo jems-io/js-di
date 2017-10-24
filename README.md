@@ -1,11 +1,10 @@
 
-
-
-<center>
-    <img src="jems.png" />    
-</center>
-
-#### Dependency Injection (Node.js)
+<p align="center">
+    <a href="https://opensource.softlutionx.com" target="_blank"><img width="200"src="https://raw.githubusercontent.com/JemsFramework/di/development/media/jems.png">       
+    </a>
+    </br> 
+    <b>Dependency Injection (Node.js)</b>
+</p>
 
 [![Build Status](https://travis-ci.org/JemsFramework/di.svg?branch=release-current)](https://travis-ci.org/JemsFramework/di)
 [![npm version](https://badge.fury.io/js/%40jems%2Fdi.svg)](https://badge.fury.io/js/%40jems%2Fdi)

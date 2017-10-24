@@ -7,12 +7,12 @@ export interface ArgumentsNamesProvider {
      * @param reference Represents the reference where the arguments will be identified.
      * @returns The list of arguments of the given reference.
      */
-    getArgumentsNames(reference:any):string[];
+  getArgumentsNames (reference: any): string[]
 
     /**
      * Returns a boolean values, specifying if the given reference is argumentable.
      * @param reference Represents the reference that will be evaluated.
      * @returns If the reference is argumentable.
      */
-    isArgumetable(reference:any):boolean;
+  isArgumetable (reference: any): boolean
 }

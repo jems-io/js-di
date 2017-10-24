@@ -1,5 +1,5 @@
-import { ResolutionContext } from "../resolutionContext";
-import { DependencyMetadata } from "../dependencyMetadata";
+import { ResolutionContext } from '../resolutionContext'
+import { DependencyMetadata } from '../dependencyMetadata'
 
 /**
  * Represenst an strategy to deliver targets with an specific strategy.
@@ -11,5 +11,5 @@ export interface DeliveryStrategy {
      * @param dependencyMetadata Represents the dependency metadata that will be delivered.
      * @return The transformed reference.
      */
-    deliver(resolutionContext:ResolutionContext, dependencyMetadata:DependencyMetadata):any;
+  deliver (resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata): any
 }

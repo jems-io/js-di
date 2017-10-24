@@ -3,5 +3,7 @@ typings/
 
 bin/
 doc/
+dist/
+artifacts/
 
 npm-debug.log

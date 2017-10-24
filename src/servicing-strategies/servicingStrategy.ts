@@ -1,4 +1,4 @@
-import { ResolutionContext } from "../resolutionContext";
+import { ResolutionContext } from '../resolutionContext'
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets.
@@ -11,5 +11,5 @@ export interface ServicingStrategy {
      * @param referenceTarget Represents the reference target to transforme.
      * @return The transformed reference target.
      */
-    serve(resolutionContext:ResolutionContext , referenceTarget:any):any;
+  serve (resolutionContext: ResolutionContext , referenceTarget: any): any
 }

@@ -9,5 +9,5 @@ export interface Module {
      * Initialize the module and perform the needed configurations in the given kernel.
      * @param {Kernel} kernel Represents the kernel tha is loading the module.
      */
-    initialize(kernel:Kernel):void;
+  initialize (kernel: Kernel): void
 }

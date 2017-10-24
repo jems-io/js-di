@@ -1,8 +1,10 @@
-import { FakeTypeA } from "./FakeTypeA";
-import { FakeTypeB } from "./FakeTypeB";
+import { FakeTypeA } from './fakeTypeA'
+import { FakeTypeB } from './fakeTypeB'
 
 export class FakeTypeC {
-    constructor(fakeTypeA:FakeTypeA, fakeTypeB:FakeTypeB) { this.fackeTypeAIntance = fakeTypeA; this.fackeTypeBIntance = fakeTypeB; }
-    public fackeTypeAIntance:FakeTypeA;
-    public fackeTypeBIntance:FakeTypeB;
+
+  public fackeTypeAIntance: FakeTypeA
+  public fackeTypeBIntance: FakeTypeB
+
+  constructor (fakeTypeA: FakeTypeA, fakeTypeB: FakeTypeB) { this.fackeTypeAIntance = fakeTypeA; this.fackeTypeBIntance = fakeTypeB }
 }

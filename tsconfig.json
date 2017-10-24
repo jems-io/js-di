@@ -7,8 +7,5 @@
         "noImplicitReturns": true,        
         "declaration": true,
         "pretty": true
-    },
-    "include": [
-        "./typings/index.d.ts"
-    ]
+    }
 }

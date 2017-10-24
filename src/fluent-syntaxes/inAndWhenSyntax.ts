@@ -1,5 +1,5 @@
-import { InSyntax } from "./inSyntax";
-import { WhenSyntax } from "./whenSyntax";
+import { InSyntax } from './inSyntax'
+import { WhenSyntax } from './whenSyntax'
 
 /**
  * Represents an as and in and when syntax to setup the delivery strategies and conditions.

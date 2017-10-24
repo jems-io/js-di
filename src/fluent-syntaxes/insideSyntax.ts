@@ -1,4 +1,4 @@
-import { ToSyntax } from "./toSyntax";
+import { ToSyntax } from './toSyntax'
 
 /**
  * Represents a fluent syntax extension to set the current binded alias inside a container.
@@ -9,5 +9,5 @@ export interface InsideSyntax {
      * @param containerAlias Represents the alias to look for.
      * @return A syntax extension to associate a targer to the current bind.
      */
-    inside(containerAlias:string):ToSyntax;
+  inside (containerAlias: string): ToSyntax
 }
