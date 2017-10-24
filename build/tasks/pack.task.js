@@ -1,8 +1,8 @@
 const zip = require('gulp-zip');
 
 module.exports = function configureGulp(gulp) {   
-  gulp.task('zip', getZipPipe)
-  gulp.task('zip-cd', ['distribute-cd'], getZipPipe)
+  gulp.task('pack', getZipPipe)
+  gulp.task('pack-cd', ['distribute-cd'], getZipPipe)
 
   function getZipPipe() {
     let currentVersion = require('../../package.json').version;
