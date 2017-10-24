@@ -1,5 +1,5 @@
 import { Kernel } from './kernel'
-import { BuildInKernel } from './buildInkernel'
+import { BuildInKernel } from './buildInKernel'
 
 /**
  * Creates and returns a new kernel instance.
