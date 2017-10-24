@@ -1,6 +1,6 @@
 import { ResolutionContext } from '../resolutionContext'
 import { ServicingStrategy } from './servicingStrategy'
-import { ServicingError } from '../../src/errors/servicingError'
+import { ServicingError } from '../errors/servicingError'
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets as a constant.

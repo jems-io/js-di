@@ -1,7 +1,7 @@
 import { ResolutionContext } from '../resolutionContext'
 import { ServicingStrategy } from './servicingStrategy'
 import { ArgumentsNamesProvider } from '../argumentsNamesProvider'
-import { ServicingError } from '../../src/errors/servicingError'
+import { ServicingError } from '../errors/servicingError'
 import { BuildInArgumentsNamesProvider } from '../buildInArgumentsNamesProvider'
 
 /**
