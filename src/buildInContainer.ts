@@ -1,12 +1,10 @@
 import { DependencyMetadata } from './dependencyMetadata'
-import { ContainerActivator } from './containerActivator'
 import { Container } from './container'
 import { ServicingStrategy } from './servicing-strategies/servicingStrategy'
 import * as Errors from './errors/index'
 import { Kernel } from './kernel'
 import { ResolutionConfiguration } from './resolutionConfiguration'
 import { ResolutionContext } from './resolutionContext'
-import contextualActivator from './contextualActivator'
 
 /**
  * @private
@@ -242,7 +240,7 @@ export class BuildInContainer implements Container {
         activatedObject = dependencyMetadata
                                     .deliveryStrategy
                                     .deliver(resolutionContext,
-                                            dependencyMetadata)
+                                             dependencyMetadata)
 
         if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolveEach) {
           resolutionContext.resolutionOption.afterResolveEach(resolutionContext, dependencyMetadata)
@@ -257,7 +255,7 @@ export class BuildInContainer implements Container {
 
       return resolutionConfiguration.quantity === 1 ? activatedObjects[0] : activatedObjects
     } else {
-      let activatedObject: any = contextualActivator.getContextInstantiator<any, ServicingStrategy>('instanceServicingStrategy')(null, '').serve(resolutionContext, reference)
+      let activatedObject: any = this._kernel.getConfiguration().defaultServicingStrategy.serve(resolutionContext, reference)
 
       if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve) {
         resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObject)
@@ -293,8 +291,6 @@ export class BuildInContainer implements Container {
         throw new Errors.InvalidDataError(`The given support container alias [${alias}], is not in kernel.`)
       }
     }
-
-    this.validateCiclycDependency([this.getName()], aliases)
 
     this._supportContainerAliases = aliases
   }
@@ -359,17 +355,15 @@ export class BuildInContainer implements Container {
         try {
           let supportAlias: string = this._supportContainerAliases[supportAliasIndex]
 
-          let supportContainer: Container = this._kernel.getContainer(supportAlias)
-
-          resolutionContext.steps.push('Using support container: ' + supportContainer.getName())
+          resolutionContext.steps.push('Using support container: ' + supportAlias)
 
           resolutionContext.containerSupportingStack.push(alias)
-          resolutionContext.originContainer = supportContainer
+          resolutionContext.currentContainerAlias = supportAlias
 
-          let resolverObject: any = supportContainer.resolve(alias, resolutionContext)
+          let resolverObject: Container = this._kernel.usingContainer(supportAlias).resolveWithContext(alias, resolutionContext)
 
           resolutionContext.containerSupportingStack.splice(resolutionContext.containerSupportingStack.length - 1, 1)
-          resolutionContext.originContainer = this
+          resolutionContext.currentContainerAlias = this._name
 
           return resolverObject
         } catch (error) {
@@ -427,28 +421,6 @@ export class BuildInContainer implements Container {
   private validateIdentifierArgument (identifier: string): void {
     if (!identifier) {
       throw new Errors.InvalidDataError('An identifier must be provided to perform this operation.')
-    }
-  }
-
-  private validateCiclycDependency (stack: string[], supports: string[]): void {
-
-    if (!supports) {
-      return
-    }
-
-    for (let supportAliasIndex = 0; supportAliasIndex < supports.length; supportAliasIndex++) {
-      for (let stackAliasIndex = 0; stackAliasIndex < stack.length; stackAliasIndex++) {
-
-        stack.push(supports[supportAliasIndex])
-
-        if (supports[supportAliasIndex] === stack[stackAliasIndex]) {
-          throw new Errors.CyclicDependencyError('An cyclic dependency has been found for containers in the addition of support.', stack)
-        }
-
-        this.validateCiclycDependency(stack, (this._kernel.getContainer(supports[supportAliasIndex])).getSupportContainersAliases())
-
-        stack.splice(stack.length - 1, 1)
-      }
     }
   }
 }

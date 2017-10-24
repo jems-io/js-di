@@ -13,8 +13,8 @@ describe('with containeraized resolution', function () {
 
   before(function () {
 
-    kernel.createContainer(containerBAlias).setSupportContainersAliases(['default'])
-    kernel.createContainer(containerCAlias).setSupportContainersAliases([containerBAlias])
+    kernel.createContainer(containerBAlias, ['default'])
+    kernel.createContainer(containerCAlias, [containerBAlias])
 
     kernel.bind('fakeType').to(FakeTypeA)
     kernel.bind('fakeTypeA').to(FakeTypeA)
@@ -27,41 +27,36 @@ describe('with containeraized resolution', function () {
   })
 
   it('should resolve an instance of FakeTypeA with fakeType alias because is registered in the container that is currently in use.', function () {
-    kernel.useDefaultContainer()
-    let resolvedObject: FakeTypeA = kernel.resolve('fakeType')
+    let resolvedObject: FakeTypeA = kernel.usingDefaultContainer().resolve('fakeType')
     assert.ok((resolvedObject instanceof FakeTypeA) === true, 'The resolved type is not: FakeTypeA')
   })
 
   it('should resolve an instance of FakeTypeA with fakeTypeA alias because is registered.', function () {
-    kernel.useDefaultContainer()
-    let resolvedObject: FakeTypeA = kernel.resolve('fakeTypeA')
+    let resolvedObject: FakeTypeA = kernel.usingDefaultContainer().resolve('fakeTypeA')
     assert.ok((resolvedObject instanceof FakeTypeA) === true, 'The resolved type is not: FakeTypeA')
   })
 
   it('should resolve an instance of FakeTypeB with fakeTypeB alias because is registered and can resolve A as a dependency of B because is supported by the default container.', function () {
-    kernel.useContainer(containerBAlias)
-    let resolvedObject: FakeTypeB = kernel.resolve('fakeTypeB')
+
+    let resolvedObject: FakeTypeB = kernel.usingContainer(containerBAlias).resolve('fakeTypeB')
     assert.ok((resolvedObject instanceof FakeTypeB) === true, 'The resolved type is not: FakeTypeB')
     assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) === true, 'The resolved A dependency type is not: FakeTypeA')
   })
 
   it('should resolve an instance of FakeTypeB with fakeType alias because is registered in the container that is currently in use.', function () {
-    kernel.useContainer(containerBAlias)
-    let resolvedObject: FakeTypeB = kernel.resolve('fakeType')
+    let resolvedObject: FakeTypeB = kernel.usingContainer(containerBAlias).resolve('fakeType')
     assert.ok((resolvedObject instanceof FakeTypeB) === true, 'The resolved type is not: FakeTypeB')
   })
 
   it('should resolve an instance of FakeTypeC with fakeTypeC alias because is registered and can resolve A and B as a dependency of C because is supported by the containerB that is supported by the default container.', function () {
-    kernel.useContainer(containerCAlias)
-    let resolvedObject: FakeTypeC = kernel.resolve('fakeTypeC')
+    let resolvedObject: FakeTypeC = kernel.usingContainer(containerCAlias).resolve('fakeTypeC')
     assert.ok((resolvedObject instanceof FakeTypeC) === true, 'The resolved type is not: FakeTypeC')
     assert.ok((resolvedObject.fackeTypeAIntance instanceof FakeTypeA) === true, 'The resolved A dependency type is not: FakeTypeA')
     assert.ok((resolvedObject.fackeTypeBIntance instanceof FakeTypeB) === true, 'The resolved B dependency type is not: FakeTypeB')
   })
 
   it('should resolve an instance of FakeTypeC with fakeType alias because is registered in the container that is currently in use.', function () {
-    kernel.useContainer(containerCAlias)
-    let resolvedObject: FakeTypeC = kernel.resolve('fakeType')
+    let resolvedObject: FakeTypeC = kernel.usingContainer(containerCAlias).resolve('fakeType')
     assert.ok((resolvedObject instanceof FakeTypeC) === true, 'The resolved type is not: FakeTypeC')
   })
 })

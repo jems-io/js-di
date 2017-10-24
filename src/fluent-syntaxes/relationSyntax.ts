@@ -5,6 +5,7 @@ import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
 import { BehaviorSyntax } from './behaviorSyntax'
 import { Kernel } from '../kernel'
 import { Container } from '../container'
+import { ContainerizedSyntax } from './containerizedSyntax'
 
 /**
  * Represents an syntax extention that allow relate aliases to targets and specify containers.
@@ -58,26 +59,26 @@ export class RelationSyntax implements BindSyntax, InsideAndToSytax {
     return this
   }
 
-    /**
-     * Associate the given target to the current bind.
-     * @param reference Represets the target that will be associated to the current bind.
-     * @return A syntax extension to setup the servicing, delivery and conditions.
-     */
+  /**
+   * Associate the given target to the current bind.
+   * @param reference Represets the target that will be associated to the current bind.
+   * @return A syntax extension to setup the servicing, delivery and conditions.
+   */
   public to (reference: any): AsAndInAndWhenSyntax {
 
     if (this._containerAlias && !this._kernel.hasContainer(this._containerAlias)) {
       this._kernel.createContainer(this._containerAlias)
     }
 
-    let container: Container = this._kernel.getContainer(this._containerAlias || 'default')
+    let containerizedSyntax: ContainerizedSyntax = this._kernel.usingContainer(this._containerAlias || 'default')
 
-    let identifier: string = container.registerDependencyMetadata(this._alias, {
+    let identifier: string = containerizedSyntax.registerDependencyMetadata(this._alias, {
       activationReference: reference,
       deliveryStrategy: this._kernel.getConfiguration().defaultDeliveryStrategy,
       servicingStrategy: this._kernel.getConfiguration().defaultServicingStrategy,
       validators: []
     })
 
-    return new BehaviorSyntax(container.getDependencyMetadataWithIdentifier(identifier))
+    return new BehaviorSyntax(containerizedSyntax.getDependencyMetadataWithIdentifier(identifier))
   }
 }

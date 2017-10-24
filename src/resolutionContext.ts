@@ -14,12 +14,12 @@ export class ResolutionContext {
     /**
      * Represents the container used by the kernel to resolve the reference.
      */
-  public originContainer: Container
+  public originContainerAlias: string
 
     /**
      * Represernt the container that is currently resolving the reference as original or support.
      */
-  public currentContainer: Container
+  public currentContainerAlias: string
 
     /**
      * Represents the stack of containers that are supporting the original container in the resolution.

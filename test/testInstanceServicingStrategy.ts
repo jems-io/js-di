@@ -10,7 +10,6 @@ describe('with instance servicing strategy resolution', function () {
   let kernel: jemsdi.Kernel = jemsdi.createKernel()
 
   before(function () {
-
     kernel.bind('fakeTypeA').to(FakeTypeA)
     kernel.bind('fakeTypeB').to(FakeTypeB)
     kernel.bind('fakeTypeC').to(FakeTypeC)

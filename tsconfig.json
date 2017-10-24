@@ -7,5 +7,9 @@
         "noImplicitReturns": true,        
         "declaration": true,
         "pretty": true
-    }
+    },
+    "include": [
+        "./src/",
+        "./test/"
+    ]
 }

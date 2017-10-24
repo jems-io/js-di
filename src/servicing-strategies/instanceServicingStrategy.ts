@@ -1,9 +1,8 @@
-import contextualActivator from '../contextualActivator'
-
 import { ResolutionContext } from '../resolutionContext'
 import { ServicingStrategy } from './servicingStrategy'
 import { ArgumentsNamesProvider } from '../argumentsNamesProvider'
 import { ServicingError } from '../../src/errors/servicingError'
+import { BuildInArgumentsNamesProvider } from '../buildInArgumentsNamesProvider'
 
 /**
  * Represents a servicing strategy that transform and serve metadata reference targets as an instance.
@@ -19,7 +18,7 @@ export class InstanceServicingStrategy implements ServicingStrategy {
      */
   constructor () {
         // Resolving it with poors man constructor. :(
-    this._argumentsNamesProvider = contextualActivator.getContextInstantiator<any, ArgumentsNamesProvider>('argumentsNamesProvider')(null, '')
+    this._argumentsNamesProvider = new BuildInArgumentsNamesProvider()
   }
 
     /**
@@ -45,7 +44,7 @@ export class InstanceServicingStrategy implements ServicingStrategy {
                 resolutionContext.resolutionOption.dependencies[argumentName]) {
         argument = resolutionContext.resolutionOption.dependencies[argumentName]
       } else {
-        argument = resolutionContext.originContainer.resolve(argumentName, resolutionContext)
+        argument = resolutionContext.kernel.usingContainer(resolutionContext.originContainerAlias).resolveWithContext(argumentName, resolutionContext)
       }
 
       argumets.push(argument)

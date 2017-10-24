@@ -1,5 +1,3 @@
-import contextualActivator from '../contextualActivator'
-
 import { ResolutionContext } from '../resolutionContext'
 import { ServicingStrategy } from './servicingStrategy'
 import { ServicingError } from '../../src/errors/servicingError'

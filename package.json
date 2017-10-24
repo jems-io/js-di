@@ -12,7 +12,8 @@
   },
   "scripts": {
     "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install -g typings && npm install && typings i",
-    "test": "gulp test-ci"
+    "test": "gulp test-ci",
+    "lint-fix": "tslint --fix ./src**/*.ts && tslint --fix ./test/**/*.ts"
   },
   "repository": {
     "type": "git",

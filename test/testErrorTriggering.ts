@@ -74,11 +74,14 @@ describe('must throw an the error', function () {
 
   it('jemsdi.Errors.CyclicDependencyError because there is a cyclic dependecy with the containers support hierarchy.', function () {
     try {
-      kernel.createContainer('ContainerB').setSupportContainersAliases(['default'])
-      kernel.createContainer('ContainerA').setSupportContainersAliases(['ContainerB'])
-      kernel.getDefaultContainer().setSupportContainersAliases(['ContainerA'])
+      kernel.createContainer('ContainerB')
+      kernel.createContainer('ContainerA', ['ContainerB'])
 
-      assert.ok(false, 'Must throw the exception because there is a resolution configuration error with the quantities.')
+      kernel.removeContainer('ContainerB')
+
+      kernel.createContainer('ContainerB', ['ContainerA'])
+
+      assert.ok(false, 'Must throw the exception because there is a Cyclic Dependency Error.')
     } catch (error) {
       assert.equal(error.name, 'CyclicDependencyError', 'The error is not an instance of jemsdi.Errors.CyclicDependencyError:\n\n' + error.message)
     }

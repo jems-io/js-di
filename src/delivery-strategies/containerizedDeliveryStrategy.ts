@@ -9,25 +9,25 @@ import { Container } from '../container'
  */
 export class ContainerizedDeliveryStrategy implements DeliveryStrategy {
 
-  private _containerInstanceMap: {container: Container, instance: any}[]
+  private _containerInstanceMap: {containerAlias: string, instance: any}[]
 
   constructor () {
     this._containerInstanceMap = []
   }
 
-    /**
-     * Deliver the transformed reference in the provided dependency metadata.
-     * @param resolutionContext Represents the context in which the request was made.
-     * @param dependencyMetadata Represents the dependency metadata that will be delivered.
-     * @return The transformed reference.
-     */
+  /**
+   * Deliver the transformed reference in the provided dependency metadata.
+   * @param resolutionContext Represents the context in which the request was made.
+   * @param dependencyMetadata Represents the dependency metadata that will be delivered.
+   * @return The transformed reference.
+   */
   public deliver (resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata): any {
     if (!resolutionContext) {
       throw new DeliveryError('Must provide a valid resolution context.')
     }
 
-    if (!resolutionContext.originContainer) {
-      throw new DeliveryError('The provided resolution context must have a valid origin container.')
+    if (!resolutionContext.originContainerAlias) {
+      throw new DeliveryError('The provided resolution context must have a valid origin container alias.')
     }
 
     if (!dependencyMetadata) {
@@ -42,12 +42,12 @@ export class ContainerizedDeliveryStrategy implements DeliveryStrategy {
       throw new DeliveryError('The provided dependency metadata must have a valid servicing strategy.')
     }
 
-    let map = this._containerInstanceMap.find(map => map.container === resolutionContext.originContainer)
+    let map = this._containerInstanceMap.find(map => map.containerAlias === resolutionContext.originContainerAlias)
     let servingResult: any
 
     if (!map) {
       servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference)
-      this._containerInstanceMap.push({ container: resolutionContext.originContainer, instance: servingResult })
+      this._containerInstanceMap.push({ containerAlias: resolutionContext.originContainerAlias, instance: servingResult })
     } else {
       servingResult = map.instance
     }

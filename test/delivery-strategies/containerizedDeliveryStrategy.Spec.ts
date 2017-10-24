@@ -7,6 +7,7 @@ import { ServicingStrategy } from '../../src/servicing-strategies/servicingStrat
 import { DependencyMetadata } from '../../src/dependencyMetadata'
 import { DeliveryError } from '../../src/errors/deliveryError'
 import { Container } from '../../src/container'
+import { Kernel } from '../../src/kernel'
 
 describe('The [ContainerizedDeliveryStrategy]', function () {
   it('should return the same reference target for the same container.', function () {
@@ -18,7 +19,8 @@ describe('The [ContainerizedDeliveryStrategy]', function () {
                                                                .returns(() => new InstantiableClass())
 
     let resolutionContext: ResolutionContext = new ResolutionContext()
-    resolutionContext.originContainer = Mock.ofType<Container>().object
+    resolutionContext.originContainerAlias = 'moked'
+    resolutionContext.kernel = Mock.ofType<Kernel>().object
     let dependencyMetadata: DependencyMetadata = new DependencyMetadata()
     dependencyMetadata.activationReference = InstantiableClass
     dependencyMetadata.servicingStrategy = servicingStrategyMock.object
@@ -28,9 +30,9 @@ describe('The [ContainerizedDeliveryStrategy]', function () {
     let deliveryResult2: any = containerizedDeliveryStrategy.deliver(resolutionContext, dependencyMetadata)
 
     assert.ok(deliveryResult1 instanceof InstantiableClass,
-                 `The delivered 1 of type [${typeof deliveryResult1}] sould  [InstantiableClass].`)
+                 `The delivered 1 of type [${typeof deliveryResult1}] should  [InstantiableClass].`)
     assert.ok(deliveryResult2 instanceof InstantiableClass,
-                 `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`)
+                 `The delivered 2 of type [${typeof deliveryResult2}] should  [InstantiableClass].`)
     assert.equal(deliveryResult1, deliveryResult2, 'The delivered result should be equals')
 
     servicingStrategyMock.verify((x: ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.once())
@@ -45,10 +47,12 @@ describe('The [ContainerizedDeliveryStrategy]', function () {
                                                                .returns(() => new InstantiableClass())
 
     let resolutionContext1: ResolutionContext = new ResolutionContext()
-    resolutionContext1.originContainer = Mock.ofType<Container>().object
+    resolutionContext1.originContainerAlias = 'moked1'
+    resolutionContext1.kernel = Mock.ofType<Kernel>().object
 
     let resolutionContext2: ResolutionContext = new ResolutionContext()
-    resolutionContext2.originContainer = Mock.ofType<Container>().object
+    resolutionContext2.originContainerAlias = 'moked2'
+    resolutionContext2.kernel = Mock.ofType<Kernel>().object
 
     let dependencyMetadata: DependencyMetadata = new DependencyMetadata()
     dependencyMetadata.activationReference = InstantiableClass
@@ -60,9 +64,9 @@ describe('The [ContainerizedDeliveryStrategy]', function () {
     let deliveryResult2: any = containerizedDeliveryStrategy.deliver(resolutionContext2, dependencyMetadata)
 
     assert.ok(deliveryResult1 instanceof InstantiableClass,
-                 `The delivered 1 of type [${typeof deliveryResult1}] sould  [InstantiableClass].`)
+                 `The delivered 1 of type [${typeof deliveryResult1}] should  [InstantiableClass].`)
     assert.ok(deliveryResult2 instanceof InstantiableClass,
-                 `The delivered 2 of type [${typeof deliveryResult2}] sould  [InstantiableClass].`)
+                 `The delivered 2 of type [${typeof deliveryResult2}] should  [InstantiableClass].`)
     assert.notEqual(deliveryResult1, deliveryResult2, 'The delivered result should be equals')
 
     servicingStrategyMock.verify((x: ServicingStrategy) => x.serve(It.isAny(), It.isAny()), Times.atLeast(2))
