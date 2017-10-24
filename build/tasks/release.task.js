@@ -7,7 +7,7 @@ module.exports = function configureGulp(gulp) {
   
   _gulp = gulp;
   
-  gulp.task('release', ['zip-cd'], release);
+  gulp.task('release', ['pack-cd'], release);
 
   function release() {
     return new Promise(createsGitHubRelease);
@@ -56,7 +56,7 @@ function createsGitHubRelease(resolve, reject) {
           throw 'There is not any upload url in the response.'
         }
 
-        exec(`curl ${response.upload_url.replace('{?name,label}', '?name=@jems.di.' + currentVersion + '.zip')} --data-binary @"./dist/@jems.di.zip" -H "Authorization: token ${gitHubtoken}" -H "Content-Type: application/octet-stream"`,
+        exec(`curl ${response.upload_url.replace('{?name,label}', `?name=@jems.di.${currentVersion}.zip`)} --data-binary @"./artigacts/@jems.di.${currentVersion}.zip" -H "Authorization: token ${gitHubtoken}" -H "Content-Type: application/octet-stream"`,
         (err, stdout, stderr) => {
 
           if (err) {
