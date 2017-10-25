@@ -1,6 +1,6 @@
 {
   "name": "@jems/di",
-  "version": "0.3.18",
+  "version": "0.9.0",
   "description": "An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications. Wrote using SOLID principles and a variety OOP patterns implementations.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
