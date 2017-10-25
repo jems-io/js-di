@@ -10,6 +10,8 @@ export function createKernel (): Kernel {
 
 // Exporting accessible build-in clasess.
 export * from './resolutionOption'
+export * from './resolutionContext'
+export * from './dependencyMetadata'
 
 // Exporting interfaces, that define the behavior.
 export * from './kernel'
