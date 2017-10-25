@@ -67,6 +67,52 @@ Instead of metadata obtained from extra code in our code, it will use the argume
 
     An it's done.
 
+## **Dependencies**
+
+To handle dependencies lets supose that our lamborgini (*let me dream*), depends on a car accelerator to move.
+
+``` javascript
+import { createKernel } from '@jems/di';
+
+let kernel = createKernel();
+
+class CarAccelerator {
+    accelerate() { 
+        console.log('Ooh yea.');
+    }
+}
+
+class Lamborghini {
+
+    private _carAccelerator: CarAccelerator;
+
+    constructor(carAccelerator: CarAccelerator) {
+        this._carAccelerator = carAccelerator;
+    }
+
+    getName() { 
+        return 'Lamborghini';
+    }
+
+    move() { 
+        this._carAccelerator.accelerate();
+    }
+}
+
+kernel.bind('carAccelerator').to(CarAccelerator);
+kernel.bind('car').to(Lamborghini);
+
+let currentCar = kernel.resolve('car');
+
+currentCar.move();
+```
+
+*Output*
+    
+```
+Ooh yea
+```
+
 ## **The Basics**
 ---
 
@@ -82,7 +128,7 @@ The kernel, is used to register, manage and resolve dependencies, also you can u
     kernel.bind('car').to(Lamborghini);
     ```
 
-    - #### Servicing Strategies
+    #### Servicing Strategies
     
     You can specify the servicing strategy for the bind, allowing you activate and serve the type of object in a different way depending on your needs.
 
@@ -115,7 +161,7 @@ The kernel, is used to register, manage and resolve dependencies, also you can u
     kernel.bind('car').to(Mercedez).as(new CustomeServicingStrategy());
     ```
 
-    - #### Delivery Strategies
+    #### Delivery Strategies
     
     You can specify the delivery strategy for the bind, allowing you deliver the type of object in a different way depending on your needs.
 
@@ -151,7 +197,7 @@ The kernel, is used to register, manage and resolve dependencies, also you can u
     kernel.bind('car').to(Hyundai).inMode(new CustomeDeliveryStrategy())
     ```
 
-    - #### Validators
+    #### Validators
     
     You can specify validators in order to conditionate when the bind is valid for a resolution request.
 
@@ -185,7 +231,7 @@ The kernel, is used to register, manage and resolve dependencies, also you can u
     kernel.bind('car').to(Toyota).when(customeValidator)
     ```
 
-    - #### Combine the strategies and validators
+    #### Combine the strategies and validators
     
     You can combine the strategies and validator based on your needs and scenarios.
 
@@ -251,3 +297,5 @@ This example is raw, to allow you easily understand, but you should do it better
  - Guides
  - Tutorials
  - API documentation
+
+If you need any help implementing the library don't hesitate in write to my mail ` franciscomerdot@gmail.com `
