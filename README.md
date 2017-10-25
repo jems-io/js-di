@@ -144,7 +144,7 @@ class Mazda {
     }
 }
 
-class Mercedez {
+class Mercedes {
 
     private _carAccelerators: CarAccelerator[];
 
@@ -202,7 +202,7 @@ return referenceTarget; // Just returning the type or object without activation.
 kernel.bind('car').to(Lamborghini).asInstance()
 kernel.bind('car').to(ferrari).asConstant()
 kernel.bind('car').to(carBuilder).asBuilderFunction()
-kernel.bind('car').to(Mercedez).as(new CustomeServicingStrategy());
+kernel.bind('car').to(Mercedes).as(new CustomeServicingStrategy());
 ```
 
 #### Delivery Strategies
@@ -236,7 +236,7 @@ class CustomeDeliveryStrategy implements DeliveryStrategy {
 
 kernel.bind('car').to(Lamborghini).inPerCallMode()
 kernel.bind('car').to(Ferrari).inPerResolutionMode()
-kernel.bind('car').to(Mercedez).inContainerizedMode()
+kernel.bind('car').to(Mercedes).inContainerizedMode()
 kernel.bind('car').to(Ford).inSingletonMode()
 kernel.bind('car').to(Hyundai).inMode(new CustomeDeliveryStrategy())
 ```
@@ -269,7 +269,7 @@ function customeValidator(resolutionContext: ResolutionContext, dependencyMetada
 
 kernel.bind('car').to(Lamborghini).whenAncestorIs(Car)
 kernel.bind('car').to(Ferrari).whenInjectedIntoAlias('factory')
-kernel.bind('car').to(Mercedez).whenInjectedIntoType(Factory)
+kernel.bind('car').to(Mercedes).whenInjectedIntoType(Factory)
 kernel.bind('car').to(Ford).whenInjectedExactlyIntoAlias('factoryMachine')
 kernel.bind('car').to(Hyundai).whenInjectedExactlyIntoType(FactoryMachine)
 kernel.bind('car').to(Toyota).when(customeValidator)
