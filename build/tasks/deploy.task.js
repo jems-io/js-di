@@ -7,7 +7,8 @@ module.exports = function configureGulp(gulp) {
   
   _gulp = gulp;
   
-  gulp.task('deploy', ['distribute-cd'], deploy);
+  gulp.task('deploy', deploy);
+  gulp.task('deploy-cd', ['distribute-cd'], deploy);
 
   function deploy() {
     releasePackageInNPM(upgradePackageVersion)    

@@ -12,6 +12,7 @@ script:
 - gulp integrate
 deploy:
 - provider: script
+  skip_cleanup: true
   script: gulp deploy
   on:
     tags: true
