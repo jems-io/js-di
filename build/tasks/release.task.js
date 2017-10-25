@@ -20,7 +20,7 @@ function createsGitHubRelease(resolve, reject) {
   let gitHubtoken;
   let data = { 
     tag_name: "v" + currentVersion,
-    target_commitish: "development",
+    target_commitish: "trunk",
     name: "v" + currentVersion,
     body: "Release version " + currentVersion,
     draft: false,
@@ -56,7 +56,7 @@ function createsGitHubRelease(resolve, reject) {
           throw 'There is not any upload url in the response.'
         }
 
-        exec(`curl ${response.upload_url.replace('{?name,label}', `?name=@jems.di.${currentVersion}.zip`)} --data-binary @"./artigacts/@jems.di.${currentVersion}.zip" -H "Authorization: token ${gitHubtoken}" -H "Content-Type: application/octet-stream"`,
+        exec(`curl ${response.upload_url.replace('{?name,label}', `?name=@jems.di-${currentVersion}.zip`)} --data-binary @"./artifacts/@jems.di-${currentVersion}.zip" -H "Authorization: token ${gitHubtoken}" -H "Content-Type: application/octet-stream"`,
         (err, stdout, stderr) => {
 
           if (err) {
