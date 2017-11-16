@@ -1,24 +1,24 @@
 
 <p align="center">
     <a href="https://opensource.softlutionx.com" target="_blank"><img width="200"src="https://raw.githubusercontent.com/JemsFramework/di/trunk/media/jems.png">       
-    </a>
+    </a>    
     </br> 
-    <b>Dependency Injection (Node.js)</b>
-    </br> 
-    <small>Jems Framework</small>
+    <b>Dependency Injection</b>
+    <br>
+    <small>Inspired in Ninject</small>
 </p>
 
 [![Build Status](https://travis-ci.org/JemsFramework/di.svg?branch=trunk)](https://travis-ci.org/JemsFramework/di)
 [![npm version](https://badge.fury.io/js/%40jems%2Fdi.svg)](https://badge.fury.io/js/%40jems%2Fdi)
 
 
-An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications. Wrote using SOLID principles and a variety OOP patterns implementations.
+An implementation of IoC pattern based on dependency injection that allows you to granulate and decouple your libraries or applications. Wrote using SOLID principles and a variety OOP patterns implementations, also with typescript definitions included.
 
 ## **Why ?**
 
 Why a new dependency injection library for node ?
 
-Actually, I asked myself this question before start to write the code, while it is true that *CommonJS* work as *IoC*, it doesn't play well when is time to implement abstractions in our code that sometimes required for good architectures, also all the *DI* libraries that I could found out there make me depend 100% in his code and this actually the problem that we wanna solve with a *DI* library [**Dependencies**].  Ones do it through decorators, others enforced us to write metadata or extra members in our code making us fully dependent of his code. Also it violate several *SOLID* principles like Dependency Inversion and Interface Segregation.
+Actually, I asked myself this question before start to write the code, while it is true that *CommonJS* work as *IoC*, it doesn't play well when is time to implement abstractions in our code that sometimes is  required for good architectures, also all the *DI* libraries that I could found out there make me depend 100% in his code and this actually the problem that we wanna solve with a *DI* library [**Dependencies**].  Ones do it through decorators, others enforced us to write metadata or extra members in our code making us fully dependent of his code. Also it violate several *SOLID* principles like Dependency Inversion and Interface Segregation.
 
 ## **How it works ?**
 
@@ -26,10 +26,10 @@ Instead of metadata obtained from extra code in our code, it will use the argume
 
 **Note:** It's a known issue that this aproach will not work with ofuscation or a mimification that change the name of function arguments, but this solution is for server side use only, for web you can use an ADM (Asynchronous Module Definition) as require.js.
 
-1. Intall the package. (Is a production dependency)
+1. Intall the package.
 
     ```
-    npm install '@jems/di'
+    npm install '@jems/di' --save
     ```
 
 2. Instantiate the kernel.
@@ -67,7 +67,7 @@ Instead of metadata obtained from extra code in our code, it will use the argume
 
 ## **Dependencies**
 
-To handle dependencies lets supose that our lamborgini (*let me dream*), depends on a car accelerator to move.
+To handle dependencies lets supose that our lamborghini (*let me dream*), depends on a car accelerator to move.
 
 ``` javascript
 import { createKernel } from '@jems/di';
@@ -111,9 +111,9 @@ currentCar.move();
 Ooh yea
 ```
 
-### The optional and collection [*arrays*] dependencies.
+### The collections [*arrays*] and optionals dependencies.
 
-In order to specify that a dependency is optional or you want to get a collection of the you use alias sufixing.
+In order to specify that a dependency is optional or that you want to get a collection as as result of the dependency resolution, you must use alias sufixing.
 
 The available alias sufixing are:
 
@@ -121,7 +121,6 @@ The available alias sufixing are:
 |---------------------	|---------------------------------------------------------------------------------------|
 | List        	        | A collection of all dependencies for a given alias will be delivered.                 |
 | Optional        	    | If there is no dependency registered for a given alias you will get null instead of an error throw.|
-| OptionalList  	    | If there is no dependency registered for a given alias you will get null instead of an error throw, else you will get a collection.           	                                |
 
 Eg.
 
@@ -143,15 +142,6 @@ class Mazda {
         this._carAccelerator = carAcceleratorOptional;
     }
 }
-
-class Mercedes {
-
-    private _carAccelerators: CarAccelerator[];
-
-    constructor(carAcceleratorOptionalList: CarAccelerator[]) {
-        this._carAccelerators = carAcceleratorOptionalList;
-    }
-}
 ```
 
 With optionals, you may need to ask if the variable is not null before attempt to use it.
@@ -162,7 +152,7 @@ With optionals, you may need to ask if the variable is not null before attempt t
 
 ### Kernel
 
-The kernel, is used to register, manage and resolve dependencies, also you can use it to creates and administrate containers. ``` We will discuss container in next explanations```.
+The kernel, is used to register, manage and resolve dependencies, also you can use it to creates and administrate containers. ``` We will discuss container in comming examples ```.
 
 ### Registering and configuring dependencies.
 
@@ -174,7 +164,7 @@ kernel.bind('car').to(Lamborghini);
 
 #### Servicing Strategies
     
-You can specify the servicing strategy for the bind, allowing you activate and serve the type of object in a different way depending on your needs.
+You can specify the servicing strategy for the bind, allowing you activate and serve the type or object in different ways depending on your needs.
 
 The available servicing strategies are:
 
@@ -193,21 +183,22 @@ import { createKernel, ServicingStrategy, ResolutionContext } from '@jems/di';
 
 let kernel = createKernel();
 
-class CustomeServicingStrategy implements ServicingStrategy {
-serve(resolutionContext: ResolutionContext, referenceTarget: any) {
-return referenceTarget; // Just returning the type or object without activation.
-}
+class CustomServicingStrategy implements ServicingStrategy {
+    serve(resolutionContext: ResolutionContext, referenceTarget: any) {
+        // Just returning the type or object without activation.
+        return referenceTarget;
+    }
 }
 
 kernel.bind('car').to(Lamborghini).asInstance()
 kernel.bind('car').to(ferrari).asConstant()
 kernel.bind('car').to(carBuilder).asBuilderFunction()
-kernel.bind('car').to(Mercedes).as(new CustomeServicingStrategy());
+kernel.bind('car').to(Mercedes).as(new CustomServicingStrategy());
 ```
 
 #### Delivery Strategies
 
-You can specify the delivery strategy for the bind, allowing you deliver the type of object in a different way depending on your needs.
+You can specify the delivery strategy for the bind, allowing you deliver the type or object in different ways depending on your needs.
 
 The available delivery strategies are:
 
@@ -217,7 +208,7 @@ The available delivery strategies are:
 | Per Resolution  	    | Deliver by serving one time per an entire request resolution.         |
 | Containerized  	    | Deliver by serving one time per container.           	                |
 | Singleton            	| Deliver by serving just one time.                         	        |
-| Custom            	| Deliver by serving how you want to deliver :)            	            |   
+| Custom            	| Deliver how you want to deliver :)            	            |   
 
 Eg.
 
@@ -227,7 +218,7 @@ import { createKernel, DeliveryStrategy, ResolutionContext, DependencyMetadata }
 
 let kernel = createKernel();
 
-class CustomeDeliveryStrategy implements DeliveryStrategy {
+class CustomDeliveryStrategy implements DeliveryStrategy {
     deliver(resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata) {
         // Just serving it and returning it.
         return dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference);
@@ -238,7 +229,7 @@ kernel.bind('car').to(Lamborghini).inPerCallMode()
 kernel.bind('car').to(Ferrari).inPerResolutionMode()
 kernel.bind('car').to(Mercedes).inContainerizedMode()
 kernel.bind('car').to(Ford).inSingletonMode()
-kernel.bind('car').to(Hyundai).inMode(new CustomeDeliveryStrategy())
+kernel.bind('car').to(Hyundai).inMode(new CustomDeliveryStrategy())
 ```
 
 #### Validators
@@ -254,7 +245,7 @@ The available validator are:
 | Injected Into Type 	        | The dependency is available if is injected into a given type.         |
 | Injected Exactly Into Alias   | The dependency is available if is exactly injected into a given alias.|
 | Injected Exactly Into Type    | The dependency is available if is exactly injected into a given type. |   
-| Custom                        | The dependency is available if pass you condition :)     	            | 
+| Custom                        | The dependency is available if pass your condition :)     	            | 
 
 Eg.
 
@@ -263,7 +254,7 @@ import { createKernel, ResolutionContext, DependencyMetadata } from '@jems/di';
 
 let kernel = createKernel();
 
-function customeValidator(resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata) {
+function customValidator(resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata) {
     return true; 
 }
 
@@ -272,7 +263,7 @@ kernel.bind('car').to(Ferrari).whenInjectedIntoAlias('factory')
 kernel.bind('car').to(Mercedes).whenInjectedIntoType(Factory)
 kernel.bind('car').to(Ford).whenInjectedExactlyIntoAlias('factoryMachine')
 kernel.bind('car').to(Hyundai).whenInjectedExactlyIntoType(FactoryMachine)
-kernel.bind('car').to(Toyota).when(customeValidator)
+kernel.bind('car').to(Toyota).when(customValidator)
 ```
 
 #### Combine the strategies and validators
@@ -281,10 +272,10 @@ You can combine the strategies and validator based on your needs and scenarios.
 
 ``` javascript
 kernel.bind('car') // Bind car
-        .to(Lamborghini) // To a Lamborghini class or function
-        .asInstance() // Serve as an instance
-        .inPerResolutionMode() // Serve and return the same instance a resolution process 
-        .whenInjectedIntoAlias('alias'); // Only if is injected into de bind alias
+      .to(Lamborghini) // To a Lamborghini class or function
+      .asInstance() // Serve as an instance
+      .inPerResolutionMode() // Serve and return the same instance a resolution process 
+      .whenInjectedIntoAlias('alias'); // Only if is injected into de bind alias
 ```
 
 ### Containers
@@ -326,13 +317,13 @@ This example is raw, to allow you easily understand, but you should do it better
 
  The *base* container will support the companies containers, so if the companies containers cannot resolve an alias, they will ask the base to resolve it.
 
- ## Contribute
+## Contribute
 
  If you want to contribute to the project fork the repository and pull request your issues fixes, create issues if something does not go as expected or you got an idea for a new feature.
 
  To set up the project just execute in the root path ` npm run setup ` and the try to build it by executing the command ` gulp pack-cd `
 
- ## Documentation
+## Documentation
 
  I'm still working on the documentation, it will come soo. I'm working in:
 
