@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install -g typings && npm install && typings i",
+    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install",
     "test": "gulp test-ci",
     "lint-fix": "tslint --fix ./src**/*.ts && tslint --fix ./test/**/*.ts"
   },
@@ -34,7 +34,10 @@
   },
   "homepage": "https://github.com/JemsFramework/di#readme",
   "devDependencies": {
+    "@types/mocha": "^2.2.44",
+    "@types/node": "^8.0.53",
     "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
     "gulp-merge": "^0.1.1",
     "gulp-mocha": "^4.2.0",
     "gulp-tslint": "^8.1.2",
@@ -42,7 +45,6 @@
     "gulp-zip": "^4.0.0",
     "tslint": "^5.7.0",
     "tslint-config-standard": "^6.0.1",
-    "typemoq": "^2.0.1",
-    "typescript": "^2.4.2"
+    "typemoq": "^2.0.1"
   }
 }

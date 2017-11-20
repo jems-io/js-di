@@ -1,5 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
-
 import { ResolutionOption } from '../resolutionOption'
 import { ContainerizedSyntax } from './containerizedSyntax'
 import { Container } from '../container'

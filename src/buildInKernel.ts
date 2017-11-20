@@ -1,5 +1,3 @@
-/// <reference path="../typings/index.d.ts" />
-
 import * as Errors from './errors/index'
 import { Module } from './module'
 import { DependencyMetadata } from './dependencyMetadata'

@@ -1,5 +1,3 @@
-/// <reference path="../../typings/index.d.ts" />
-
 import { ResolutionOption } from '../resolutionOption'
 import { ResolutionContext } from '../resolutionContext'
 import { EventEmitter } from 'events'
