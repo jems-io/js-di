@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install -g gulp-cli && npm install -g typedoc && npm install",
+    "setup": "npm install -g gulp-cli && npm install -g typescript && npm install",
     "test": "gulp test-ci",
     "lint-fix": "tslint --fix ./src**/*.ts && tslint --fix ./test/**/*.ts"
   },
