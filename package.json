@@ -11,7 +11,7 @@
     "access": "public"
   },
   "scripts": {
-    "setup": "npm install -g gulp-cli && npm install -g typescript && npm install",
+    "setup": "npm install -g gulp-cli && npm install",
     "test": "gulp test-ci",
     "lint-fix": "tslint --fix ./src**/*.ts && tslint --fix ./test/**/*.ts"
   },
@@ -45,6 +45,7 @@
     "gulp-zip": "^4.0.0",
     "tslint": "^5.7.0",
     "tslint-config-standard": "^6.0.1",
-    "typemoq": "^2.0.1"
+    "typemoq": "^2.0.1",
+    "typescript": "^2.6.1"
   }
 }
