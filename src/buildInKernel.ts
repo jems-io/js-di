@@ -6,14 +6,14 @@ import { Container } from './container'
 import { KernelConfiguration } from './kernelConfiguration'
 import { ResolutionContext } from './resolutionContext'
 import { ResolutionOption } from './resolutionOption'
-import { ContainerizedSyntax } from './fluent-syntaxes/containerizedSyntax'
+import { ContainerizedKernel } from './containerizedKernel'
 import { EventEmitter } from 'events'
 import { RelationSyntax } from './fluent-syntaxes/relationSyntax'
-import { InsideAndToSytax } from './fluent-syntaxes/insideAndToSytax'
 import { InstanceServicingStrategy } from './servicing-strategies/instanceServicingStrategy'
 import { PerCallDeliveryStrategy } from './delivery-strategies/perCallDeliveryStrategy'
-import { BuildInContainerizedSyntax } from './fluent-syntaxes/buildInContainerizedSyntax'
+import { BuildInContainerizedKernel } from './buildInContainerizedKernel'
 import { BuildInContainer } from './buildInContainer'
+import { ToSyntax } from './fluent-syntaxes/toSyntax'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -43,7 +43,7 @@ export class BuildInKernel implements Kernel {
    * Returns the configuration of the kernel.
    * @returns {KernelConfiguration} The configuation of the kernel.
    */
-  public getConfiguration (): KernelConfiguration {
+  public get configuration (): KernelConfiguration {
     return this._kernelConfiguration
   }
 
@@ -67,43 +67,25 @@ export class BuildInKernel implements Kernel {
   }
 
   /**
-   * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
-   * @param {string} alias Represents the alias to look for.
-   * @returns {InsideAndToSytax} A fluent bind.
-   */
-  public bind (alias: string): InsideAndToSytax {
-    return new RelationSyntax(this).bind(alias)
-  }
-
-  /**
-   * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.
-   * @param {string} alias Represents the alias to look for.
-   * @returns {boolean} True if the kernel can resolve the given alias.
-   */
-  public canResolve (alias: string): boolean {
-    return this._currentContainer.canResolve(alias)
-  }
-
-  /**
    * Return a containerized resolution syntax that allow perform resolution with an exiting container.
    * @param alias Represents the alias of the container to look for.
-   * @return {ContainerizedSyntax} The containerized resolution systax.
+   * @return {ContainerizedKernel} The containerized resolution systax.
    */
-  public usingContainer (alias: string): ContainerizedSyntax {
+  public usingContainer (alias: string): ContainerizedKernel {
 
     if (!this.hasContainer(alias)) {
       throw new Errors.UnregisteredAliasError('There is not any container with the given alias.')
     }
 
-    return this.getContainerizedSyntax(this._containers[alias])
+    return this.getContainerizedKernel(this._containers[alias])
   }
 
   /**
    * Return a containerized resolution syntax that allow perform resolution with the defautl container.
-   * @return {ContainerizedSyntax} The containerized resolution systax.
+   * @return {ContainerizedKernel} The containerized resolution systax.
    */
-  public usingDefaultContainer (): ContainerizedSyntax {
-    return this.getContainerizedSyntax(this._currentContainer)
+  public usingDefaultContainer (): ContainerizedKernel {
+    return this.getContainerizedKernel(this._currentContainer)
   }
 
   /**
@@ -114,6 +96,15 @@ export class BuildInKernel implements Kernel {
    */
   public createContainer (alias: string, supports?: string[]): void {
     this.createNewContainer(alias, supports)
+  }
+
+  /**
+   * Returns a boolean value specifying if the given alias can be resolved.
+   * @param {string} alias Represents the alias to look for.
+   * @return {boolean} True if the given alias can be resolved.
+   */
+  public canResolve (alias: string): boolean {
+    return this._currentContainer.canResolve(alias)
   }
 
   /**
@@ -154,6 +145,15 @@ export class BuildInKernel implements Kernel {
    */
   public async resolveWithContextAsync (reference: { new (): any } | Function | string, resolutionContext: ResolutionContext): Promise<any> {
     return await this.usingDefaultContainer().resolveWithContextAsync(reference, resolutionContext)
+  }
+
+  /**
+   * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
+   * @param {string} alias Represents the alias to look for.
+   * @returns {ToSyntax} A fluent bind.
+   */
+  public bind (alias: string): ToSyntax {
+    return new RelationSyntax(this).bind(alias)
   }
 
   /**
@@ -267,8 +267,8 @@ export class BuildInKernel implements Kernel {
     }
   }
 
-  private getContainerizedSyntax (container: Container): ContainerizedSyntax {
-    return new BuildInContainerizedSyntax(container)
+  private getContainerizedKernel (container: Container): ContainerizedKernel {
+    return new BuildInContainerizedKernel(container)
   }
 
   private validateCiclycDependency (stack: string[], supports: string[]): void {

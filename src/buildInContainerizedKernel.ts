@@ -1,15 +1,18 @@
-import { ResolutionOption } from '../resolutionOption'
-import { ContainerizedSyntax } from './containerizedSyntax'
-import { Container } from '../container'
-import { ResolutionContext } from '../resolutionContext'
-import { Kernel } from '../kernel'
+import { ResolutionOption } from './resolutionOption'
+import { ContainerizedKernel } from './containerizedKernel'
+import { Container } from './container'
+import { ResolutionContext } from './resolutionContext'
+import { Kernel } from './kernel'
 import { EventEmitter } from 'events'
-import { DependencyMetadata } from '../dependencyMetadata'
+import { DependencyMetadata } from './dependencyMetadata'
+import { RelationSyntax } from './fluent-syntaxes/relationSyntax'
+import { ToSyntax } from './fluent-syntaxes/toSyntax'
+import { KernelConfiguration } from './kernelConfiguration'
 
 /**
  * Represents a fluent extension that allows resolving dependencies with a container from the kernel fluently.
  */
-export class BuildInContainerizedSyntax implements ContainerizedSyntax {
+export class BuildInContainerizedKernel implements ContainerizedKernel {
   /**
    * Represents the container that will perform the resolutions.
    */
@@ -21,6 +24,15 @@ export class BuildInContainerizedSyntax implements ContainerizedSyntax {
    */
   constructor (contaier: Container) {
     this._container = contaier
+  }
+
+  /**
+   * Returns a boolean value specifying if the given alias can be resolved.
+   * @param {string} alias Represents the alias to look for.
+   * @return {boolean} True if the given alias can be resolved.
+   */
+  public canResolve (alias: string): boolean {
+    return this._container.canResolve(alias)
   }
 
   /**
@@ -77,6 +89,15 @@ export class BuildInContainerizedSyntax implements ContainerizedSyntax {
   }
 
   /**
+   * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
+   * @param {string} alias Represents the alias to look for.
+   * @return {InsideAndToSytax} A fluent bind.
+   */
+  public bind (alias: string): ToSyntax {
+    return new RelationSyntax(this).bind(alias)
+  }
+
+  /**
    * Unbind all dependencies metadata with the given alias from the container.
    * @param {string} alias Represents the alias to look for.
    */
@@ -108,6 +129,15 @@ export class BuildInContainerizedSyntax implements ContainerizedSyntax {
    * @returns {string} Returns the dependency metadata generated identifier.
    */
   public registerDependencyMetadata (alias: string, dependencyMetadata: DependencyMetadata): string {
+
+    const kernerlConfiguration: KernelConfiguration = this._container.getKernel().configuration
+
+    dependencyMetadata.servicingStrategy = dependencyMetadata.servicingStrategy ||
+                                           kernerlConfiguration.defaultServicingStrategy
+
+    dependencyMetadata.deliveryStrategy = dependencyMetadata.deliveryStrategy ||
+                                          kernerlConfiguration.defaultDeliveryStrategy
+
     return this._container.registerDependencyMetadata(alias, dependencyMetadata)
   }
 

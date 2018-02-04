@@ -5,7 +5,7 @@ import { ResolutionContext } from '../../src/resolutionContext'
 import { BuilderFunctionServicingStrategy } from '../../src/servicing-strategies/builderFunctionServicingStrategy'
 import { Container } from '../../src/container'
 import { ServicingError } from '../../src/errors/servicingError'
-import { ContainerizedSyntax } from '../../src/fluent-syntaxes/containerizedSyntax'
+import { ContainerizedKernel } from '../../src/containerizedKernel'
 import { Kernel } from '../../src/kernel'
 
 describe('The [BuilderFunctionServicingStrategy]', function () {
@@ -22,7 +22,7 @@ describe('The [BuilderFunctionServicingStrategy]', function () {
   it('should return the result of the invokation of the given reference target and resolve its dependencies with the context origin container.', function () {
     let resolutionContext: ResolutionContext = new ResolutionContext()
 
-    let containerSyntaxMock: IMock<ContainerizedSyntax> = Mock.ofType<ContainerizedSyntax>()
+    let containerSyntaxMock: IMock<ContainerizedKernel> = Mock.ofType<ContainerizedKernel>()
     containerSyntaxMock.setup(x => x.resolveWithContext('argument1', It.isAny())).returns(() => 'moto')
 
     let kernelMock: IMock<Kernel> = Mock.ofType<Kernel>()

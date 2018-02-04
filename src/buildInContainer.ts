@@ -198,7 +198,7 @@ export class BuildInContainer implements Container {
     if (typeof reference === 'string') {
       let alias: string = reference as string
       let originalAlias: string = alias
-      let resolutionConfiguration: ResolutionConfiguration = this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap['default']
+      let resolutionConfiguration: ResolutionConfiguration = this._kernel.configuration.aliasSufixResolutionConfigurationMap['default']
       let dependenciesMetadata: DependencyMetadata[] = this.getValidAliasMetadataCollection(alias, resolutionContext)
       let activatedObjects: any[] = []
 
@@ -255,7 +255,7 @@ export class BuildInContainer implements Container {
 
       return resolutionConfiguration.quantity === 1 ? activatedObjects[0] : activatedObjects
     } else {
-      let activatedObject: any = this._kernel.getConfiguration().defaultServicingStrategy.serve(resolutionContext, reference)
+      let activatedObject: any = this._kernel.configuration.defaultServicingStrategy.serve(resolutionContext, reference)
 
       if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve) {
         resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObject)
@@ -333,8 +333,8 @@ export class BuildInContainer implements Container {
 
     let posibleSufixeMatch: string = ''
 
-    for (let aliasSufix in this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap) {
-      if (this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap.hasOwnProperty(aliasSufix) &&
+    for (let aliasSufix in this._kernel.configuration.aliasSufixResolutionConfigurationMap) {
+      if (this._kernel.configuration.aliasSufixResolutionConfigurationMap.hasOwnProperty(aliasSufix) &&
                 alias.endsWith(aliasSufix) &&
                 alias.length > posibleSufixeMatch.length) {
 
@@ -344,7 +344,7 @@ export class BuildInContainer implements Container {
 
     return {
       outAlias: alias.substring(0, alias.length - posibleSufixeMatch.length),
-      configuration: this._kernel.getConfiguration().aliasSufixResolutionConfigurationMap[posibleSufixeMatch]
+      configuration: this._kernel.configuration.aliasSufixResolutionConfigurationMap[posibleSufixeMatch]
     }
   }
 

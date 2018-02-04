@@ -3,19 +3,18 @@ import { DependencyMetadata } from './dependencyMetadata'
 import { Container } from './container'
 import { KernelConfiguration } from './kernelConfiguration'
 import { ResolutionOption } from './resolutionOption'
-import { ContainerizedSyntax } from './fluent-syntaxes/containerizedSyntax'
-import { InsideAndToSytax } from './fluent-syntaxes/insideAndToSytax'
+import { ContainerizedKernel } from './containerizedKernel'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
  */
-export interface Kernel extends ContainerizedSyntax {
+export interface Kernel extends ContainerizedKernel {
 
   /**
-   * Returns the configuration of the kernel.
+   * Get or set the configuration of the kernel.
    * @return {KernelConfiguration} The configuation of the kernel.
    */
-  getConfiguration (): KernelConfiguration
+  configuration: KernelConfiguration
 
   /**
    * Load thegiven modules into the kernel.
@@ -31,20 +30,6 @@ export interface Kernel extends ContainerizedSyntax {
   loadModulesAsync (modules: Module[]): Promise<void>
 
   /**
-   * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
-   * @param {string} alias Represents the alias to look for.
-   * @return {InsideAndToSytax} A fluent bind.
-   */
-  bind (alias: string): InsideAndToSytax
-
-  /**
-   * Returns a boolean value specifying if the kernel can resolve given alias with the container resolution stack.
-   * @param {string} alias Represents the alias to look for.
-   * @return {boolean} True if the kernel can resolve the given alias.
-   */
-  canResolve (alias: string): boolean
-
-  /**
    * Creates and returns a container with the given alias.
    * @param {string} alias Represents the alias of the container.
    * @param {string[]} supports Represents the aliases of the supports containers.
@@ -55,15 +40,15 @@ export interface Kernel extends ContainerizedSyntax {
   /**
    * Return a containerized resolution syntax that allow perform resolution with an exiting container.
    * @param alias Represents the alias of the container to look for.
-   * @return {ContainerizedSyntax} The containerized resolution systax.
+   * @return {ContainerizedKernel} The containerized resolution systax.
    */
-  usingContainer (alias: string): ContainerizedSyntax
+  usingContainer (alias: string): ContainerizedKernel
 
   /**
    * Return a containerized resolution syntax that allow perform resolution with the defautl container.
-   * @return {ContainerizedSyntax} The containerized resolution systax.
+   * @return {ContainerizedKernel} The containerized resolution systax.
    */
-  usingDefaultContainer (): ContainerizedSyntax
+  usingDefaultContainer (): ContainerizedKernel
 
   /**
    * Removes the container with the given alias.

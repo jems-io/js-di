@@ -1,21 +1,16 @@
 import { BindSyntax } from './bindSyntax'
-import { InsideAndToSytax } from './insideAndToSytax'
 import { ToSyntax } from './toSyntax'
 import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
 import { BehaviorSyntax } from './behaviorSyntax'
 import { Kernel } from '../kernel'
 import { Container } from '../container'
-import { ContainerizedSyntax } from './containerizedSyntax'
+import { ContainerizedKernel } from '../containerizedKernel'
+import { DependencyMetadata } from '../index';
 
 /**
  * Represents an syntax extention that allow relate aliases to targets and specify containers.
  */
-export class RelationSyntax implements BindSyntax, InsideAndToSytax {
-
-    /**
-     * Represents the kernel where the binding is occurring.
-     */
-  private _kernel: Kernel
+export class RelationSyntax implements BindSyntax, ToSyntax {
 
     /**
      * Represents the bind alias.
@@ -23,16 +18,16 @@ export class RelationSyntax implements BindSyntax, InsideAndToSytax {
   private _alias: string
 
     /**
-     * Represents the container that will contain the bind.
+     * Represents the containerized syntax where the bind will be performed.
      */
-  private _containerAlias: string
+  private _containerizedKernel: ContainerizedKernel
 
     /**
      * Creates a new relation syntax that allow relates aliases to targets with the given kernel.
      * @param kernel Reprersents the kernel where the binding is happening.
      */
-  constructor (kernel: Kernel) {
-    this._kernel = kernel
+  constructor (containerizedKernel: ContainerizedKernel) {
+    this._containerizedKernel = containerizedKernel
   }
 
     /**
@@ -40,21 +35,9 @@ export class RelationSyntax implements BindSyntax, InsideAndToSytax {
      * @param alias Represents the alias to bind.
      * @return A syntax extension to associate the target or setup a container.
      */
-  public bind (alias: string): InsideAndToSytax {
+  public bind (alias: string): ToSyntax {
 
     this._alias = alias
-
-    return this
-  }
-
-    /**
-     * Set the current binded alias into the container with the given container alias.
-     * @param containerAlias Represents the alias to look for.
-     * @return A syntax extension to associate a targer to the current bind.
-     */
-  public inside (containerAlias: string): ToSyntax {
-
-    this._containerAlias = containerAlias
 
     return this
   }
@@ -66,19 +49,12 @@ export class RelationSyntax implements BindSyntax, InsideAndToSytax {
    */
   public to (reference: any): AsAndInAndWhenSyntax {
 
-    if (this._containerAlias && !this._kernel.hasContainer(this._containerAlias)) {
-      this._kernel.createContainer(this._containerAlias)
+    const dependencyMetadata: DependencyMetadata = {
+      activationReference: reference
     }
 
-    let containerizedSyntax: ContainerizedSyntax = this._kernel.usingContainer(this._containerAlias || 'default')
+    let identifier: string = this._containerizedKernel.registerDependencyMetadata(this._alias, dependencyMetadata)
 
-    let identifier: string = containerizedSyntax.registerDependencyMetadata(this._alias, {
-      activationReference: reference,
-      deliveryStrategy: this._kernel.getConfiguration().defaultDeliveryStrategy,
-      servicingStrategy: this._kernel.getConfiguration().defaultServicingStrategy,
-      validators: []
-    })
-
-    return new BehaviorSyntax(containerizedSyntax.getDependencyMetadataWithIdentifier(identifier))
+    return new BehaviorSyntax(dependencyMetadata)
   }
 }

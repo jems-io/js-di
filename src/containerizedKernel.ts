@@ -1,12 +1,20 @@
-import { ResolutionOption } from '../resolutionOption'
-import { ResolutionContext } from '../resolutionContext'
-import { EventEmitter } from 'events'
-import { DependencyMetadata } from '../dependencyMetadata'
+import { ResolutionOption } from './resolutionOption'
+import { ResolutionContext } from './resolutionContext'
+import { DependencyMetadata } from './dependencyMetadata'
+import { ToSyntax } from './fluent-syntaxes/toSyntax'
 
 /**
  * Represents a fluent extension that allows resolving dependencies with a container from the kernel fluently.
  */
-export interface ContainerizedSyntax {
+export interface ContainerizedKernel {
+
+  /**
+   * Returns a boolean value specifying if the given alias can be resolved.
+   * @param {string} alias Represents the alias to look for.
+   * @return {boolean} True if the given alias can be resolved.
+   */
+  canResolve (alias: string): boolean
+
   /**
    * Return an resolved instance using the given reference that could be a class, function or alias.
    * @param {{ new ():any } | Function | string} reference Represents the reference that must be resolved, it could be a class, function or alias.
@@ -38,6 +46,13 @@ export interface ContainerizedSyntax {
    * @return {Promise<any>} A promise that resolve the objects.
    */
   resolveWithContextAsync (reference: { new (): any } | Function | string, resolutionContext: ResolutionContext): Promise<any>
+
+  /**
+   * Return an alias bind fluent syntax that allow register dependencies metadata in a fluent api syntax.
+   * @param {string} alias Represents the alias to look for.
+   * @return {InsideAndToSytax} A fluent bind.
+   */
+  bind (alias: string): ToSyntax
 
   /**
    * Unbind all dependencies metadata with the given alias from the container.

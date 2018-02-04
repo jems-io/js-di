@@ -15,6 +15,7 @@ export * from './dependencyMetadata'
 
 // Exporting interfaces, that define the behavior.
 export * from './kernel'
+export * from './containerizedKernel'
 export * from './module'
 export * from './servicing-strategies/servicingStrategy'
 export * from './delivery-strategies/deliveryStrategy'

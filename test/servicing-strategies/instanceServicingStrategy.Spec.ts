@@ -5,7 +5,7 @@ import { ResolutionContext } from '../../src/resolutionContext'
 import { InstanceServicingStrategy } from '../../src/servicing-strategies/instanceServicingStrategy'
 import { Container } from '../../src/container'
 import { ServicingError } from '../../src/errors/servicingError'
-import { ContainerizedSyntax } from '../../src/fluent-syntaxes/containerizedSyntax'
+import { ContainerizedKernel } from '../../src/containerizedKernel'
 import { Kernel } from '../../src/kernel'
 
 describe('The [InstanceServicingStrategy]', function () {
@@ -26,7 +26,7 @@ describe('The [InstanceServicingStrategy]', function () {
 
     let resolutionContext: ResolutionContext = new ResolutionContext()
 
-    let containerSyntaxMock: IMock<ContainerizedSyntax> = Mock.ofType<ContainerizedSyntax>()
+    let containerSyntaxMock: IMock<ContainerizedKernel> = Mock.ofType<ContainerizedKernel>()
     containerSyntaxMock.setup(x => x.resolveWithContext('argument1', It.isAny())).returns(() => 'moto')
 
     let kernelMock: IMock<Kernel> = Mock.ofType<Kernel>()

@@ -14,16 +14,16 @@ export class DependencyMetadata {
     /**
      * Get or set the servicing strategy.
      */
-  servicingStrategy: ServicingStrategy
+  servicingStrategy?: ServicingStrategy
 
     /**
      * Get or set the delivery strategy.
      */
-  deliveryStrategy: DeliveryStrategy
+  deliveryStrategy?: DeliveryStrategy
 
     /**
      * Represents the validators that determine if the metadata is valid for the resolution.
      */
-  validators: ((resolutionContext: ResolutionContext,
-                dependencyMetadata: DependencyMetadata) => boolean)[]
+  validators?: ((resolutionContext: ResolutionContext,
+                 dependencyMetadata: DependencyMetadata) => boolean)[]
 }
