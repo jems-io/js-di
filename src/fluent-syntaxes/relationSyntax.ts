@@ -5,7 +5,7 @@ import { BehaviorSyntax } from './behaviorSyntax'
 import { Kernel } from '../kernel'
 import { Container } from '../container'
 import { ContainerizedKernel } from '../containerizedKernel'
-import { DependencyMetadata } from '../index';
+import { DependencyMetadata } from '../index'
 
 /**
  * Represents an syntax extention that allow relate aliases to targets and specify containers.

@@ -1,4 +1,4 @@
-import { ToSyntax } from "./toSyntax";
+import { ToSyntax } from './toSyntax'
 
 /**
  * Represents a fluent syntax extension to bind aliases to the kernel.
