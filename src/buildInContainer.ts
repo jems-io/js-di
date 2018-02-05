@@ -193,6 +193,7 @@ export class BuildInContainer implements Container {
   public resolve (reference: { new (): any } | Function | string, resolutionContext: ResolutionContext): any {
 
     resolutionContext.steps.push('Using container: [' + this.getName() + '] to resolve the ' + typeof reference + ': ' + (typeof reference === 'function' ? reference.name : reference))
+        
     this.validateReference(reference)
 
     if (typeof reference === 'string') {
@@ -229,6 +230,9 @@ export class BuildInContainer implements Container {
         let dependencyMetadata: DependencyMetadata = dependenciesMetadata[metadataIndex]
         let activatedObject: any
 
+        resolutionContext.aliasResolutionStack.push(alias)
+        resolutionContext.targetResolutionStack.push(dependencyMetadata.activationReference)
+
         if (!dependencyMetadata.servicingStrategy) {
           dependencyMetadata.servicingStrategy = this._kernel.configuration.defaultServicingStrategy
         }
@@ -251,7 +255,13 @@ export class BuildInContainer implements Container {
         }
 
         activatedObjects.push(activatedObject)
+
+        resolutionContext.aliasResolutionStack.splice(resolutionContext.aliasResolutionStack.length - 1, 1)
+        resolutionContext.targetResolutionStack.splice(resolutionContext.targetResolutionStack.length - 1, 1)
+
       }
+
+
 
       if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve) {
         resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObjects)
