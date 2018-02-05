@@ -12,7 +12,6 @@ describe('must throw an the error', function () {
   before(function () {
     kernel.bind('fakeTypeDependant1').to(FakeTypeDependant1)
     kernel.bind('fakeTypeDependant2').to(FakeTypeDependant2)
-    kernel.bind('fakeTypeNotStrategy').to(FakeTypeC).as(null)
     kernel.bind('fakeTypeNULL').to(null).asConstant()
     kernel.bind('fakeType').to(function () { this.fake = true })
     kernel.bind('fakeType').to(function () { this.fake = true })
@@ -24,15 +23,6 @@ describe('must throw an the error', function () {
       assert.ok(false, 'Must throw the exception because the alias is not registered.')
     } catch (error) {
       assert.equal(error.name, 'UnregisteredAliasError', 'The error is not an instance of jemsdi.Errors.UnregisteredAliasError')
-    }
-  })
-
-  it('jemsdi.Errors.UnsupportedServicignStrategyError because there is not a servicing strategy that match with the metadata.',function () {
-    try {
-      let resolvedObject: any = kernel.resolve('fakeTypeNotStrategy')
-      assert.ok(false, 'Must throw the exception because the strategy is not suported.')
-    } catch (error) {
-      assert.equal(error.name, 'UnsupportedServicignStrategyError', 'The error is not an instance of jemsdi.Errors.UnsupportedServicignStrategyError')
     }
   })
 

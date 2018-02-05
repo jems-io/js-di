@@ -6,39 +6,39 @@ import { DependencyMetadata } from '../dependencyMetadata'
  */
 export interface WhenSyntax {
     /**
-     * Setup the current alias bind to be valid when the target be an ancestor of the given type.
-     * @param type Represents the type that must be the ancestor of the bind.
+     * Setup the current alias bind to be valid when the target be an ancestor of the given types.
+     * @param types Represents the types that must be the ancestor of the bind.
      * @return A syntax extention to setup conditions.
      */
-  whenAncestorIs (type: Function): WhenSyntax
+  whenAncestorsAre (...types: Function[]): WhenSyntax
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected into the given alias.
-     * @param alias Represents the alias where the bind must be injected
+     * Setup the current alias bind to be valid when the metadata is being injected into the given aliases.
+     * @param aliases Represents the aliases where the bind must be injected
      * @return A syntax extention to setup conditions.
      */
-  whenInjectedIntoAlias (alias: string): WhenSyntax
+  whenInjectedIntoAliases (...aliases: string[]): WhenSyntax
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected into the given type.
-     * @param type Represents the type where the bind must be injected.
+     * Setup the current alias bind to be valid when the metadata is being injected into the given types.
+     * @param types Represents the types where the bind must be injected.
      * @return A syntax extention to setup conditions.
      */
-  whenInjectedIntoType (type: Function): WhenSyntax
+  whenInjectedIntoTypes (...types: Function[]): WhenSyntax
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given alias.
-     * @param alias Represents the alias where the bind must be exactly injected
+     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given aliases.
+     * @param aliases Represents the aliases where the bind must be exactly injected
      * @return A syntax extention to setup conditions.
      */
-  whenInjectedExactlyIntoAlias (alias: string): WhenSyntax
+  whenInjectedExactlyIntoAliases (...aliases: string[]): WhenSyntax
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given type.
-     * @param type Represents the type where the bind must be exactly injected.
+     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given types.
+     * @param types Represents the types where the bind must be exactly injected.
      * @return A syntax extention to setup conditions.
      */
-  whenInjectedExactlyIntoType (type: Function): WhenSyntax
+  whenInjectedExactlyIntoTypes (...types: Function[]): WhenSyntax
 
     /**
      * Setup the current alias bind to be valid when the given validator is successfully.

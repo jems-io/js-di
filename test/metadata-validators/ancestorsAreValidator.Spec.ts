@@ -1,9 +1,9 @@
 import * as assert from 'assert'
 
-import ancestoIsValidator from '../../src/metadata-validators/ancestoIsValidator'
+import ancestorsAreValidator from '../../src/metadata-validators/ancestorsAreValidator'
 import { DependencyMetadata } from '../../src/dependencyMetadata'
 
-describe('The [AncestoIsValidator]', function () {
+describe('The [AncestorsAreValidator]', function () {
   it('should return true if the ancestor is the given one.', function () {
     class BaseClass {}
     class TheClass extends BaseClass {}
@@ -11,7 +11,7 @@ describe('The [AncestoIsValidator]', function () {
     let dependencyMetadata: DependencyMetadata = new DependencyMetadata()
     dependencyMetadata.activationReference = TheClass
 
-    assert.ok(ancestoIsValidator(null, dependencyMetadata, BaseClass),
+    assert.ok(ancestorsAreValidator(null, dependencyMetadata, BaseClass),
                  `The given referene [${TheClass.name}] is not inheriting from [${BaseClass.name}]`)
   })
 
@@ -22,7 +22,7 @@ describe('The [AncestoIsValidator]', function () {
     let dependencyMetadata: DependencyMetadata = new DependencyMetadata()
     dependencyMetadata.activationReference = TheClass
 
-    assert.ok(!ancestoIsValidator(null, dependencyMetadata, BaseClass),
+    assert.ok(!ancestorsAreValidator(null, dependencyMetadata, BaseClass),
                  `The given referene [${TheClass.name}] is inheriting from [${BaseClass.name}]`)
   })
 })

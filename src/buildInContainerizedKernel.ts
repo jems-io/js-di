@@ -129,15 +129,6 @@ export class BuildInContainerizedKernel implements ContainerizedKernel {
    * @returns {string} Returns the dependency metadata generated identifier.
    */
   public registerDependencyMetadata (alias: string, dependencyMetadata: DependencyMetadata): string {
-
-    const kernerlConfiguration: KernelConfiguration = this._container.getKernel().configuration
-
-    dependencyMetadata.servicingStrategy = dependencyMetadata.servicingStrategy ||
-                                           kernerlConfiguration.defaultServicingStrategy
-
-    dependencyMetadata.deliveryStrategy = dependencyMetadata.deliveryStrategy ||
-                                          kernerlConfiguration.defaultDeliveryStrategy
-
     return this._container.registerDependencyMetadata(alias, dependencyMetadata)
   }
 

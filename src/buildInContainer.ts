@@ -230,11 +230,15 @@ export class BuildInContainer implements Container {
         let activatedObject: any
 
         if (!dependencyMetadata.servicingStrategy) {
-          throw new Errors.UnsupportedServicignStrategyError('The given servicing strategy is not suported.')
+          dependencyMetadata.servicingStrategy = this._kernel.configuration.defaultServicingStrategy
         }
 
         if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.beforeResolveEach) {
           resolutionContext.resolutionOption.beforeResolveEach(resolutionContext, dependencyMetadata)
+        }
+
+        if (!dependencyMetadata.deliveryStrategy) {
+          dependencyMetadata.deliveryStrategy = this._kernel.configuration.defaultDeliveryStrategy
         }
 
         activatedObject = dependencyMetadata

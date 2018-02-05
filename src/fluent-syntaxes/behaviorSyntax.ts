@@ -12,11 +12,11 @@ import { PerCallDeliveryStrategy } from '../delivery-strategies/perCallDeliveryS
 import { SingletonDeliveryStrategy } from '../delivery-strategies/singletonDeliveryStrategy'
 import { PerResolutionDeliveryStrategy } from '../delivery-strategies/perResolutionDeliveryStrategy'
 import { ContainerizedDeliveryStrategy } from '../delivery-strategies/containerizedDeliveryStrategy'
-import ancestoIsValidator from '../metadata-validators/ancestoIsValidator'
-import injectedExactlyIntoTypeValidator from '../metadata-validators/injectedExactlyIntoTypeValidator'
-import injectedExactlyIntoAliasValidator from '../metadata-validators/injectedExactlyIntoAliasValidator'
-import injectedIntoTypeValidator from '../metadata-validators/injectedIntoTypeValidator'
-import injectedIntoAliasValidator from '../metadata-validators/injectedIntoAliasValidator'
+import ancestorsAreValidator from '../metadata-validators/ancestorsAreValidator'
+import injectedExactlyIntoTypesValidator from '../metadata-validators/injectedExactlyIntoTypesValidator'
+import injectedExactlyIntoAliasesValidator from '../metadata-validators/injectedExactlyIntoAliasesValidator'
+import injectedIntoTypesValidator from '../metadata-validators/injectedIntoTypesValidator'
+import injectedIntoAliasesValidator from '../metadata-validators/injectedIntoAliasesValidator'
 
 /**
  * Represents a syntax that allow setup the dependecy resolution behavior.
@@ -33,6 +33,11 @@ export class BehaviorSyntax implements AsAndInAndWhenSyntax {
      * @param dependencyMetadata Represents the dependency metadata to affect in a fluently way.
      */
   constructor (dependencyMetadata: DependencyMetadata) {
+
+    if (!dependencyMetadata.validators) {
+      dependencyMetadata.validators = []
+    }
+
     this._dependencyMetadata = dependencyMetadata
   }
 
@@ -150,66 +155,66 @@ export class BehaviorSyntax implements AsAndInAndWhenSyntax {
      *********************************/
 
     /**
-     * Setup the current alias bind to be valid when the target be an ancestor of the given type.
-     * @param type Represents the type that must be the ancestor of the bind.
+     * Setup the current alias bind to be valid when the target be an ancestor of the given types.
+     * @param types Represents the types that must be the ancestor of the bind.
      * @return A syntax extention to setup conditions.
      */
-  public whenAncestorIs (type: Function): WhenSyntax {
+  public whenAncestorsAre (...types: Function[]): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push((resolutionContext, dependencyMetadata) => ancestoIsValidator(resolutionContext, dependencyMetadata, type))
+                            .push((resolutionContext, dependencyMetadata) => ancestorsAreValidator(resolutionContext, dependencyMetadata, ...types))
 
     return this
   }
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected into the given alias.
-     * @param alias Represents the alias where the bind must be injected
+     * Setup the current alias bind to be valid when the metadata is being injected into the given aliases.
+     * @param aliases Represents the aliases where the bind must be injected
      * @return A syntax extention to setup conditions.
      */
-  public whenInjectedIntoAlias (alias: string): WhenSyntax {
+  public whenInjectedIntoAliases (...aliases: string[]): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push((resolutionContext, dependencyMetadata) => injectedIntoAliasValidator(resolutionContext, dependencyMetadata, alias))
+                            .push((resolutionContext, dependencyMetadata) => injectedIntoAliasesValidator(resolutionContext, dependencyMetadata, ...aliases))
 
     return this
   }
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected into the given type.
-     * @param type Represents the type where the bind must be injected.
+     * Setup the current alias bind to be valid when the metadata is being injected into the given types.
+     * @param types Represents the types where the bind must be injected.
      * @return A syntax extention to setup conditions.
      */
-  public whenInjectedIntoType (type: Function): WhenSyntax {
+  public whenInjectedIntoTypes (...types: Function[]): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push((resolutionContext, dependencyMetadata) => injectedIntoTypeValidator(resolutionContext, dependencyMetadata, type))
+                            .push((resolutionContext, dependencyMetadata) => injectedIntoTypesValidator(resolutionContext, dependencyMetadata, ...types))
 
     return this
   }
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given alias.
-     * @param alias Represents the alias where the bind must be exactly injected
+     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given aliases.
+     * @param aliases Represents the aliases where the bind must be exactly injected
      * @return A syntax extention to setup conditions.
      */
-  public whenInjectedExactlyIntoAlias (alias: string): WhenSyntax {
+  public whenInjectedExactlyIntoAliases (...aliases: string[]): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push((resolutionContext, dependencyMetadata) => injectedExactlyIntoAliasValidator(resolutionContext, dependencyMetadata, alias))
+                            .push((resolutionContext, dependencyMetadata) => injectedExactlyIntoAliasesValidator(resolutionContext, dependencyMetadata, ...aliases))
 
     return this
   }
 
     /**
-     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given type.
-     * @param type Represents the type where the bind must be exactly injected.
+     * Setup the current alias bind to be valid when the metadata is being injected exactly into the given types.
+     * @param types Represents the types where the bind must be exactly injected.
      * @return A syntax extention to setup conditions.
      */
-  public whenInjectedExactlyIntoType (type: Function): WhenSyntax {
+  public whenInjectedExactlyIntoTypes (...types: Function[]): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push((resolutionContext, dependencyMetadata) => injectedExactlyIntoTypeValidator(resolutionContext, dependencyMetadata, type))
+                            .push((resolutionContext, dependencyMetadata) => injectedExactlyIntoTypesValidator(resolutionContext, dependencyMetadata, ...types))
 
     return this
   }
@@ -222,7 +227,7 @@ export class BehaviorSyntax implements AsAndInAndWhenSyntax {
   public when (validator: (resolutionContext: ResolutionContext, dependencyMetadata: DependencyMetadata) => boolean): WhenSyntax {
 
     this._dependencyMetadata.validators
-                                .push(validator)
+                            .push(validator)
 
     return this
   }
