@@ -51,11 +51,5 @@ export class KernelConfiguration {
       optional: true,
       dependencyFilter: undefined
     }
-
-    this.aliasSufixResolutionConfigurationMap['OptionalList'] = {
-      quantity: 0,
-      optional: true,
-      dependencyFilter: undefined
-    }
   }
 }

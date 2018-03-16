@@ -222,6 +222,11 @@ export class BuildInContainer implements Container {
           let supportedResolvedObject: any = this.resolveWithSupport(originalAlias, resolutionContext)
 
           if (supportedResolvedObject === undefined) {
+            if (resolutionContext.originContainerAlias === this.getName() &&
+                resolutionConfiguration.quantity === 0) {
+              return activatedObjects
+            }
+
             throw new Errors.UnregisteredAliasError(`Can not resolve the given alias [${alias}].`)
           }
 
