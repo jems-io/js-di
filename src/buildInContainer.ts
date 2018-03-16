@@ -218,7 +218,14 @@ export class BuildInContainer implements Container {
         if (resolutionConfiguration.optional) {
           return null
         } else {
-          return this.resolveWithSupport(originalAlias, resolutionContext)
+
+          let supportedResolvedObject: any = this.resolveWithSupport(originalAlias, resolutionContext)
+
+          if (supportedResolvedObject === undefined) {
+            throw new Errors.UnregisteredAliasError(`Can not resolve the given alias [${alias}].`)
+          }
+
+          return supportedResolvedObject
         }
       } else {
         if (resolutionConfiguration.quantity > 0 && resolutionConfiguration.quantity !== dependenciesMetadata.length) {
@@ -379,7 +386,7 @@ export class BuildInContainer implements Container {
           return resolverObject
         } catch (error) {
           if (error instanceof Errors.UnregisteredAliasError) {
-            break
+            continue
           } else {
             throw error
           }
@@ -387,7 +394,7 @@ export class BuildInContainer implements Container {
       }
     }
 
-    throw new Errors.UnregisteredAliasError(`Can not resolve the given alias [${alias}].`)
+    return undefined
   }
 
   private getIdentifierMetadataMapCollection (alias: string): IdentifierDependencyMetadataMap[] {
