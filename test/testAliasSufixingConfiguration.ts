@@ -24,6 +24,12 @@ describe('with an alias that contain sufixing configuration', function () {
     })
   })
 
+  it('should resolve an empty array with fakeTypeUnexisting alias when is using the List sufix.', function () {
+    let resolvedObjects: any[] = kernel.resolve('fakeTypeUnexistingOptionalList')
+
+    assert.equal(0, resolvedObjects.length, 'The resolved object is not registered, it must be null.')
+  })
+
   it('should resolve a null with fakeTypeUnexisting alias when is using the Optional sufix.', function () {
     let resolvedObject: any = kernel.resolve('fakeTypeUnexistingOptional')
 
