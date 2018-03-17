@@ -18,6 +18,7 @@ import injectedIntoTypesValidator from '../metadata-validators/injectedIntoTypes
 import injectedIntoAliasesValidator from '../metadata-validators/injectedIntoAliasesValidator'
 import { WithAndAsAndInAndWhenSyntax } from './withAndAsAndInAndWhenSyntax'
 import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
+import { Errors } from '..'
 
 /**
  * Represents a syntax that allow setup the dependecy resolution behavior.
@@ -52,6 +53,12 @@ export class BehaviorSyntax implements WithAndAsAndInAndWhenSyntax {
      * @return A syntax extension to setup the serving, delivery and conditions.
      */
   public with (aliases: string[]): AsAndInAndWhenSyntax {
+    if (!this._dependencyMetadata.isArgumentable) {
+      throw new Errors.InvalidDataError('Can not add arguments names to a not argumentable dependency.')
+    }
+
+    this._dependencyMetadata.argumentsNames = aliases
+
     return this
   }
 
