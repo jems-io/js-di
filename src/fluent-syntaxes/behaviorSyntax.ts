@@ -1,4 +1,3 @@
-import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
 import { DependencyMetadata } from '../dependencyMetadata'
 import { InAndWhenSyntax } from './inAndWhenSyntax'
 import { ServicingStrategy } from '../servicing-strategies/servicingStrategy'
@@ -17,11 +16,13 @@ import injectedExactlyIntoTypesValidator from '../metadata-validators/injectedEx
 import injectedExactlyIntoAliasesValidator from '../metadata-validators/injectedExactlyIntoAliasesValidator'
 import injectedIntoTypesValidator from '../metadata-validators/injectedIntoTypesValidator'
 import injectedIntoAliasesValidator from '../metadata-validators/injectedIntoAliasesValidator'
+import { WithAndAsAndInAndWhenSyntax } from './withAndAsAndInAndWhenSyntax'
+import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
 
 /**
  * Represents a syntax that allow setup the dependecy resolution behavior.
  */
-export class BehaviorSyntax implements AsAndInAndWhenSyntax {
+export class BehaviorSyntax implements WithAndAsAndInAndWhenSyntax {
 
     /**
      * Represents the dependency metadata to affect in a fluently way.
@@ -39,6 +40,19 @@ export class BehaviorSyntax implements AsAndInAndWhenSyntax {
     }
 
     this._dependencyMetadata = dependencyMetadata
+  }
+
+    /*********************************
+     *  The Dependencies (With Syntax)
+     *********************************/
+
+    /**
+     * Setup the aliases that will repsents the argument names with the given aliases.
+     * @param aliases Represents the aliases that will repsents the argument names.
+     * @return A syntax extension to setup the serving, delivery and conditions.
+     */
+  public with (aliases: string[]): AsAndInAndWhenSyntax {
+    return this
   }
 
      /*********************************

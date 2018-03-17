@@ -1,6 +1,5 @@
 import { BindSyntax } from './bindSyntax'
 import { ToSyntax } from './toSyntax'
-import { AsAndInAndWhenSyntax } from './asAndInAndWhenSyntax'
 import { BehaviorSyntax } from './behaviorSyntax'
 import { Kernel } from '../kernel'
 import { Container } from '../container'
@@ -8,6 +7,7 @@ import { ContainerizedKernel } from '../containerizedKernel'
 import { DependencyMetadata } from '../index'
 import { ArgumentsNamesProvider } from '../argumentsNamesProvider'
 import { BuildInArgumentsNamesProvider } from '../buildInArgumentsNamesProvider'
+import { WithAndAsAndInAndWhenSyntax } from './withAndAsAndInAndWhenSyntax'
 
 /**
  * Represents an syntax extention that allow relate aliases to targets and specify containers.
@@ -56,9 +56,9 @@ export class RelationSyntax implements BindSyntax, ToSyntax {
   /**
    * Associate the given target to the current bind.
    * @param reference Represets the target that will be associated to the current bind.
-   * @return A syntax extension to setup the servicing, delivery and conditions.
+   * @return A syntax extension to setup the dependencies, servicing, delivery and conditions.
    */
-  public to (reference: any): AsAndInAndWhenSyntax {
+  public to (reference: any): WithAndAsAndInAndWhenSyntax {
     let isArgumentable: boolean = this._argumentsNamesProvider.isArgumetable(reference)
 
     const dependencyMetadata: DependencyMetadata = {
