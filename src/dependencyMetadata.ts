@@ -22,6 +22,18 @@ export class DependencyMetadata {
   deliveryStrategy?: DeliveryStrategy
 
     /**
+     * Get or set a boolean value specifying if the activation reference is argumentable.
+     */
+  isArgumentable: boolean
+
+    /**
+     * Get or set the arguments names which are the aliases that will be used to resolve
+     * the dependency metadata dependencies in the construction or invokation
+     * of an argumentable activation reference.
+     */
+  argumentsNames: string[]
+
+    /**
      * Represents the validators that determine if the metadata is valid for the resolution.
      */
   validators?: ((resolutionContext: ResolutionContext,

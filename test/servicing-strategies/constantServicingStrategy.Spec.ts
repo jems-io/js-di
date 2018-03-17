@@ -10,7 +10,11 @@ describe('The [ConstantServicingStrategy]', function () {
     let resolutionContext: ResolutionContext = new ResolutionContext()
 
     let constantServicingStrategy: ConstantServicingStrategy = new ConstantServicingStrategy()
-    let servicingResult: any = constantServicingStrategy.serve(resolutionContext, referece)
+    let servicingResult: any = constantServicingStrategy.serve(resolutionContext, {
+      activationReference: referece,
+      isArgumentable: false,
+      argumentsNames: []
+    })
 
     assert.equal(servicingResult, referece,
                  `The served reference is [${servicingResult}] when it should be [${referece}]`)
@@ -22,11 +26,19 @@ describe('The [ConstantServicingStrategy]', function () {
     let constantServicingStrategy: ConstantServicingStrategy = new ConstantServicingStrategy()
 
     assert.throws(() => {
-      let servicingResult: any = constantServicingStrategy.serve(resolutionContext, undefined)
+      let servicingResult: any = constantServicingStrategy.serve(resolutionContext, {
+        activationReference: undefined,
+        isArgumentable: false,
+        argumentsNames: []
+      })
     }, ServicingError)
 
     assert.throws(() => {
-      let servicingResult: any = constantServicingStrategy.serve(resolutionContext, null)
+      let servicingResult: any = constantServicingStrategy.serve(resolutionContext, {
+        activationReference: null,
+        isArgumentable: false,
+        argumentsNames: []
+      })
     }, ServicingError)
   })
 })

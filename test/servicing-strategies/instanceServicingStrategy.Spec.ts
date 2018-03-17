@@ -15,7 +15,11 @@ describe('The [InstanceServicingStrategy]', function () {
     let resolutionContext: ResolutionContext = new ResolutionContext()
 
     let instanceServicingStrategy: InstanceServicingStrategy = new InstanceServicingStrategy()
-    let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, IntatiableFunction)
+    let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, {
+      activationReference: IntatiableFunction,
+      isArgumentable: true,
+      argumentsNames: []
+    })
 
     assert.ok(servicingResult instanceof IntatiableFunction,
                  `The served instance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunction}]`)
@@ -35,7 +39,11 @@ describe('The [InstanceServicingStrategy]', function () {
     resolutionContext.kernel = kernelMock.object
 
     let instanceServicingStrategy: InstanceServicingStrategy = new InstanceServicingStrategy()
-    let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, IntatiableFunctionWithArgument)
+    let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, {
+      activationReference: IntatiableFunctionWithArgument,
+      isArgumentable: true,
+      argumentsNames: ['argument1']
+    })
 
     assert.ok(servicingResult instanceof IntatiableFunctionWithArgument,
                  `The served instance is [${typeof servicingResult}] when it should be [${typeof IntatiableFunctionWithArgument}]`)
@@ -48,7 +56,11 @@ describe('The [InstanceServicingStrategy]', function () {
       let resolutionContext: ResolutionContext = new ResolutionContext()
 
       let instanceServicingStrategy: InstanceServicingStrategy = new InstanceServicingStrategy()
-      let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, {})
+      let servicingResult: any = instanceServicingStrategy.serve(resolutionContext, {
+        activationReference: {},
+        isArgumentable: false,
+        argumentsNames: []
+      })
     }, ServicingError)
   })
 

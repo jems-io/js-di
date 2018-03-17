@@ -41,7 +41,7 @@ export class PerResolutionDeliveryStrategy implements DeliveryStrategy {
     let servingResult: any
 
     if (!map) {
-      servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference)
+      servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata)
       this._resolutionContextInstanceMap.push({ context: resolutionContext, instance: servingResult })
     } else {
       servingResult = map.instance

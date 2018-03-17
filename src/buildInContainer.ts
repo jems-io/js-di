@@ -278,7 +278,13 @@ export class BuildInContainer implements Container {
 
       return resolutionConfiguration.quantity === 1 ? activatedObjects[0] : activatedObjects
     } else {
-      let activatedObject: any = this._kernel.configuration.defaultServicingStrategy.serve(resolutionContext, reference)
+      let temporalAlias: string = 'temporal-alias'
+
+      this._kernel.usingContainer(this.getName()).bind(temporalAlias).to(reference)
+
+      let activatedObject: any = this.resolve(temporalAlias, resolutionContext)
+
+      this._kernel.usingContainer(this.getName()).unbindWithAlias(temporalAlias)
 
       if (resolutionContext.resolutionOption && resolutionContext.resolutionOption.afterResolve) {
         resolutionContext.resolutionOption.afterResolve(resolutionContext, activatedObject)

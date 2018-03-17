@@ -30,6 +30,6 @@ export class PerCallDeliveryStrategy implements DeliveryStrategy {
       throw new DeliveryError('The provided dependency metadata must have a valid servicing strategy.')
     }
 
-    return dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference)
+    return dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata)
   }
 }

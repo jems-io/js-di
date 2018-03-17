@@ -6,11 +6,18 @@ import { Kernel } from '../kernel'
 import { Container } from '../container'
 import { ContainerizedKernel } from '../containerizedKernel'
 import { DependencyMetadata } from '../index'
+import { ArgumentsNamesProvider } from '../argumentsNamesProvider'
+import { BuildInArgumentsNamesProvider } from '../buildInArgumentsNamesProvider'
 
 /**
  * Represents an syntax extention that allow relate aliases to targets and specify containers.
  */
 export class RelationSyntax implements BindSyntax, ToSyntax {
+
+    /**
+     * Represents the arguments name provider that identify the arguments in a argumentable reference.
+     */
+  private _argumentsNamesProvider: ArgumentsNamesProvider
 
     /**
      * Represents the bind alias.
@@ -27,6 +34,10 @@ export class RelationSyntax implements BindSyntax, ToSyntax {
      * @param kernel Reprersents the kernel where the binding is happening.
      */
   constructor (containerizedKernel: ContainerizedKernel) {
+
+    // Resolving it with poors man constructor. :(
+    this._argumentsNamesProvider = new BuildInArgumentsNamesProvider()
+
     this._containerizedKernel = containerizedKernel
   }
 
@@ -48,9 +59,12 @@ export class RelationSyntax implements BindSyntax, ToSyntax {
    * @return A syntax extension to setup the servicing, delivery and conditions.
    */
   public to (reference: any): AsAndInAndWhenSyntax {
+    let isArgumentable: boolean = this._argumentsNamesProvider.isArgumetable(reference)
 
     const dependencyMetadata: DependencyMetadata = {
-      activationReference: reference
+      activationReference: reference,
+      isArgumentable: isArgumentable,
+      argumentsNames: isArgumentable ? this._argumentsNamesProvider.getArgumentsNames(reference) : []
     }
 
     let identifier: string = this._containerizedKernel.registerDependencyMetadata(this._alias, dependencyMetadata)

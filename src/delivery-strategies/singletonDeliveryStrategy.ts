@@ -42,7 +42,7 @@ export class SingletonDeliveryStrategy implements DeliveryStrategy {
     }
 
     if (!this._isServed) {
-      this._instance = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference)
+      this._instance = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata)
       this._isServed = true
     }
 

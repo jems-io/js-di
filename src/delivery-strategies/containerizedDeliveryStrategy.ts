@@ -46,7 +46,7 @@ export class ContainerizedDeliveryStrategy implements DeliveryStrategy {
     let servingResult: any
 
     if (!map) {
-      servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata.activationReference)
+      servingResult = dependencyMetadata.servicingStrategy.serve(resolutionContext, dependencyMetadata)
       this._containerInstanceMap.push({ containerAlias: resolutionContext.originContainerAlias, instance: servingResult })
     } else {
       servingResult = map.instance

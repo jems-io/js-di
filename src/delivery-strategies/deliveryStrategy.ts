@@ -1,5 +1,5 @@
 import { ResolutionContext } from '../resolutionContext'
-import { DependencyMetadata } from '../dependencyMetadata'
+import { DependencyMetadata } from '..'
 
 /**
  * Represenst an strategy to deliver targets with an specific strategy.

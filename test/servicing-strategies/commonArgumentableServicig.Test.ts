@@ -14,15 +14,20 @@ export = function (servicingStrategyProvider: () => ServicingStrategy) {
 
     let argumentableServicingStrategy: ServicingStrategy = servicingStrategyProvider()
 
-    let servicingResult: any = argumentableServicingStrategy.serve(resolutionContext, function (toResolveArgument: string) {
-      if (this) {
-        this.resolvedArgument = toResolveArgument
-      }
+    let servicingResult: any = argumentableServicingStrategy.serve(resolutionContext, {
+      activationReference: function (toResolveArgument: string) {
+        if (this) {
+          this.resolvedArgument = toResolveArgument
+        }
 
-      return {
-        resolvedArgument: toResolveArgument
-      }
+        return {
+          resolvedArgument: toResolveArgument
+        }
+      },
+      isArgumentable: true,
+      argumentsNames: ['toResolveArgument']
     })
+
     assert.equal(servicingResult.resolvedArgument, 'Hello Moto')
   })
 }

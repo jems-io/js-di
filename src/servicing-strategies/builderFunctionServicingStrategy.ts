@@ -1,41 +1,26 @@
 import { ResolutionContext } from '../resolutionContext'
 import { ServicingStrategy } from './servicingStrategy'
-import { ArgumentsNamesProvider } from '../argumentsNamesProvider'
 import { ServicingError } from '../errors/servicingError'
-import { BuildInArgumentsNamesProvider } from '../buildInArgumentsNamesProvider'
+import { DependencyMetadata } from '..'
 
 /**
- * Represents a servicing strategy that transform and serve metadata reference targets as the result of an invokation.
+ * Represents a servicing strategy that transform and serve dependency metadata references as the result of an invokation.
  */
 export class BuilderFunctionServicingStrategy implements ServicingStrategy {
     /**
-     * Represents the arguments name provider that identify the arguments in a argumentable reference.
-     */
-  private _argumentsNamesProvider: ArgumentsNamesProvider
-
-    /**
-     * Instantiate a new builer function servicing strategy.
-     */
-  constructor () {
-        // Resolving it with poors man constructor. :(
-    this._argumentsNamesProvider = new BuildInArgumentsNamesProvider()
-  }
-
-    /**
-     * Invoke and serve the result of the invokation of the given reference target.
+     * Serve the result of the given reference target transformation.
      * @param resolutionContext Represents the resolution context of the servicing.
-     * @param referenceTarget Represents the reference target to invoke.
-     * @return The result of the invokation of the reference target.
+     * @param dependencyMetadata Represents the dependency metadata to transformed.
+     * @return The transformed reference target.
      */
-  public serve (resolutionContext: ResolutionContext , referenceTarget: any): any {
-    if (!this._argumentsNamesProvider.isArgumetable(referenceTarget)) {
-      throw new ServicingError(`The provided metadata reference target of type [${typeof referenceTarget}], is not argumentable.`)
+  public serve (resolutionContext: ResolutionContext , dependencyMetadata: DependencyMetadata): any {
+    if (!dependencyMetadata.isArgumentable) {
+      throw new ServicingError(`The provided metadata reference target of type [${typeof dependencyMetadata.activationReference}], is not argumentable.`)
     }
 
-    let argumetsNames: string[] = this._argumentsNamesProvider.getArgumentsNames(referenceTarget)
     let argumets: any[] = []
 
-    argumetsNames.forEach((argumentName) => {
+    dependencyMetadata.argumentsNames.forEach((argumentName) => {
 
       let argument: any
 
@@ -51,6 +36,6 @@ export class BuilderFunctionServicingStrategy implements ServicingStrategy {
       argumets.push(argument)
     })
 
-    return referenceTarget.call(null, argumets)
+    return dependencyMetadata.activationReference.call(null, argumets)
   }
 }

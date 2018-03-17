@@ -13,7 +13,11 @@ describe('The [BuilderFunctionServicingStrategy]', function () {
     let resolutionContext: ResolutionContext = new ResolutionContext()
 
     let builderFunctionServicingStrategy: BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy()
-    let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, () => 123)
+    let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, {
+      activationReference: () => 123,
+      isArgumentable: true,
+      argumentsNames: []
+    })
 
     assert.equal(servicingResult, 123,
                  `The served result is [${servicingResult}] when it should be [123]`)
@@ -31,7 +35,11 @@ describe('The [BuilderFunctionServicingStrategy]', function () {
     resolutionContext.kernel = kernelMock.object
 
     let builderFunctionServicingStrategy: BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy()
-    let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, (argument1: string) => 'hello ' + argument1)
+    let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, {
+      activationReference: (argument1: string) => 'hello ' + argument1,
+      isArgumentable: true,
+      argumentsNames: ['argument1']
+    })
 
     assert.equal(servicingResult, 'hello moto',
                  `The served result is [${servicingResult}] when it should be [hello moto]`)
@@ -44,7 +52,11 @@ describe('The [BuilderFunctionServicingStrategy]', function () {
       let resolutionContext: ResolutionContext = new ResolutionContext()
 
       let builderFunctionServicingStrategy: BuilderFunctionServicingStrategy = new BuilderFunctionServicingStrategy()
-      let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, {})
+      let servicingResult: any = builderFunctionServicingStrategy.serve(resolutionContext, {
+        activationReference: {},
+        isArgumentable: false,
+        argumentsNames: []
+      })
     }, ServicingError)
   })
 
