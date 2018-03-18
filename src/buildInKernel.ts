@@ -44,7 +44,6 @@ export class BuildInKernel implements Kernel {
 
   /**
    * Returns the configuration of the kernel.
-   * @returns {KernelConfiguration} The configuation of the kernel.
    */
   public get configuration (): KernelConfiguration {
     return this._kernelConfiguration
