@@ -2,7 +2,7 @@ import { BaseError } from './baseError'
 import { AliasMetadataMember } from '../aliasMetadataMember'
 
 /**
- * Represents an error triggered when a cyclic dependency has been identified.
+ * Represents an error triggered when one or many alias metadata members requirements are unfulfilled.
  */
 export class UnfulfilledMembersRequirementsError extends BaseError {
 
