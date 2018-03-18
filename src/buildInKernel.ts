@@ -14,6 +14,7 @@ import { PerCallDeliveryStrategy } from './delivery-strategies/perCallDeliverySt
 import { BuildInContainerizedKernel } from './buildInContainerizedKernel'
 import { BuildInContainer } from './buildInContainer'
 import { ToSyntax } from './fluent-syntaxes/toSyntax'
+import { AliasMetadata } from './aliasMetadata'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies.
@@ -25,6 +26,7 @@ export class BuildInKernel implements Kernel {
   private _containers: {[containerAlias: string]: Container} = {}
   private _currentContainer: Container
   private _kernelConfiguration: KernelConfiguration
+  private _aliasMetadataMap: {[alias: string]: AliasMetadata}
 
   /**
    * Instance a new kernel.
@@ -33,8 +35,9 @@ export class BuildInKernel implements Kernel {
     let defaultContainer = this.createNewContainer(this._defaultContainerAlias, [])
     this._currentContainer = defaultContainer
     this._containers[defaultContainer.getName()] = defaultContainer
-    this._kernelConfiguration = new KernelConfiguration()
+    this._aliasMetadataMap = {}
 
+    this._kernelConfiguration = new KernelConfiguration()
     this._kernelConfiguration.defaultServicingStrategy = new InstanceServicingStrategy()
     this._kernelConfiguration.defaultDeliveryStrategy = new PerCallDeliveryStrategy()
   }
@@ -45,6 +48,13 @@ export class BuildInKernel implements Kernel {
    */
   public get configuration (): KernelConfiguration {
     return this._kernelConfiguration
+  }
+
+  /**
+   * Get the alias metadata map to configure aliases behavior.
+   */
+  public get aliasMetadataMap (): {[alias: string]: AliasMetadata} {
+    return this._aliasMetadataMap
   }
 
   /**

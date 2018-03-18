@@ -4,6 +4,7 @@ import { Container } from './container'
 import { KernelConfiguration } from './kernelConfiguration'
 import { ResolutionOption } from './resolutionOption'
 import { ContainerizedKernel } from './containerizedKernel'
+import { AliasMetadata } from './aliasMetadata'
 
 /**
  * Represents a kernel that manage the type registration, instance activation and servicing strategies
@@ -12,12 +13,16 @@ export interface Kernel extends ContainerizedKernel {
 
   /**
    * Get or set the configuration of the kernel.
-   * @return {KernelConfiguration} The configuation of the kernel.
    */
   configuration: KernelConfiguration
 
   /**
-   * Load thegiven modules into the kernel.
+   * Get the alias metadata map to configure aliases behavior.
+   */
+  aliasMetadataMap: {[alias: string]: AliasMetadata}
+
+  /**
+   * Load the given modules into the kernel.
    * @param {Module[]} modules Represents the modules that will be loaded in the kernel.
    */
   loadModules (modules: Module[]): void
