@@ -12,7 +12,6 @@ describe('must throw an the error', function () {
   before(function () {
     kernel.bind('fakeTypeDependant1').to(FakeTypeDependant1)
     kernel.bind('fakeTypeDependant2').to(FakeTypeDependant2)
-    kernel.bind('fakeTypeNULL').to(null).asConstant()
     kernel.bind('fakeType').to(function () { this.fake = true })
     kernel.bind('fakeType').to(function () { this.fake = true })
   })
@@ -28,10 +27,10 @@ describe('must throw an the error', function () {
 
   it('jemsdi.Errors.ActivationFailError because the reuslt of the resolution is null.', function () {
     try {
-      let resolvedObject: any = kernel.resolve('fakeTypeNULL')
+      kernel.bind('fakeTypeNULL').to(null).asConstant()
       assert.ok(false, 'Must throw the exception because the activation result is null.')
     } catch (error) {
-      assert.equal(error.name, 'DeliveryError', 'The error is not an instance of ServicingError')
+      assert.equal(error.name, 'InvalidDataError', 'The error is not an instance of InvalidDataError')
     }
   })
 

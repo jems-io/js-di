@@ -5,6 +5,8 @@ import * as Errors from './errors/index'
 import { Kernel } from './kernel'
 import { ResolutionConfiguration } from './resolutionConfiguration'
 import { ResolutionContext } from './resolutionContext'
+import { AliasMetadata } from './aliasMetadata'
+import { AliasMetadataMember } from './aliasMetadataMember'
 
 /**
  * @private
@@ -67,6 +69,16 @@ export class BuildInContainer implements Container {
   public registerDependencyMetadata (alias: string, dependencyMetadata: DependencyMetadata): string {
 
     this.validateReference(alias)
+
+    if (!dependencyMetadata) {
+      throw new Errors.InvalidDataError('The provided dependency metadata is invalid -> ' + dependencyMetadata)
+    }
+
+    if (!dependencyMetadata.activationReference) {
+      throw new Errors.InvalidDataError('The provided dependency metadata activation reference is invalid -> ' + dependencyMetadata.activationReference)
+    }
+
+    this.validateAliasMetadata(alias, dependencyMetadata.activationReference)
 
     let metadataIdentifier: string = Math.random().toString(36).substring(10)
 
@@ -266,6 +278,8 @@ export class BuildInContainer implements Container {
           resolutionContext.resolutionOption.afterResolveEach(resolutionContext, dependencyMetadata)
         }
 
+        this.validateAliasMetadata(alias, activatedObject)
+
         activatedObjects.push(activatedObject)
 
         resolutionContext.aliasResolutionStack.splice(resolutionContext.aliasResolutionStack.length - 1, 1)
@@ -445,6 +459,70 @@ export class BuildInContainer implements Container {
     if (!alias) {
       throw new Errors.InvalidDataError('An alias must be provided to perform this operation.')
     }
+  }
+
+  private validateAliasMetadata (alias: any, reference: any): void {
+    let aliasMetadata: AliasMetadata = this.getKernel().aliasMetadataMap[alias]
+
+    if (!aliasMetadata) {
+      return
+    }
+
+    if (!aliasMetadata.members.length) {
+      return
+    }
+
+    let unfullfilledMemberPaths: string[] =
+      this.getUnfullfilledMembersPathsFromMetadata(
+        aliasMetadata,
+        reference,
+        `path <alias:${alias}>.`)
+
+    if (unfullfilledMemberPaths.length) {
+      console.log(unfullfilledMemberPaths)
+      throw new Errors.UnfulfilledMembersRequirementsError('Some of the provided references unfullfill the alias behavior', unfullfilledMemberPaths)
+    }
+  }
+
+  private getUnfullfilledMembersPathsFromMetadata (aliasMetadata: AliasMetadata, reference: any, path: string): string[] {
+    return [].concat(...
+      aliasMetadata.members.map(member => {
+        let unfullfilledMemberPaths: string[] = []
+
+        if (!this.isMemberInReference(member.name, reference)) {
+          unfullfilledMemberPaths.push(path + member.name)
+        } else if (typeof reference !== 'function' && member.aliasMetadata) {
+          this.getUnfullfilledMembersPathsFromMetadata(
+            member.aliasMetadata,
+            reference[member.name],
+            path + member.name + '.'
+          ).forEach(path => unfullfilledMemberPaths.push(path))
+        }
+
+        return unfullfilledMemberPaths
+      })
+    )
+  }
+
+  private isMemberInReference (memberName: string, reference: any): boolean {
+    let prototypeReference: any
+
+    switch (typeof reference) {
+      case 'function':
+        prototypeReference = (reference as Function).prototype
+        break
+      case 'object':
+        prototypeReference = reference
+        break
+    }
+
+    if (!prototypeReference) {
+      return false
+    }
+
+    return prototypeReference[memberName] ?
+              !!prototypeReference[memberName] :
+              this.isMemberInReference(memberName, prototypeReference['__proto__'])
   }
 
   private validateIdentifierArgument (identifier: string): void {
