@@ -80,7 +80,7 @@ export class BuildInContainer implements Container {
 
     this.validateAliasMetadata(alias, dependencyMetadata.activationReference)
 
-    let metadataIdentifier: string = Math.random().toString(36).substring(10)
+    let metadataIdentifier: string = this.getDependencyMetadataIdentifier()
 
     if (this._metadataIdentifierAliasMap[metadataIdentifier]) {
       throw Error('The metadata identifier already exists in other alias, this identifier must be unique.')
@@ -372,6 +372,11 @@ export class BuildInContainer implements Container {
     this.dispose()
   }
 
+  private getDependencyMetadataIdentifier(): string {
+    const id = Math.random().toString(36)
+    return this._aliasDependenciesMetadataMap[id] ? this.getDependencyMetadataIdentifier() : id
+  }
+
   private getResolutionConfigurationForAlias (alias: string): ResolutionConfigurationLookUpResult {
 
     let posibleSufixeMatch: string = ''
@@ -479,7 +484,6 @@ export class BuildInContainer implements Container {
         `path <alias:${alias}>.`)
 
     if (unfullfilledMemberPaths.length) {
-      console.log(unfullfilledMemberPaths)
       throw new Errors.UnfulfilledMembersRequirementsError('Some of the provided references unfullfill the alias behavior', unfullfilledMemberPaths)
     }
   }
